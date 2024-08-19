@@ -5,65 +5,28 @@ export const siteConfig = {
   description: "AI-assisted study helper",
   navItems: [
     {
-      label: "Home",
+      label: "Main",
       href: "/",
     },
     {
-      label: "Docs",
-      href: "/docs",
+      label: "Guide",
+      href: "/guide",
     },
     {
-      label: "Pricing",
-      href: "/pricing",
+      label: "Summary",
+      href: "/summary",
     },
     {
-      label: "Blog",
-      href: "/blog",
+      label: "Flashcards",
+      href: "/flashcards",
     },
     {
-      label: "About",
-      href: "/about",
+      label: "Pair match",
+      href: "/pairmatch",
+    },
+    {
+      label: "Quiz",
+      href: "/quiz",
     },
   ],
-  navMenuItems: [
-    {
-      label: "Profile",
-      href: "/profile",
-    },
-    {
-      label: "Dashboard",
-      href: "/dashboard",
-    },
-    {
-      label: "Projects",
-      href: "/projects",
-    },
-    {
-      label: "Team",
-      href: "/team",
-    },
-    {
-      label: "Calendar",
-      href: "/calendar",
-    },
-    {
-      label: "Settings",
-      href: "/settings",
-    },
-    {
-      label: "Help & Feedback",
-      href: "/help-feedback",
-    },
-    {
-      label: "Logout",
-      href: "/logout",
-    },
-  ],
-  links: {
-    github: "https://github.com/nextui-org/nextui",
-    twitter: "https://twitter.com/getnextui",
-    docs: "https://nextui.org",
-    discord: "https://discord.gg/9b6yyZKmH4",
-    sponsor: "https://patreon.com/jrgarciadev",
-  },
 };
