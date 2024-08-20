@@ -37,7 +37,7 @@ export const Navbar = () => {
         className="basis-1/5 min-[681px]:basis-full"
         justify="center"
       >
-        <ul className="hidden min-[681px]:flex gap-8 justify-center ml-4">
+        <ul className="hidden min-[681px]:flex gap-x-2 justify-center ml-4 bg-default rounded-lg p-1 mt-4">
           {siteConfig.navItems.map((item) => {
             const TabIcon = item.icon;
 
@@ -46,13 +46,14 @@ export const Navbar = () => {
                 <NextLink
                   className={clsx(
                     linkStyles({ color: "foreground" }),
-                    "data-[active=true]:text-primary data-[active=true]:font-medium gap-x-2",
-                    currentPath === item.href && "text-secondary-400",
+                    "data-[active=true]:text-primary-50 data-[active=true]:font-medium gap-x-2 text-xl bg-background-50 py-1 px-2 rounded-lg",
+                    currentPath === item.href &&
+                      "text-foreground-50 bg-foreground",
                   )}
                   color="foreground"
                   href={item.href}
                 >
-                  <TabIcon />
+                  <TabIcon size={28} />
                   {item.label}
                 </NextLink>
               </NavbarItem>
