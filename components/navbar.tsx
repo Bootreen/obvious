@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Navbar as NextUINavbar,
   NavbarContent,
@@ -11,13 +13,15 @@ import { Link } from "@nextui-org/link";
 import { link as linkStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
-import { headers } from "next/headers";
+import { usePathname } from "next/navigation";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { Logo } from "@/components/icons";
 
 export const Navbar = () => {
+  const currentPath = usePathname();
+
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
       <NavbarContent>
@@ -36,8 +40,6 @@ export const Navbar = () => {
         <ul className="hidden min-[681px]:flex gap-8 justify-center ml-4">
           {siteConfig.navItems.map((item) => {
             const TabIcon = item.icon;
-            const headerList = headers();
-            const currentPath = headerList.get("x-current-path");
 
             return (
               <NavbarItem key={item.href}>
