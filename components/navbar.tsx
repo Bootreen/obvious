@@ -14,14 +14,28 @@ import clsx from "clsx";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { Logo } from "@/components/icons";
+import {
+  FlashcardsIcon,
+  GuideIcon,
+  HomeIcon,
+  Logo,
+  PairsIcon,
+  QuizIcon,
+  SummaryIcon,
+} from "@/components/icons";
 
 export const Navbar = () => {
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
       <NavbarContent>
         <NavbarBrand as="li" className="gap-3 max-w-fit">
-          <NextLink className="flex justify-start items-center gap-1" href="/">
+          <NextLink className="flex justify-start items-center gap-2" href="/">
+            <SummaryIcon />
+            <GuideIcon />
+            <FlashcardsIcon />
+            <HomeIcon />
+            <QuizIcon />
+            <PairsIcon />
             <Logo />
             <p className="font-bold text-inherit">Sarge Obvious</p>
           </NextLink>
