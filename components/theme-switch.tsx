@@ -48,7 +48,7 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
       <VisuallyHidden>
         <input {...getInputProps()} />
       </VisuallyHidden>
-      <div {...getWrapperProps()} className={styles.icon_container}>
+      <div {...getWrapperProps()} className={styles.iconContainer}>
         {!isSelected || isSSR ? (
           <SunFilledIcon size={22} />
         ) : (
