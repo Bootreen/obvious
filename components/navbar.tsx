@@ -3,13 +3,9 @@
 import {
   Navbar as NextUINavbar,
   NavbarContent,
-  NavbarMenu,
-  NavbarMenuToggle,
-  NavbarBrand,
   NavbarItem,
-  NavbarMenuItem,
 } from "@nextui-org/navbar";
-import { Link } from "@nextui-org/link";
+import { Button } from "@nextui-org/button";
 import { link as linkStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
@@ -19,7 +15,6 @@ import styles from "./navbar.module.css";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { Logo } from "@/components/icons";
 
 export const Navbar = () => {
   const currentPath = usePathname();
@@ -27,11 +22,14 @@ export const Navbar = () => {
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
       <NavbarContent>
-        <NavbarBrand as="li">
-          <NextLink href="/">
-            <Logo size={32} />
-          </NextLink>
-        </NavbarBrand>
+        <Button
+          className={styles.helpButton}
+          color="success"
+          radius="full"
+          size="md"
+        >
+          ?
+        </Button>
       </NavbarContent>
 
       <NavbarContent className={styles.navbarMiddle} justify="center">
@@ -51,7 +49,7 @@ export const Navbar = () => {
                   href={item.href}
                 >
                   <TabIcon size={28} />
-                  {item.label}
+                  <span className={styles.linkText}>{item.label}</span>
                 </NextLink>
               </NavbarItem>
             );
@@ -59,36 +57,9 @@ export const Navbar = () => {
         </ul>
       </NavbarContent>
 
-      <NavbarContent className={styles.navbarRightDesktop} justify="end">
+      <NavbarContent justify="end">
         <ThemeSwitch />
       </NavbarContent>
-
-      <NavbarContent className={styles.navbarRightMobile} justify="end">
-        <NavbarMenuToggle />
-        <ThemeSwitch />
-      </NavbarContent>
-
-      <NavbarMenu>
-        <div className={styles.verticalMenu}>
-          {siteConfig.navItems.map((item, index) => (
-            <NavbarMenuItem key={`${item}-${index}`}>
-              <Link
-                color={
-                  index === 2
-                    ? "primary"
-                    : index === siteConfig.navItems.length - 1
-                      ? "danger"
-                      : "foreground"
-                }
-                href="#"
-                size="lg"
-              >
-                {item.label}
-              </Link>
-            </NavbarMenuItem>
-          ))}
-        </div>
-      </NavbarMenu>
     </NextUINavbar>
   );
 };

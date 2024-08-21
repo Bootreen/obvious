@@ -1,27 +1,23 @@
+.helpButton {
+  @apply min-w-9 min-h-9 w-9 h-9 m-auto text-xl font-medium;
+}
+
 .navbarMiddle {
-  @apply basis-1/5 min-[681px]:basis-full;
+  @apply basis-1/5 sm:basis-full;
 }
 
 .navMenu {
-  @apply hidden min-[681px]:flex gap-x-2 justify-center ml-4 bg-default rounded-lg p-1;
+  @apply flex gap-x-1 md:gap-x-2 justify-center bg-default rounded-lg p-1;
 }
 
 .navMenuLink {
-  @apply data-[active=true]:text-primary font-medium gap-x-2 text-xl bg-transparent py-1 px-2 rounded-lg;
+  @apply data-[active=true]:text-primary font-medium gap-x-2 text-sm lg:text-lg bg-transparent py-1 px-1 lg:px-2 rounded-lg;
 }
 
 .linkActive {
   @apply text-primary-foreground bg-primary;
 }
 
-.navbarRightDesktop {
-  @apply hidden min-[681px]:flex;
-}
-
-.navbarRightMobile {
-  @apply min-[680px]:hidden basis-1 pl-4;
-}
-
-.verticalMenu {
-  @apply mx-4 mt-2 flex flex-col gap-2;
+.linkText {
+  @apply hidden md:inline;
 }
