@@ -1,31 +1,56 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import { headers } from "next/headers";
 
-const headerList = headers();
-const currentPath: string | null = headerList.get("x-current-path");
-
-type State = {
-  currentPath: string | null;
-};
-
-type Actions = {
+type State = typeof initialState & {
   actions: {
-    setCurrentPath: (path: string) => void;
+    setTabState: (
+      tab: keyof typeof initialState.tabs,
+      isLoaded: boolean,
+    ) => void;
+    setCheckboxState: (
+      checkbox: keyof typeof initialState.checkboxes,
+      isChecked: boolean,
+    ) => void;
   };
 };
 
-export const useAppParamsStore = create<State & Actions>()(
+const initialState = {
+  tabs: {
+    Main: true,
+    Guide: false,
+    Summary: false,
+    Flashcards: false,
+    "Pair match": false,
+    Quiz: false,
+  },
+  checkboxes: {
+    guide: { label: "Step by step guide", isChecked: true },
+    summary: { label: "Summary", isChecked: true },
+    flashcards: { label: "Flashcards", isChecked: true },
+    pairmatch: { label: "Pair match", isChecked: true },
+    quiz: { label: "Quiz", isChecked: true },
+  },
+  request: "",
+};
+
+export const useAppParamsStore = create<State>()(
   immer((set) => ({
-    currentPath: currentPath,
+    ...initialState,
     actions: {
-      setCurrentPath: (path: string) =>
-        set((state) => {
-          state.currentPath = path;
+      setTabState: (tab: keyof State["tabs"], isLoaded: boolean) =>
+        set((state: State) => {
+          state.tabs[tab] = isLoaded;
+        }),
+      setCheckboxState: (
+        checkbox: keyof State["checkboxes"],
+        isChecked: boolean,
+      ) =>
+        set((state: State) => {
+          state.checkboxes[checkbox].isChecked = isChecked;
         }),
     },
   })),
 );
 
-export const useAppParamsActions = () =>
-  useAppParamsStore((state) => state.actions);
+export const useAppParamsStoreActions = () =>
+  useAppParamsStore(({ actions }) => actions);
