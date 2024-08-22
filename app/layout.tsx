@@ -1,10 +1,12 @@
 import "@/styles/globals.css";
+
 import { Metadata, Viewport } from "next";
 import { Link } from "@nextui-org/link";
 import clsx from "clsx";
 
 import { Providers } from "./providers";
 
+import styles from "@/styles/layout.home.module.css";
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import { Navbar } from "@/components/navbar";
@@ -16,7 +18,7 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   icons: {
-    icon: "/so-icon.png",
+    icon: "/so-icon.svg",
   },
 };
 
@@ -35,27 +37,20 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning lang="en">
       <head />
-      <body
-        className={clsx(
-          "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable,
-        )}
-      >
+      <body className={clsx(styles.body, fontSans.variable)}>
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          <div className="relative flex flex-col h-screen">
+          <div className={styles.pageContainer}>
             <Navbar />
-            <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
-              {children}
-            </main>
-            <footer className="w-full flex items-center justify-center py-3">
+            <main className={styles.mainSectionContainer}>{children}</main>
+            <footer className={styles.footer}>
               <Link
                 isExternal
-                className="flex items-center gap-1 text-current"
+                className={styles.footerLink}
                 href="https://butrin.vercel.app/"
                 title="Oleksii Butrin's portfolio"
               >
-                <span className="text-default-600">Created by</span>
-                <p className="text-primary">Oleksii Butrin</p>
+                <span className={styles.footerTextRegular}>Created by</span>
+                <p className={styles.footerTextAccent}>Oleksii Butrin</p>
               </Link>
             </footer>
           </div>

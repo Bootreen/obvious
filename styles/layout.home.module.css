@@ -1,0 +1,27 @@
+.body {
+  @apply min-h-screen bg-background font-sans antialiased;
+}
+
+.pageContainer {
+  @apply relative flex flex-col h-screen;
+}
+
+.mainSectionContainer {
+  @apply container mx-auto max-w-7xl pt-16 px-6 flex-grow;
+}
+
+.footer {
+  @apply w-full flex items-center justify-center py-3;
+}
+
+.footerLink {
+  @apply flex items-center gap-1 text-current;
+}
+
+.footerTextRegular {
+  @apply text-default-600;
+}
+
+.footerTextAccent {
+  @apply text-primary;
+}

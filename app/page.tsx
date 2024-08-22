@@ -1,56 +1,72 @@
-import { Link } from "@nextui-org/link";
-import { Snippet } from "@nextui-org/snippet";
-import { Code } from "@nextui-org/code";
-import { button as buttonStyles } from "@nextui-org/theme";
+"use client";
 
-import { siteConfig } from "@/config/site";
-import { title, subtitle } from "@/components/primitives";
-import { GithubIcon } from "@/components/icons";
+import { Textarea } from "@nextui-org/input";
+import { CheckboxGroup, Checkbox } from "@nextui-org/checkbox";
+import { Button } from "@nextui-org/button";
+import { ChangeEvent } from "react";
 
-export default function Home() {
+import styles from "@/styles/page.home.module.css";
+import { useAppStates, useAppActions } from "@/store/app-states";
+import { title } from "@/components/primitives";
+
+const Home = () => {
+  const { checkboxes, request } = useAppStates((state) => state);
+  const { setCheckboxState, setRequestContent } = useAppActions();
+
+  // eslint-disable-next-line no-console
+  console.log(request);
+
+  const onCheckboxToggle = (
+    checkbox: keyof typeof checkboxes,
+    event: ChangeEvent<HTMLInputElement>,
+  ) => setCheckboxState(checkbox, event.target.checked);
+  const onTextareaChange = (event: ChangeEvent<HTMLInputElement>) =>
+    setRequestContent(event.target.value);
+
   return (
-    <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-      <div className="inline-block max-w-lg text-center justify-center">
-        <h1 className={title()}>Make&nbsp;</h1>
-        <h1 className={title({ color: "violet" })}>beautiful&nbsp;</h1>
-        <br />
-        <h1 className={title()}>
-          websites regardless of your design experience.
-        </h1>
-        <h2 className={subtitle({ class: "mt-4" })}>
-          Beautiful, fast and modern React UI library.
-        </h2>
-      </div>
-
-      <div className="flex gap-3">
-        <Link
-          isExternal
-          className={buttonStyles({
-            color: "primary",
-            radius: "full",
-            variant: "shadow",
-          })}
-          href={siteConfig.links.docs}
+    <section className={styles.homePage}>
+      <div className={styles.contentContainer}>
+        <h1 className={title()}>Sarge Obvious</h1>
+        <p className={styles.paragrapg}>
+          Welcome to the AI-assisted learning helper
+        </p>
+        <Textarea
+          isRequired
+          className={styles.textarea}
+          label="Enter your request:"
+          labelPlacement="inside"
+          placeholder="Describe here in natural language what topic you would like to practice today..."
+          onChange={(event) => onTextareaChange(event)}
+        />
+        <CheckboxGroup
+          defaultValue={Object.entries(checkboxes)
+            .filter(([, { isChecked }]) => isChecked)
+            .map(([key]) => key)}
+          label="What kind of materials do you need?"
         >
-          Documentation
-        </Link>
-        <Link
-          isExternal
-          className={buttonStyles({ variant: "bordered", radius: "full" })}
-          href={siteConfig.links.github}
+          {Object.entries(checkboxes).map(([key, { label }]) => (
+            <Checkbox
+              key={key}
+              value={key}
+              onChange={(event) =>
+                onCheckboxToggle(key as keyof typeof checkboxes, event)
+              }
+            >
+              {label}
+            </Checkbox>
+          ))}
+        </CheckboxGroup>
+        <Button
+          className={styles.submitButton}
+          color="primary"
+          radius="sm"
+          size="lg"
         >
-          <GithubIcon size={20} />
-          GitHub
-        </Link>
-      </div>
-
-      <div className="mt-8">
-        <Snippet hideCopyButton hideSymbol variant="bordered">
-          <span>
-            Get started by editing <Code color="primary">app/page.tsx</Code>
-          </span>
-        </Snippet>
+          Generate
+        </Button>
       </div>
     </section>
   );
-}
+};
+
+export default Home;

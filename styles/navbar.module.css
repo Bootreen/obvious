@@ -1,0 +1,31 @@
+.helpButton {
+  @apply min-w-9 min-h-9 w-9 h-9 m-auto text-xl font-medium;
+}
+
+.navbarMiddle {
+  @apply basis-1/5 sm:basis-full;
+}
+
+.tab {
+  @apply p-0;
+}
+
+.navMenu {
+  @apply flex gap-x-1 md:gap-x-2 justify-center bg-default rounded-lg p-1;
+}
+
+.navMenuLink {
+  @apply data-[active=true]:text-primary font-medium gap-x-2 text-sm lg:text-lg bg-transparent py-1 px-1 lg:px-2 rounded-lg;
+}
+
+.linkActive {
+  @apply text-primary-foreground bg-primary;
+}
+
+.linkDisabled {
+  @apply pointer-events-none;
+}
+
+.linkText {
+  @apply hidden md:inline;
+}
