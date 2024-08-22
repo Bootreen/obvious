@@ -11,6 +11,7 @@ type State = typeof initialState & {
       checkbox: keyof typeof initialState.checkboxes,
       isChecked: boolean,
     ) => void;
+    setRequestContent: (content: string) => void;
   };
 };
 
@@ -48,6 +49,11 @@ export const useAppParamsStore = create<State>()(
         set((state: State) => {
           state.checkboxes[checkbox].isChecked = isChecked;
         }),
+      setRequestContent: (content: string) => {
+        set((state: State) => {
+          state.request = content;
+        });
+      },
     },
   })),
 );

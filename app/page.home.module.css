@@ -1,0 +1,19 @@
+.homePage {
+  @apply flex flex-col items-center justify-center text-center gap-4 py-8 md:py-10;
+}
+
+.contentContainer {
+  @apply flex flex-col gap-y-8;
+}
+
+.paragraph {
+  @apply text-lg;
+}
+
+.textarea {
+  @apply max-w-md;
+}
+
+.submitButton {
+  @apply w-fit m-auto;
+}

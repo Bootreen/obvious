@@ -5,6 +5,8 @@ import { CheckboxGroup, Checkbox } from "@nextui-org/checkbox";
 import { Button } from "@nextui-org/button";
 import { ChangeEvent } from "react";
 
+import styles from "./page.home.module.css";
+
 import {
   useAppParamsStore,
   useAppParamsStoreActions,
@@ -13,27 +15,34 @@ import { title } from "@/components/primitives";
 
 export default function Home() {
   const checkboxes = useAppParamsStore(({ checkboxes }) => checkboxes);
+  const request = useAppParamsStore(({ request }) => request);
   const { setCheckboxState } = useAppParamsStoreActions();
+  const { setRequestContent } = useAppParamsStoreActions();
 
   // eslint-disable-next-line no-console
-  console.log(checkboxes);
+  console.log(request);
 
   const onCheckboxToggle = (
     checkbox: keyof typeof checkboxes,
     event: ChangeEvent<HTMLInputElement>,
   ) => setCheckboxState(checkbox, event.target.checked);
+  const onTextareaChange = (event: ChangeEvent<HTMLInputElement>) =>
+    setRequestContent(event.target.value);
 
   return (
-    <section className="flex flex-col items-center justify-center text-center gap-4 py-8 md:py-10">
-      <div className="flex flex-col gap-y-8">
+    <section className={styles.homePage}>
+      <div className={styles.contentContainer}>
         <h1 className={title()}>Sarge Obvious</h1>
-        <p className="text-lg">Welcome to the AI-assisted learning helper</p>
+        <p className={styles.paragrapg}>
+          Welcome to the AI-assisted learning helper
+        </p>
         <Textarea
           isRequired
-          className="max-w-md"
+          className={styles.textarea}
           label="Enter your request:"
           labelPlacement="inside"
           placeholder="Describe here in natural language what topic you would like to practice today..."
+          onChange={(event) => onTextareaChange(event)}
         />
         <CheckboxGroup
           defaultValue={Object.entries(checkboxes)
@@ -53,7 +62,12 @@ export default function Home() {
             </Checkbox>
           ))}
         </CheckboxGroup>
-        <Button className="w-fit m-auto" color="primary" radius="sm" size="lg">
+        <Button
+          className={styles.submitButton}
+          color="primary"
+          radius="sm"
+          size="lg"
+        >
           Generate
         </Button>
       </div>
