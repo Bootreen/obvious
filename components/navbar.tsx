@@ -1,6 +1,6 @@
 "use client";
 
-import { Navbar as NextUINavbar, NavbarContent } from "@nextui-org/navbar";
+import { Navbar as DefaultNavbar, NavbarContent } from "@nextui-org/navbar";
 import { Tabs, Tab } from "@nextui-org/tabs";
 import { Button } from "@nextui-org/button";
 import { link as linkStyles } from "@nextui-org/theme";
@@ -11,17 +11,17 @@ import clsx from "clsx";
 import styles from "./navbar.module.css";
 
 import { ThemeSwitch } from "@/components/theme-switch";
-import { useAppParamsStore } from "@/store/app-params-store";
+import { useAppStates } from "@/store/app-states";
 
 export const Navbar = () => {
   const currentPath = usePathname();
-  const tabs = useAppParamsStore(({ tabs }) => tabs);
+  const tabs = useAppStates(({ tabs }) => tabs);
   const disabledTabs = Object.entries(tabs)
     .filter(([, { isLoaded }]) => !isLoaded)
     .map(([key]) => key);
 
   return (
-    <NextUINavbar maxWidth="xl" position="sticky">
+    <DefaultNavbar maxWidth="xl" position="sticky">
       <NavbarContent>
         <Button
           className={styles.helpButton}
@@ -74,6 +74,6 @@ export const Navbar = () => {
       <NavbarContent justify="end">
         <ThemeSwitch />
       </NavbarContent>
-    </NextUINavbar>
+    </DefaultNavbar>
   );
 };

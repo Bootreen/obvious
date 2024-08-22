@@ -43,7 +43,7 @@ const initialState = {
   request: "",
 };
 
-export const useAppParamsStore = create<State>()(
+export const useAppStates = create<State>()(
   immer((set) => ({
     ...initialState,
     actions: {
@@ -67,5 +67,4 @@ export const useAppParamsStore = create<State>()(
   })),
 );
 
-export const useAppParamsStoreActions = () =>
-  useAppParamsStore(({ actions }) => actions);
+export const useAppActions = () => useAppStates(({ actions }) => actions);

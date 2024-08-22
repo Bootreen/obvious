@@ -7,17 +7,12 @@ import { ChangeEvent } from "react";
 
 import styles from "./page.home.module.css";
 
-import {
-  useAppParamsStore,
-  useAppParamsStoreActions,
-} from "@/store/app-params-store";
+import { useAppStates, useAppActions } from "@/store/app-states";
 import { title } from "@/components/primitives";
 
 export default function Home() {
-  const checkboxes = useAppParamsStore(({ checkboxes }) => checkboxes);
-  const request = useAppParamsStore(({ request }) => request);
-  const { setCheckboxState } = useAppParamsStoreActions();
-  const { setRequestContent } = useAppParamsStoreActions();
+  const { checkboxes, request } = useAppStates((state) => state);
+  const { setCheckboxState, setRequestContent } = useAppActions();
 
   // eslint-disable-next-line no-console
   console.log(request);
