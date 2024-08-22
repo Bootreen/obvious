@@ -27,7 +27,7 @@ const Home = () => {
     <section className={styles.homePage}>
       <div className={styles.contentContainer}>
         <h1 className={title()}>Sarge Obvious</h1>
-        <p className={styles.paragrapg}>
+        <p className={styles.paragraph}>
           Welcome to the AI-assisted learning helper
         </p>
         <Textarea
