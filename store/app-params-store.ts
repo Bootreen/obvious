@@ -1,6 +1,15 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
+import {
+  FlashcardsIcon,
+  GuideIcon,
+  HomeIcon,
+  PairsIcon,
+  QuizIcon,
+  SummaryIcon,
+} from "@/components/icons";
+
 type State = typeof initialState & {
   actions: {
     setTabState: (
@@ -17,12 +26,12 @@ type State = typeof initialState & {
 
 const initialState = {
   tabs: {
-    Main: true,
-    Guide: false,
-    Summary: false,
-    Flashcards: false,
-    "Pair match": false,
-    Quiz: false,
+    Main: { href: "/", icon: HomeIcon, isLoaded: true },
+    Guide: { href: "/guide", icon: GuideIcon, isLoaded: false },
+    Summary: { href: "/summary", icon: SummaryIcon, isLoaded: false },
+    Flashcards: { href: "/flashcards", icon: FlashcardsIcon, isLoaded: false },
+    "Pair match": { href: "/pairmatch", icon: PairsIcon, isLoaded: false },
+    Quiz: { href: "/quiz", icon: QuizIcon, isLoaded: false },
   },
   checkboxes: {
     guide: { label: "Step by step guide", isChecked: true },
@@ -40,7 +49,7 @@ export const useAppParamsStore = create<State>()(
     actions: {
       setTabState: (tab: keyof State["tabs"], isLoaded: boolean) =>
         set((state: State) => {
-          state.tabs[tab] = isLoaded;
+          state.tabs[tab].isLoaded = isLoaded;
         }),
       setCheckboxState: (
         checkbox: keyof State["checkboxes"],

@@ -1,23 +1,24 @@
 "use client";
 
-import {
-  Navbar as NextUINavbar,
-  NavbarContent,
-  NavbarItem,
-} from "@nextui-org/navbar";
+import { Navbar as NextUINavbar, NavbarContent } from "@nextui-org/navbar";
+import { Tabs, Tab } from "@nextui-org/tabs";
 import { Button } from "@nextui-org/button";
 import { link as linkStyles } from "@nextui-org/theme";
+import { usePathname } from "next/navigation";
 import NextLink from "next/link";
 import clsx from "clsx";
-import { usePathname } from "next/navigation";
 
 import styles from "./navbar.module.css";
 
-import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
+import { useAppParamsStore } from "@/store/app-params-store";
 
 export const Navbar = () => {
   const currentPath = usePathname();
+  const tabs = useAppParamsStore(({ tabs }) => tabs);
+  const disabledTabs = Object.entries(tabs)
+    .filter(([, { isLoaded }]) => !isLoaded)
+    .map(([key]) => key);
 
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
@@ -33,28 +34,41 @@ export const Navbar = () => {
       </NavbarContent>
 
       <NavbarContent className={styles.navbarMiddle} justify="center">
-        <ul className={styles.navMenu}>
-          {siteConfig.navItems.map((item) => {
-            const TabIcon = item.icon;
+        <Tabs
+          aria-label="Disabled Options"
+          disabledKeys={disabledTabs}
+          radius="md"
+          size="lg"
+          variant="solid"
+        >
+          {Object.entries(tabs).map(([key, { href, icon }]) => {
+            const TabIcon = icon;
 
             return (
-              <NavbarItem key={item.href}>
-                <NextLink
-                  className={clsx(
-                    linkStyles({ color: "foreground" }),
-                    styles.navMenuLink,
-                    currentPath === item.href && styles.linkActive,
-                  )}
-                  color="foreground"
-                  href={item.href}
-                >
-                  <TabIcon size={28} />
-                  <span className={styles.linkText}>{item.label}</span>
-                </NextLink>
-              </NavbarItem>
+              <Tab
+                key={key}
+                className={styles.tab}
+                title={
+                  <div className="flex items-center space-x-2">
+                    <NextLink
+                      className={clsx(
+                        linkStyles({ color: "foreground" }),
+                        styles.navMenuLink,
+                        currentPath === href && styles.linkActive,
+                        disabledTabs.includes(key) && styles.linkDisabled,
+                      )}
+                      color="foreground"
+                      href={href}
+                    >
+                      <TabIcon size={28} />
+                      <span className={styles.linkText}>{key}</span>
+                    </NextLink>
+                  </div>
+                }
+              />
             );
           })}
-        </ul>
+        </Tabs>
       </NavbarContent>
 
       <NavbarContent justify="end">
