@@ -4,9 +4,9 @@ import { Metadata, Viewport } from "next";
 import { Link } from "@nextui-org/link";
 import clsx from "clsx";
 
-import styles from "./layout.module.css";
 import { Providers } from "./providers";
 
+import styles from "@/styles/layout.home.module.css";
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import { Navbar } from "@/components/navbar";

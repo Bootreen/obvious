@@ -5,12 +5,11 @@ import { CheckboxGroup, Checkbox } from "@nextui-org/checkbox";
 import { Button } from "@nextui-org/button";
 import { ChangeEvent } from "react";
 
-import styles from "./page.home.module.css";
-
+import styles from "@/styles/page.home.module.css";
 import { useAppStates, useAppActions } from "@/store/app-states";
 import { title } from "@/components/primitives";
 
-export default function Home() {
+const Home = () => {
   const { checkboxes, request } = useAppStates((state) => state);
   const { setCheckboxState, setRequestContent } = useAppActions();
 
@@ -68,4 +67,6 @@ export default function Home() {
       </div>
     </section>
   );
-}
+};
+
+export default Home;

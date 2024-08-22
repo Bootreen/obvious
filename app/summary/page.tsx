@@ -1,9 +1,9 @@
 import { title } from "@/components/primitives";
 
-export default function BlogPage() {
-  return (
-    <div>
-      <h1 className={title()}>Summary tab</h1>
-    </div>
-  );
-}
+const SummaryPage = () => (
+  <div>
+    <h1 className={title()}>Flashcards tab</h1>
+  </div>
+);
+
+export default SummaryPage;

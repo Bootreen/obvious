@@ -8,8 +8,7 @@ import { usePathname } from "next/navigation";
 import NextLink from "next/link";
 import clsx from "clsx";
 
-import styles from "./navbar.module.css";
-
+import styles from "@/styles/navbar.module.css";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { useAppStates } from "@/store/app-states";
 
@@ -35,11 +34,13 @@ export const Navbar = () => {
 
       <NavbarContent className={styles.navbarMiddle} justify="center">
         <Tabs
-          aria-label="Disabled Options"
-          disabledKeys={disabledTabs}
           radius="md"
           size="lg"
           variant="solid"
+          {...(disabledTabs.length > 0 && {
+            disabledKeys: disabledTabs,
+            "aria-label": "Disabled Options",
+          })}
         >
           {Object.entries(tabs).map(([key, { href, icon }]) => {
             const TabIcon = icon;

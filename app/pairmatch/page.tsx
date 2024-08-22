@@ -1,9 +1,9 @@
 import { title } from "@/components/primitives";
 
-export default function DocsPage() {
-  return (
-    <div>
-      <h1 className={title()}>Pair matching tab</h1>
-    </div>
-  );
-}
+const PairsPage = () => (
+  <div>
+    <h1 className={title()}>Flashcards tab</h1>
+  </div>
+);
+
+export default PairsPage;

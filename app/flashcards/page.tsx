@@ -1,9 +1,9 @@
 import { title } from "@/components/primitives";
 
-export default function PricingPage() {
-  return (
-    <div>
-      <h1 className={title()}>Flashcards tab</h1>
-    </div>
-  );
-}
+const FlashcardsPage = () => (
+  <div>
+    <h1 className={title()}>Flashcards tab</h1>
+  </div>
+);
+
+export default FlashcardsPage;
