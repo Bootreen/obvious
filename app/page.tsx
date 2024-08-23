@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 "use client";
 
 import { Textarea } from "@nextui-org/input";
@@ -13,8 +14,34 @@ const Home = () => {
   const { checkboxes, request } = useAppStates((state) => state);
   const { setCheckboxState, setRequestContent } = useAppActions();
 
-  // eslint-disable-next-line no-console
-  console.log(request);
+  const sendRequest = async () => {
+    try {
+      // use the fetch method to send an http request to /api/generate endpoint
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ body: request }),
+      });
+
+      // Waits for the response to be converted to JSON format and stores it in the data variable
+      const data = await response.json();
+
+      //  If successful, updates the output state with the output field from the response data
+      if (response.ok) {
+        console.log(data);
+      } else {
+        console.log(data.error);
+      }
+
+      // Catches any errors that occur during the fetch request
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  // console.log(request);
 
   const onCheckboxToggle = (
     checkbox: keyof typeof checkboxes,
@@ -61,6 +88,7 @@ const Home = () => {
           color="primary"
           radius="sm"
           size="lg"
+          onPress={() => sendRequest()}
         >
           Generate
         </Button>
