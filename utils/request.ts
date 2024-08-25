@@ -3,6 +3,8 @@ import axios from "axios";
 
 import { requestInstructions, responseSchemas } from "@/config/prompt";
 
+export type Parts = "guide" | "summary" | "flashcards" | "pairmatch" | "quiz";
+
 const makeRequest = async (
   request: string,
   instructions: string,
@@ -32,20 +34,23 @@ const makeRequest = async (
   }
 };
 
-export const queryRequests = async () => {
+export const shapeRequest = async (request: string, parts: Parts[]) => {
   const instructions =
     requestInstructions.prefix +
-    requestInstructions.quiz +
+    Object.entries(requestInstructions)
+      .filter(([key]) => parts.includes(key as Parts))
+      .map(([, instruction]) => instruction)
+      .join("") +
+    requestInstructions.subtopics +
+    requestInstructions.note +
     requestInstructions.postfix;
 
-  console.log("INSTRUCTIONS:", instructions);
-  console.log("SCHEMA:", JSON.stringify(responseSchemas.quizSchema));
+  const schemas = `{ ${responseSchemas.topic}, ${Object.entries(responseSchemas)
+    .filter(([key]) => parts.includes(key as Parts))
+    .map(([, instruction]) => instruction)
+    .join(", ")}, ${responseSchemas.subtopics}, ${responseSchemas.error} }`;
 
-  const response = await makeRequest(
-    "Javascript destructuring.",
-    instructions,
-    JSON.stringify(responseSchemas.quizSchema),
-  );
+  const response = await makeRequest(request + "\n", instructions, schemas);
 
   console.log(await response);
 

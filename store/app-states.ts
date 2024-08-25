@@ -26,12 +26,27 @@ type State = typeof initialState & {
 
 const initialState = {
   tabs: {
-    Main: { href: "/", icon: HomeIcon, isLoaded: true },
-    Guide: { href: "/guide", icon: GuideIcon, isLoaded: false },
-    Summary: { href: "/summary", icon: SummaryIcon, isLoaded: false },
-    Flashcards: { href: "/flashcards", icon: FlashcardsIcon, isLoaded: false },
-    "Pair match": { href: "/pairmatch", icon: PairsIcon, isLoaded: false },
-    Quiz: { href: "/quiz", icon: QuizIcon, isLoaded: false },
+    main: { label: "Main", href: "/", icon: HomeIcon, isLoaded: true },
+    guide: { label: "Guide", href: "/guide", icon: GuideIcon, isLoaded: false },
+    summary: {
+      label: "Summary",
+      href: "/summary",
+      icon: SummaryIcon,
+      isLoaded: false,
+    },
+    flashcards: {
+      label: "Flashcards",
+      href: "/flashcards",
+      icon: FlashcardsIcon,
+      isLoaded: false,
+    },
+    pairmatch: {
+      label: "Pair Match",
+      href: "/pairmatch",
+      icon: PairsIcon,
+      isLoaded: false,
+    },
+    quiz: { label: "Quiz", href: "/quiz", icon: QuizIcon, isLoaded: false },
   },
   checkboxes: {
     guide: { label: "Step by step guide", isChecked: true },

@@ -42,7 +42,7 @@ export const Navbar = () => {
             "aria-label": "Disabled Options",
           })}
         >
-          {Object.entries(tabs).map(([key, { href, icon }]) => {
+          {Object.entries(tabs).map(([key, { label, href, icon }]) => {
             const TabIcon = icon;
 
             return (
@@ -62,7 +62,7 @@ export const Navbar = () => {
                       href={href}
                     >
                       <TabIcon size={28} />
-                      <span className={styles.linkText}>{key}</span>
+                      <span className={styles.linkText}>{label}</span>
                     </NextLink>
                   </div>
                 }

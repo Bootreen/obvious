@@ -7,7 +7,7 @@ import { Button } from "@nextui-org/button";
 import { ChangeEvent } from "react";
 
 import styles from "@/styles/page.home.module.css";
-import { queryRequests } from "@/utils/prompt-request";
+import { Parts, shapeRequest } from "@/utils/request";
 import { useAppStates, useAppActions } from "@/store/app-states";
 import { title } from "@/components/primitives";
 
@@ -21,7 +21,20 @@ const Home = () => {
   ) => setCheckboxState(checkbox, event.target.checked);
   const onTextareaChange = (event: ChangeEvent<HTMLInputElement>) =>
     setRequestContent(event.target.value);
-  const onGenerateButtonClick = () => queryRequests();
+  const onGenerateButtonClick = () =>
+    shapeRequest(
+      request,
+      Object.entries(checkboxes)
+        .filter(([, { isChecked }]) => isChecked)
+        .map(([key]) => key) as Parts[],
+    );
+
+  // If none of the training material options are selected or if the request is empty.
+  const isEmptyRequest =
+    Object.values(checkboxes).find(({ isChecked }) => isChecked) ===
+      undefined || request.trim() === ""
+      ? true
+      : false;
 
   return (
     <section className={styles.homePage}>
@@ -59,6 +72,7 @@ const Home = () => {
         <Button
           className={styles.submitButton}
           color="primary"
+          isDisabled={isEmptyRequest}
           radius="sm"
           size="lg"
           onPress={() => onGenerateButtonClick()}
