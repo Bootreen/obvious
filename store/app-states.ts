@@ -41,6 +41,16 @@ const initialState = {
     quiz: { label: "Quiz", isChecked: true },
   },
   request: "",
+  topic: "",
+  guide: [] as string[],
+  summary: "",
+  flashcards: [] as { question: string; answer: string }[],
+  pairs: [] as { question: string; answer: string }[],
+  quiz: [] as {
+    question: string;
+    options: { text: string; isCorrect: boolean }[];
+  }[],
+  subtopics: [] as string[],
 };
 
 export const useAppStates = create<State>()(

@@ -21,13 +21,14 @@ export async function POST(req: Request): Promise<NextResponse> {
     if (!genAI) {
       genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string);
     }
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-flash",
+      generationConfig: { responseMimeType: "application/json" },
+    });
     const data: RequestData = await req.json();
     const prompt = data.body;
     const result: GenerateContentResult = await model.generateContent(prompt);
     const output = result.response.text() || "No content available";
-
-    console.log(result);
 
     return NextResponse.json({ output });
   } catch (error) {
