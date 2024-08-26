@@ -17,6 +17,7 @@ const Home = () => {
     setTabState,
     setCheckboxState,
     setRequestContent,
+    setTopic,
     setGuide,
     setSummary,
     setFlashcards,
@@ -49,7 +50,12 @@ const Home = () => {
         .map(([key]) => key) as Parts[],
     );
 
+    console.log(response);
+
     // Update content state and tabs availability
+    if (response.topic) {
+      setTopic(response.topic);
+    }
     if (response.guide) {
       setGuide(response.guide);
       setTabState("guide", true);

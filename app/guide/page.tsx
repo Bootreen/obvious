@@ -1,15 +1,20 @@
 "use client";
 
+import MarkdownRenderer from "@/utils/md-renderer";
 import { title } from "@/components/primitives";
 import { useAppStates } from "@/store/app-states";
 
 const GuidePage = () => {
-  const { guide } = useAppStates((state) => state);
+  const { topic, guide } = useAppStates((state) => state);
+
+  // console.log(guide);
 
   return (
-    <div>
-      <h1 className={title()}>Flashcards tab</h1>
-      <div>{guide}</div>
+    <div className="text-left flex flex-col gap-y-4">
+      <h2 className={title()}>{topic}</h2>
+      {guide.map((e, i) => (
+        <MarkdownRenderer key={i} content={e} />
+      ))}
     </div>
   );
 };

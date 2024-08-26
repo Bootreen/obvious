@@ -64,8 +64,7 @@ export const geminiApiRequest = async (
     if (status >= 200 && status < 300) {
       const response = data.output;
 
-      // Handle server-side errors
-      if (!response) throw new Error("Network error");
+      if (!response) throw new Error("No response error");
 
       try {
         const parsedResponse: Response = JSON.parse(response);
