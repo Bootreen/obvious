@@ -7,27 +7,70 @@ import { Button } from "@nextui-org/button";
 import { ChangeEvent } from "react";
 
 import styles from "@/styles/page.home.module.css";
-import { Parts, shapeRequest } from "@/utils/request";
+import { Parts, geminiApiRequest } from "@/utils/request";
 import { useAppStates, useAppActions } from "@/store/app-states";
 import { title } from "@/components/primitives";
 
 const Home = () => {
   const { checkboxes, request } = useAppStates((state) => state);
-  const { setCheckboxState, setRequestContent } = useAppActions();
+  const {
+    setTabState,
+    setCheckboxState,
+    setRequestContent,
+    setGuide,
+    setSummary,
+    setFlashcards,
+    setPairmatch,
+    setQuiz,
+  } = useAppActions();
 
+  // Event handlers
   const onCheckboxToggle = (
     checkbox: keyof typeof checkboxes,
     event: ChangeEvent<HTMLInputElement>,
   ) => setCheckboxState(checkbox, event.target.checked);
+
   const onTextareaChange = (event: ChangeEvent<HTMLInputElement>) =>
     setRequestContent(event.target.value);
-  const onGenerateButtonClick = () =>
-    shapeRequest(
+
+  const onGenerateButtonClick = async () => {
+    // Disable content tabs until response is received
+    setTabState("guide", false);
+    setTabState("summary", false);
+    setTabState("flashcards", false);
+    setTabState("pairmatch", false);
+    setTabState("quiz", false);
+
+    const response = await geminiApiRequest(
       request,
+      // Request only selected materials to minimize Gemini token usage
       Object.entries(checkboxes)
         .filter(([, { isChecked }]) => isChecked)
         .map(([key]) => key) as Parts[],
     );
+
+    // Update content state and tabs availability
+    if (response.guide) {
+      setGuide(response.guide);
+      setTabState("guide", true);
+    }
+    if (response.summary) {
+      setSummary(response.summary);
+      setTabState("summary", true);
+    }
+    if (response.flashcards) {
+      setFlashcards(response.flashcards);
+      setTabState("flashcards", true);
+    }
+    if (response.pairmatch) {
+      setPairmatch(response.pairmatch);
+      setTabState("pairmatch", true);
+    }
+    if (response.quiz) {
+      setQuiz(response.quiz);
+      setTabState("quiz", true);
+    }
+  };
 
   // If none of the training material options are selected or if the request is empty.
   const isEmptyRequest =
