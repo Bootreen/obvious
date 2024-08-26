@@ -11,7 +11,7 @@ const GuidePage = () => {
 
   return (
     <div className="text-left flex flex-col gap-y-4">
-      <h2 className={title()}>{topic}</h2>
+      <h4 className={title()}>{topic}</h4>
       {guide.map((e, i) => (
         <MarkdownRenderer key={i} content={e} />
       ))}
