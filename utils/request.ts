@@ -5,16 +5,19 @@ import { requestInstructions, responseSchemas } from "@/config/prompt";
 
 export type Parts = "guide" | "summary" | "flashcards" | "pairmatch" | "quiz";
 
-export type Response = Partial<{
-  topic: string;
-  guide: string[];
-  summary: string;
-  flashcards: { question: string; answer: string }[];
-  pairmatch: { question: string; answer: string }[];
-  quiz: { question: string; options: { text: string; isCorrect: boolean }[] }[];
-  subtopics: string[];
-  error: { isError: boolean; message: string };
-}>;
+export type Response = {
+  topic?: string;
+  guide?: string[];
+  summary?: string;
+  flashcards?: { question: string; answer: string }[];
+  pairmatch?: { question: string; answer: string }[];
+  quiz?: {
+    question: string;
+    options: { text: string; isCorrect: boolean }[];
+  }[];
+  subtopics?: string[];
+  error?: { isError: boolean; message: string };
+};
 
 export const geminiApiRequest = async (
   request: string,
@@ -64,37 +67,21 @@ export const geminiApiRequest = async (
     if (status >= 200 && status < 300) {
       const response = data.output;
 
-      // Catch network errors from makeRequest
+      // Handle server-side errors
       if (!response) throw new Error("Network error");
 
-      let parsedResponse;
-
-      // Catch JSON-related errors
       try {
-        parsedResponse = JSON.parse(response);
+        const parsedResponse: Response = JSON.parse(response);
+
+        // Add to result existing keys only
+        result = Object.fromEntries(
+          Object.entries(parsedResponse).filter(
+            ([_, value]) => value !== undefined,
+          ),
+        ) as Response;
       } catch (error) {
         throw new Error("JSON error");
       }
-
-      const keys: (keyof Response)[] = [
-        "topic",
-        "guide",
-        "summary",
-        "flashcards",
-        "pairmatch",
-        "quiz",
-        "subtopics",
-        "error",
-      ];
-
-      // Add only existing keys to result
-      result = keys.reduce((acc, key) => {
-        if (key in parsedResponse) {
-          acc[key] = parsedResponse[key];
-        }
-
-        return acc;
-      }, {} as Response);
     } else {
       console.log(data.error);
       throw new Error("Request failed with status " + status);
