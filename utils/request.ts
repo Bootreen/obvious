@@ -64,8 +64,8 @@ export const geminiApiRequest = async (
     if (status >= 200 && status < 300) {
       const response = data.output;
 
-      // Handle server-side errors
-      if (!response) throw new Error("Network error");
+      // Handle `no response` error
+      if (!response) throw new Error("No response");
 
       try {
         const parsedResponse: Response = JSON.parse(response);
@@ -77,13 +77,16 @@ export const geminiApiRequest = async (
           ),
         ) as Response;
       } catch (error) {
+        // Handle JSON errors if Gemini API failed to follow the schema
         throw new Error("JSON error");
       }
     } else {
+      // Handle server-side errors
       console.log(data.error);
       throw new Error("Request failed with status " + status);
     }
   } catch (error) {
+    // Specify the error for the calling component
     result.error = { isError: true, message: (error as Error).message };
   }
 
