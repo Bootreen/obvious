@@ -21,17 +21,44 @@ type State = typeof initialState & {
       isChecked: boolean,
     ) => void;
     setRequestContent: (content: string) => void;
+    setTopic: (topic: string) => void;
+    setGuide: (guide: string[]) => void;
+    setSummary: (summary: string) => void;
+    setFlashcards: (flashcards: { question: string; answer: string }[]) => void;
+    setPairmatch: (pairmatch: { question: string; answer: string }[]) => void;
+    setQuiz: (
+      quiz: {
+        question: string;
+        options: { text: string; isCorrect: boolean }[];
+      }[],
+    ) => void;
+    setSubtopics: (subtopics: string[]) => void;
   };
 };
 
 const initialState = {
   tabs: {
-    Main: { href: "/", icon: HomeIcon, isLoaded: true },
-    Guide: { href: "/guide", icon: GuideIcon, isLoaded: false },
-    Summary: { href: "/summary", icon: SummaryIcon, isLoaded: false },
-    Flashcards: { href: "/flashcards", icon: FlashcardsIcon, isLoaded: false },
-    "Pair match": { href: "/pairmatch", icon: PairsIcon, isLoaded: false },
-    Quiz: { href: "/quiz", icon: QuizIcon, isLoaded: false },
+    main: { label: "Main", href: "/", icon: HomeIcon, isLoaded: true },
+    guide: { label: "Guide", href: "/guide", icon: GuideIcon, isLoaded: false },
+    summary: {
+      label: "Summary",
+      href: "/summary",
+      icon: SummaryIcon,
+      isLoaded: false,
+    },
+    flashcards: {
+      label: "Flashcards",
+      href: "/flashcards",
+      icon: FlashcardsIcon,
+      isLoaded: false,
+    },
+    pairmatch: {
+      label: "Pair Match",
+      href: "/pairmatch",
+      icon: PairsIcon,
+      isLoaded: false,
+    },
+    quiz: { label: "Quiz", href: "/quiz", icon: QuizIcon, isLoaded: false },
   },
   checkboxes: {
     guide: { label: "Step by step guide", isChecked: true },
@@ -45,7 +72,7 @@ const initialState = {
   guide: [] as string[],
   summary: "",
   flashcards: [] as { question: string; answer: string }[],
-  pairs: [] as { question: string; answer: string }[],
+  pairmatch: [] as { question: string; answer: string }[],
   quiz: [] as {
     question: string;
     options: { text: string; isCorrect: boolean }[];
@@ -71,6 +98,46 @@ export const useAppStates = create<State>()(
       setRequestContent: (content: string) => {
         set((state: State) => {
           state.request = content;
+        });
+      },
+      setTopic: (topic: string) => {
+        set((state) => {
+          state.topic = topic;
+        });
+      },
+      setGuide: (guide: string[]) => {
+        set((state) => {
+          state.guide = guide;
+        });
+      },
+      setSummary: (summary: string) => {
+        set((state) => {
+          state.summary = summary;
+        });
+      },
+      setFlashcards: (flashcards: { question: string; answer: string }[]) => {
+        set((state) => {
+          state.flashcards = flashcards;
+        });
+      },
+      setPairmatch: (pairmatch: { question: string; answer: string }[]) => {
+        set((state) => {
+          state.pairmatch = pairmatch;
+        });
+      },
+      setQuiz: (
+        quiz: {
+          question: string;
+          options: { text: string; isCorrect: boolean }[];
+        }[],
+      ) => {
+        set((state) => {
+          state.quiz = quiz;
+        });
+      },
+      setSubtopics: (subtopics: string[]) => {
+        set((state) => {
+          state.subtopics = subtopics;
         });
       },
     },
