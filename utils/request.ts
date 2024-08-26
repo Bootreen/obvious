@@ -5,19 +5,16 @@ import { requestInstructions, responseSchemas } from "@/config/prompt";
 
 export type Parts = "guide" | "summary" | "flashcards" | "pairmatch" | "quiz";
 
-export type Response = {
-  topic?: string;
-  guide?: string[];
-  summary?: string;
-  flashcards?: { question: string; answer: string }[];
-  pairmatch?: { question: string; answer: string }[];
-  quiz?: {
-    question: string;
-    options: { text: string; isCorrect: boolean }[];
-  }[];
-  subtopics?: string[];
-  error?: { isError: boolean; message: string };
-};
+export type Response = Partial<{
+  topic: string;
+  guide: string[];
+  summary: string;
+  flashcards: { question: string; answer: string }[];
+  pairmatch: { question: string; answer: string }[];
+  quiz: { question: string; options: { text: string; isCorrect: boolean }[] }[];
+  subtopics: string[];
+  error: { isError: boolean; message: string };
+}>;
 
 export const geminiApiRequest = async (
   request: string,
