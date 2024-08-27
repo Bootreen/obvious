@@ -12,8 +12,9 @@ const GuidePage = () => {
       <h2>{topic}: Flashcards</h2>
       {flashcards.map((e, i) => (
         <div key={i}>
-          Q{i + 1}:
-          <MarkdownRenderer content={e.question} />A{i + 1}:
+          <span>Q{i + 1}:</span>
+          <MarkdownRenderer content={e.question} />
+          <span>A{i + 1}:</span>
           <MarkdownRenderer content={e.answer} />
         </div>
       ))}

@@ -1,8 +1,6 @@
-import { title } from "@/components/primitives";
-
 const PairsPage = () => (
   <div>
-    <h1 className={title()}>Flashcards tab</h1>
+    <h1>Flashcards tab</h1>
   </div>
 );
 
