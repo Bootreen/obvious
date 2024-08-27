@@ -14,6 +14,8 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
     .replaceAll("\\(", "(") //  for some reason Gemini tends to unnecessary escape
     .replaceAll("\\)", ")"); // some of the brackets enclosing the formulas
 
+  console.log(preparsedContent);
+
   return (
     <ReactMarkdown
       components={{}} // Optional components

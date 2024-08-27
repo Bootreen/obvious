@@ -1,0 +1,3 @@
+.container {
+  @apply prose prose-lg text-foreground prose-headings:text-foreground prose-strong:text-foreground prose-ol:text-foreground prose-ul:text-foreground prose-li:text-foreground;
+}

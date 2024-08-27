@@ -17,7 +17,6 @@ import { ChangeEvent } from "react";
 import styles from "@/styles/page.home.module.css";
 import { Parts, geminiApiRequest } from "@/utils/request";
 import { useAppStates, useAppActions } from "@/store/app-states";
-import { title } from "@/components/primitives";
 
 const Home = () => {
   // Store variables...
@@ -149,7 +148,7 @@ const Home = () => {
   return (
     <section className={styles.homePage}>
       <div className={styles.contentContainer}>
-        <h1 className={title()}>Sarge Obvious</h1>
+        <h1>Sarge Obvious</h1>
         <p className={styles.paragraph}>
           Welcome to the AI-assisted learning helper
         </p>
