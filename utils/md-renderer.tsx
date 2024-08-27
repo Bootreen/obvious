@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
@@ -8,10 +9,13 @@ interface MarkdownRendererProps {
 }
 
 const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
+  console.log(content);
   const preparsedContent = content
     .replaceAll("+++", "```")
-    .replaceAll("\\(", "(")
-    .replaceAll("\\)", ")");
+    .replaceAll("\\(", "(") //  for some reason Gemini tends to unnecessary escape
+    .replaceAll("\\)", ")"); // some of the brackets enclosing the formulas
+
+  console.log(preparsedContent);
 
   return (
     <ReactMarkdown
