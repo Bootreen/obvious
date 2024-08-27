@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import axios from "axios";
 
 import { requestInstructions, responseSchemas } from "@/config/prompt";
@@ -63,8 +62,6 @@ export const geminiApiRequest = async (
 
     if (status >= 200 && status < 300) {
       const response = data.output;
-
-      console.log(response);
 
       // No response error handling
       if (!response) throw new Error("No response error");

@@ -4,6 +4,14 @@
 import { Textarea } from "@nextui-org/input";
 import { CheckboxGroup, Checkbox } from "@nextui-org/checkbox";
 import { Button } from "@nextui-org/button";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+} from "@nextui-org/modal";
+import { useDisclosure } from "@nextui-org/react";
 import { ChangeEvent } from "react";
 
 import styles from "@/styles/page.home.module.css";
@@ -29,6 +37,12 @@ const Home = () => {
     resetContent,
     setIsBusy,
   } = useAppActions();
+
+  const {
+    isOpen: isErrorOpen,
+    onOpen: onErrorOpen,
+    onOpenChange: onErrorOpenChange,
+  } = useDisclosure();
 
   // Event handlers
   const onCheckboxToggle = (
@@ -62,6 +76,7 @@ const Home = () => {
     setTabState("pairmatch", false);
     setTabState("quiz", false);
 
+    // Make at least one request
     do {
       const {
         topic,
@@ -83,7 +98,6 @@ const Home = () => {
       // Update content state and tabs availability
       if (topic) setTopic(topic);
       if (guide && guide.length > 0) {
-        console.log("GUIDE IS PRESENTED");
         setGuide(guide);
         setTabState("guide", true);
       }
@@ -105,8 +119,8 @@ const Home = () => {
       }
       if (subtopics) setSubtopics(subtopics);
 
+      // Flags an error and log error type
       if (error) {
-        // Flags an error and log error type
         if (error.isError) addError(error.message);
         else clearErrors();
       } // Clear error log both in 'isError = false' and 'no error object' scenarios
@@ -114,9 +128,10 @@ const Home = () => {
       // Try again until success or up to 3 consecutive fails
     } while (isError && errorLog.length < 3);
 
-    console.log(errorLog);
     if (isError) {
-      // Write error handling
+      // Add proper error handling
+      onErrorOpen();
+      console.log("Unable to fulfill request. See error log:", errorLog);
     }
 
     // Enable requests again
@@ -175,6 +190,38 @@ const Home = () => {
           Generate
         </Button>
       </div>
+
+      {/* Error modal window */}
+      <Modal
+        isDismissable={false}
+        isOpen={isErrorOpen}
+        size="xl"
+        onOpenChange={onErrorOpenChange}
+      >
+        <ModalContent>
+          {(onErrorClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                Unable to fulfill the request
+              </ModalHeader>
+              <ModalBody>
+                <p>
+                  Failed to generate tutorials for your question after three
+                  attempts. This usually happens when the query is not
+                  formulated well, or you are trying to request materials that
+                  violate the ethical principles of using AI. Try rephrasing
+                  your question or change the subject.
+                </p>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="primary" onPress={onErrorClose}>
+                  Dismiss
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </section>
   );
 };
