@@ -7,33 +7,8 @@ import {
   SummaryIcon,
 } from "@/components/icons";
 
-export type State = typeof initialState & {
-  actions: {
-    setTabState: (
-      tab: keyof typeof initialState.tabs,
-      isLoaded: boolean,
-    ) => void;
-    setCheckboxState: (
-      checkbox: keyof typeof initialState.checkboxes,
-      isChecked: boolean,
-    ) => void;
-    setRequestContent: (content: string) => void;
-    setTopic: (topic: string) => void;
-    setGuide: (guide: string[]) => void;
-    setSummary: (summary: string) => void;
-    setFlashcards: (flashcards: { question: string; answer: string }[]) => void;
-    setPairmatch: (pairmatch: { question: string; answer: string }[]) => void;
-    setQuiz: (
-      quiz: {
-        question: string;
-        options: { text: string; isCorrect: boolean }[];
-      }[],
-    ) => void;
-    setSubtopics: (subtopics: string[]) => void;
-  };
-};
-
 export const initialState = {
+  // App navigation tabs
   tabs: {
     main: { label: "Main", href: "/", icon: HomeIcon, isLoaded: true },
     guide: { label: "Guide", href: "/guide", icon: GuideIcon, isLoaded: false },
@@ -57,6 +32,8 @@ export const initialState = {
     },
     quiz: { label: "Quiz", href: "/quiz", icon: QuizIcon, isLoaded: false },
   },
+
+  // Desired material type checkboxes
   checkboxes: {
     guide: { label: "Step by step guide", isChecked: true },
     summary: { label: "Summary", isChecked: true },
@@ -64,6 +41,8 @@ export const initialState = {
     pairmatch: { label: "Pair match", isChecked: true },
     quiz: { label: "Quiz", isChecked: true },
   },
+
+  // Request and response
   request: "",
   topic: "",
   guide: [] as string[],
@@ -75,4 +54,35 @@ export const initialState = {
     options: { text: string; isCorrect: boolean }[];
   }[],
   subtopics: [] as string[],
+
+  // Semaphores
+  isBusy: false, // temporarily blocks input, when App is waiting for API response
+};
+
+export type State = typeof initialState & {
+  actions: {
+    setTabState: (
+      tab: keyof typeof initialState.tabs,
+      isLoaded: boolean,
+    ) => void;
+    setCheckboxState: (
+      checkbox: keyof typeof initialState.checkboxes,
+      isChecked: boolean,
+    ) => void;
+    setRequest: (content: string) => void;
+    setTopic: (topic: string) => void;
+    setGuide: (guide: string[]) => void;
+    setSummary: (summary: string) => void;
+    setFlashcards: (flashcards: { question: string; answer: string }[]) => void;
+    setPairmatch: (pairmatch: { question: string; answer: string }[]) => void;
+    setQuiz: (
+      quiz: {
+        question: string;
+        options: { text: string; isCorrect: boolean }[];
+      }[],
+    ) => void;
+    setSubtopics: (subtopics: string[]) => void;
+    resetContent: () => void;
+    setIsBusy: (value: boolean) => void;
+  };
 };

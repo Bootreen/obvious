@@ -9,13 +9,10 @@ interface MarkdownRendererProps {
 }
 
 const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
-  console.log(content);
   const preparsedContent = content
     .replaceAll("+++", "```")
     .replaceAll("\\(", "(") //  for some reason Gemini tends to unnecessary escape
     .replaceAll("\\)", ")"); // some of the brackets enclosing the formulas
-
-  console.log(preparsedContent);
 
   return (
     <ReactMarkdown

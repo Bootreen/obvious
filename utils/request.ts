@@ -66,6 +66,8 @@ export const geminiApiRequest = async (
 
       if (!response) throw new Error("No response error");
 
+      console.log(response);
+
       try {
         const parsedResponse: Response = JSON.parse(response);
 
@@ -80,6 +82,10 @@ export const geminiApiRequest = async (
       }
     } else {
       console.log(data.error);
+      result.error = {
+        isError: true,
+        message: "Request failed with status " + status,
+      };
       throw new Error("Request failed with status " + status);
     }
   } catch (error) {

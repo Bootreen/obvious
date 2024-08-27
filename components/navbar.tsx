@@ -50,7 +50,7 @@ export const Navbar = () => {
                 key={key}
                 className={styles.tab}
                 title={
-                  <div className="flex items-center space-x-2">
+                  <div className={styles.tabTitle}>
                     <NextLink
                       className={clsx(
                         linkStyles({ color: "foreground" }),

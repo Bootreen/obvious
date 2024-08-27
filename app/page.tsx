@@ -12,17 +12,22 @@ import { useAppStates, useAppActions } from "@/store/app-states";
 import { title } from "@/components/primitives";
 
 const Home = () => {
-  const { checkboxes, request } = useAppStates((state) => state);
+  // Store variables...
+  const { checkboxes, request, isBusy } = useAppStates((state) => state);
+  // ...and setters
   const {
     setTabState,
     setCheckboxState,
-    setRequestContent,
+    setRequest,
     setTopic,
     setGuide,
     setSummary,
     setFlashcards,
     setPairmatch,
     setQuiz,
+    setSubtopics,
+    resetContent,
+    setIsBusy,
   } = useAppActions();
 
   // Event handlers
@@ -32,9 +37,24 @@ const Home = () => {
   ) => setCheckboxState(checkbox, event.target.checked);
 
   const onTextareaChange = (event: ChangeEvent<HTMLInputElement>) =>
-    setRequestContent(event.target.value);
+    setRequest(event.target.value);
 
   const onGenerateButtonClick = async () => {
+    // Errors and retries handling logic
+    let isError: boolean = false;
+    let errorLog: string[] = [];
+    const addError = (error: string): void => {
+      isError = true;
+      errorLog = [...errorLog, error];
+    };
+    const clearErrors = (): void => {
+      isError = false;
+      errorLog = [];
+    };
+
+    resetContent();
+    // Disable requests while awaiting for the response
+    setIsBusy(true);
     // Disable content tabs until response is received
     setTabState("guide", false);
     setTabState("summary", false);
@@ -42,40 +62,65 @@ const Home = () => {
     setTabState("pairmatch", false);
     setTabState("quiz", false);
 
-    const response = await geminiApiRequest(
-      request,
-      // Request only selected materials to minimize Gemini token usage
-      Object.entries(checkboxes)
-        .filter(([, { isChecked }]) => isChecked)
-        .map(([key]) => key) as Parts[],
-    );
+    do {
+      const {
+        topic,
+        guide,
+        summary,
+        flashcards,
+        pairmatch,
+        quiz,
+        subtopics,
+        error,
+      } = await geminiApiRequest(
+        request,
+        // Request only selected materials to minimize Gemini token usage
+        Object.entries(checkboxes)
+          .filter(([, { isChecked }]) => isChecked)
+          .map(([key]) => key) as Parts[],
+      );
 
-    console.log(response);
+      // Update content state and tabs availability
+      if (topic) setTopic(topic);
+      if (guide) {
+        setGuide(guide);
+        setTabState("guide", true);
+      }
+      if (summary) {
+        setSummary(summary);
+        setTabState("summary", true);
+      }
+      if (flashcards) {
+        setFlashcards(flashcards);
+        setTabState("flashcards", true);
+      }
+      if (pairmatch) {
+        setPairmatch(pairmatch);
+        setTabState("pairmatch", true);
+      }
+      if (quiz) {
+        setQuiz(quiz);
+        setTabState("quiz", true);
+      }
+      if (subtopics) setSubtopics(subtopics);
 
-    // Update content state and tabs availability
-    if (response.topic) {
-      setTopic(response.topic);
+      if (error) {
+        // Flags an error and log error type
+        if (error.isError) addError(error.message);
+        else clearErrors();
+      } // Clear error log both in 'isError = false' and 'no error object' scenarios
+      else clearErrors();
+      // Try again until success or up to 3 consecutive fails
+    } while (isError && errorLog.length < 3);
+
+    console.log(errorLog);
+    if (isError) {
+      // Write error handling
     }
-    if (response.guide) {
-      setGuide(response.guide);
-      setTabState("guide", true);
-    }
-    if (response.summary) {
-      setSummary(response.summary);
-      setTabState("summary", true);
-    }
-    if (response.flashcards) {
-      setFlashcards(response.flashcards);
-      setTabState("flashcards", true);
-    }
-    if (response.pairmatch) {
-      setPairmatch(response.pairmatch);
-      setTabState("pairmatch", true);
-    }
-    if (response.quiz) {
-      setQuiz(response.quiz);
-      setTabState("quiz", true);
-    }
+
+    // Enable requests again
+    setIsBusy(false);
+    clearErrors();
   };
 
   // If none of the training material options are selected or if the request is empty.
@@ -121,7 +166,7 @@ const Home = () => {
         <Button
           className={styles.submitButton}
           color="primary"
-          isDisabled={isEmptyRequest}
+          isDisabled={isEmptyRequest || isBusy}
           radius="sm"
           size="lg"
           onPress={() => onGenerateButtonClick()}
