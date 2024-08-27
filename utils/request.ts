@@ -64,9 +64,10 @@ export const geminiApiRequest = async (
     if (status >= 200 && status < 300) {
       const response = data.output;
 
-      if (!response) throw new Error("No response error");
-
       console.log(response);
+
+      // No response error handling
+      if (!response) throw new Error("No response error");
 
       try {
         const parsedResponse: Response = JSON.parse(response);
@@ -78,17 +79,12 @@ export const geminiApiRequest = async (
           ),
         ) as Response;
       } catch (error) {
+        // Invalid JSON handling
         throw new Error("JSON error");
       }
-    } else {
-      console.log(data.error);
-      result.error = {
-        isError: true,
-        message: "Request failed with status " + status,
-      };
-      throw new Error("Request failed with status " + status);
-    }
+    } else throw new Error("Request failed with status " + status);
   } catch (error) {
+    // Gather all errors from the nested scopes
     result.error = { isError: true, message: (error as Error).message };
   }
 

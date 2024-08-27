@@ -82,23 +82,24 @@ const Home = () => {
 
       // Update content state and tabs availability
       if (topic) setTopic(topic);
-      if (guide) {
+      if (guide && guide.length > 0) {
+        console.log("GUIDE IS PRESENTED");
         setGuide(guide);
         setTabState("guide", true);
       }
-      if (summary) {
+      if (summary && summary !== "") {
         setSummary(summary);
         setTabState("summary", true);
       }
-      if (flashcards) {
+      if (flashcards && flashcards.length > 0) {
         setFlashcards(flashcards);
         setTabState("flashcards", true);
       }
-      if (pairmatch) {
+      if (pairmatch && pairmatch.length > 0) {
         setPairmatch(pairmatch);
         setTabState("pairmatch", true);
       }
-      if (quiz) {
+      if (quiz && quiz.length > 0) {
         setQuiz(quiz);
         setTabState("quiz", true);
       }
