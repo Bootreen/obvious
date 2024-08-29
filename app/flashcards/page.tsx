@@ -24,11 +24,15 @@ const GuidePage = () => {
     setHint,
   } = useAppActions();
 
-  let currentAnswer = "";
+  // Prevent access to the flashcard properties if flashcards is not loaded yet
+  const currentQuestion: string =
+    flashcards.length > 0
+      ? flashcards[currentFlashcardNumber - 1].question
+      : "";
+  const currentAnswer: string =
+    flashcards.length > 0 ? flashcards[currentFlashcardNumber - 1].answer : "";
 
-  if (flashcards.length > 0)
-    currentAnswer = flashcards[currentFlashcardNumber - 1].answer;
-
+  // GUI event handlers
   const onFlashCardClick = () => setIsFlashcardFlipped(!isFlashcardFlipped);
 
   const onHintButtonClick = () => {
@@ -44,13 +48,16 @@ const GuidePage = () => {
 
   const onFlashcardsNavigateButtonClick = (direction: "prev" | "next") => {
     if (
+      // Disable buttons for the boundary values
       (direction === "prev" && currentFlashcardNumber !== 1) ||
-      (direction === "next" && currentFlashcardNumber !== flashcards.length)
+      (direction === "next" &&
+        currentFlashcardNumber !== flashcards.length &&
+        flashcards.length !== 0)
     ) {
-      setIsFlashcardFlipped(false);
-      setIsFlipInProgress(true);
       setHint("");
+      setIsFlashcardFlipped(false);
       // Hide answer while flipping the card back to not to spoil answer for the next question
+      setIsFlipInProgress(true);
       setTimeout(() => {
         setIsFlipInProgress(false);
       }, 1000); // This timeout should be equal to flip transition duration
@@ -71,13 +78,7 @@ const GuidePage = () => {
               {currentFlashcardNumber}/{flashcards.length}
             </div>
             <div className={styles.cardMark}>Answer:</div>
-            <MarkdownRenderer
-              content={
-                !isFlipInProgress
-                  ? flashcards[currentFlashcardNumber - 1].answer
-                  : ""
-              }
-            />
+            <MarkdownRenderer content={isFlipInProgress ? "" : currentAnswer} />
           </>
         }
         backCss={styles.cardBack}
@@ -92,9 +93,7 @@ const GuidePage = () => {
               {currentFlashcardNumber}/{flashcards.length}
             </div>
             <div className={styles.cardMark}>Question:</div>
-            <MarkdownRenderer
-              content={flashcards[currentFlashcardNumber - 1].question}
-            />
+            <MarkdownRenderer content={currentQuestion} />
           </>
         }
         frontCss={styles.cardFront}
@@ -126,7 +125,10 @@ const GuidePage = () => {
         <Button
           className={styles.navigationButton}
           color="primary"
-          isDisabled={currentFlashcardNumber === flashcards.length}
+          isDisabled={
+            currentFlashcardNumber === flashcards.length ||
+            flashcards.length === 0
+          }
           radius="sm"
           size="lg"
           onPress={() => onFlashcardsNavigateButtonClick("next")}
