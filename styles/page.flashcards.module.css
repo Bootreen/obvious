@@ -1,0 +1,11 @@
+.card {
+  @apply w-[600px] h-[350px] text-center p-6 text-white font-extrabold;
+}
+
+.cardFront {
+  @apply bg-slate-600 border-black border-4 rounded-lg;
+}
+
+.cardBack {
+  @apply bg-red-700 border-black border-4 rounded-lg;
+}

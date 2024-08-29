@@ -7,7 +7,7 @@
 }
 
 .mainSectionContainer {
-  @apply container mx-auto max-w-3xl pt-1 px-6 flex-grow;
+  @apply container mx-auto max-w-md pt-1 px-6 flex-grow;
 }
 
 .footer {

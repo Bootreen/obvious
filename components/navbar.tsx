@@ -101,12 +101,6 @@ export const Navbar = () => {
                 Sarge Obvious: Help
               </ModalHeader>
               <ModalBody>
-                <p>
-                  Ready to get in line and learn something? Sarge Obvious is
-                  your new AI drill sergeant, here to put you through your
-                  paces! Just give Sarge a command, and he’ll generate custom
-                  study materials that’ll make you smarter in no time.
-                </p>
                 <h3>1. Choose Your Topic:</h3>
                 <p>
                   Enter any topic you’d like to learn about. The more specific,

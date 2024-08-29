@@ -6,6 +6,10 @@
   @apply flex flex-col gap-y-8;
 }
 
+.title {
+  @apply text-center font-semibold;
+}
+
 .paragraph {
   @apply text-lg;
 }

@@ -148,18 +148,25 @@ const Home = () => {
   return (
     <section className={styles.homePage}>
       <div className={styles.contentContainer}>
-        <h1>Sarge Obvious</h1>
-        <p className={styles.paragraph}>
-          Welcome to the AI-assisted learning helper
-        </p>
-        <Textarea
-          isRequired
-          className={styles.textarea}
-          label="Enter your request:"
-          labelPlacement="inside"
-          placeholder="Describe here in natural language what topic you would like to practice today..."
-          onChange={(event) => onTextareaChange(event)}
-        />
+        <div>
+          <h1 className={styles.title}>Sarge Obvious</h1>
+          <p className={styles.paragraph}>
+            Ready to get in line and learn something?
+            <br />
+            <strong>Sarge Obvious</strong> is your new AI drill sergeant, here
+            to put you through your paces! Just give Sarge a command, and he’ll
+            generate custom study materials that’ll make you smarter in no time.
+          </p>
+          <Textarea
+            isRequired
+            className={styles.textarea}
+            label="Enter your request:"
+            labelPlacement="inside"
+            placeholder="Describe here in natural language what topic you would like to practice today..."
+            onChange={(event) => onTextareaChange(event)}
+          />
+        </div>
+
         <CheckboxGroup
           defaultValue={Object.entries(checkboxes)
             .filter(([, { isChecked }]) => isChecked)

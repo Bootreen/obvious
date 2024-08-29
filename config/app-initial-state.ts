@@ -22,7 +22,7 @@ export const initialState = {
       label: "Flashcards",
       href: "/flashcards",
       icon: FlashcardsIcon,
-      isLoaded: false,
+      isLoaded: true,
     },
     pairmatch: {
       label: "Pair Match",
