@@ -11,13 +11,13 @@ export const initialState = {
   // App navigation tabs
   tabs: {
     main: { label: "Main", href: "/", icon: HomeIcon, isLoaded: true },
-    guide: { label: "Guide", href: "/guide", icon: GuideIcon, isLoaded: false },
     summary: {
       label: "Summary",
       href: "/summary",
       icon: SummaryIcon,
       isLoaded: false,
     },
+    guide: { label: "Guide", href: "/guide", icon: GuideIcon, isLoaded: false },
     flashcards: {
       label: "Flashcards",
       href: "/flashcards",
@@ -35,8 +35,8 @@ export const initialState = {
 
   // Desired material type checkboxes
   checkboxes: {
-    guide: { label: "Step by step guide", isChecked: true },
     summary: { label: "Summary", isChecked: true },
+    guide: { label: "Step by step guide", isChecked: true },
     flashcards: { label: "Flashcards", isChecked: true },
     pairmatch: { label: "Pair match", isChecked: true },
     quiz: { label: "Quiz", isChecked: true },
