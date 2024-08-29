@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@nextui-org/button";
+import { Card, CardBody } from "@nextui-org/card";
 import {
   Table,
   TableHeader,
@@ -8,12 +8,11 @@ import {
   TableColumn,
   TableRow,
   TableCell,
-  getKeyValue,
 } from "@nextui-org/table";
 
 import { useAppStates, useAppActions } from "@/store/app-states";
-import MarkdownRenderer from "@/utils/md-renderer";
 import common from "@/styles/page.default.module.css";
+import styles from "@/styles/page.pairmatch.module.css";
 
 const PairsPage = () => {
   const { topic, pairmatch } = useAppStates((state) => state);
@@ -22,16 +21,36 @@ const PairsPage = () => {
   return (
     <article className={common.container}>
       <h2>{topic}: Pair match</h2>
-      <Table hideHeader aria-label="Matching pairs">
+      <Table hideHeader removeWrapper aria-label="Matching pairs">
         <TableHeader>
-          <TableColumn>Q</TableColumn>
-          <TableColumn>A</TableColumn>
+          <TableColumn> </TableColumn>
+          <TableColumn> </TableColumn>
         </TableHeader>
         <TableBody>
-          {pairmatch.map((pair, i) => (
-            <TableRow key={i}>
-              <TableCell>{pair.question}</TableCell>
-              <TableCell>{pair.answer}</TableCell>
+          {pairmatch.map(({ question, answer }, i) => (
+            <TableRow key={i} className={styles.tableRow}>
+              <TableCell className={styles.tableCell}>
+                <Card
+                  isPressable
+                  className={styles.pairLabelContainer}
+                  fullWidth={true}
+                  onPress={() => {}}
+                >
+                  <CardBody className={styles.pairPartLeft}>
+                    {question}
+                  </CardBody>
+                </Card>
+              </TableCell>
+              <TableCell className={styles.tableCell}>
+                <Card
+                  isPressable
+                  className={styles.pairLabelContainer}
+                  fullWidth={true}
+                  onPress={() => {}}
+                >
+                  <CardBody className={styles.pairPartRight}>{answer}</CardBody>
+                </Card>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

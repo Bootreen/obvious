@@ -1,0 +1,16 @@
+.tableRow {
+  @apply h-full border-none;
+}
+
+.tableCell {
+  @apply h-full align-top;
+}
+
+.pairLabelContainer {
+  @apply h-20 text-lg;
+}
+
+.pairPartLeft,
+.pairPartRight {
+  @apply flex h-20 text-center place-content-center bg-slate-200;
+}
