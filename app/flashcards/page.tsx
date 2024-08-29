@@ -3,8 +3,8 @@
 import ReactFlipCard from "reactjs-flip-card";
 import { Button } from "@nextui-org/button";
 
-import MarkdownRenderer from "@/utils/md-renderer";
 import { useAppStates, useAppActions } from "@/store/app-states";
+import MarkdownRenderer from "@/utils/md-renderer";
 import common from "@/styles/page.default.module.css";
 import styles from "@/styles/page.flashcards.module.css";
 
@@ -24,13 +24,20 @@ const GuidePage = () => {
     setHint,
   } = useAppActions();
 
-  const currentAnswer = flashcards[currentFlashcardNumber - 1].answer;
+  const currentAnswer =
+    flashcards.length > 0 ? flashcards[currentFlashcardNumber - 1].answer : "";
 
   const onFlashCardClick = () => setIsFlashcardFlipped(!isFlashcardFlipped);
 
   const onHintButtonClick = () => {
     if (hint.length < currentAnswer.length - 6)
-      setHint(hint + currentAnswer.slice(hint.length, hint.length + 4));
+      setHint(
+        hint +
+          currentAnswer
+            .replaceAll("`", "") // Hide code formatting in the hint
+            .replaceAll("+++", "")
+            .slice(hint.length, hint.length + 4),
+      );
   };
 
   const onFlashcardsNavigateButtonClick = (direction: "prev" | "next") => {
@@ -41,9 +48,11 @@ const GuidePage = () => {
       setIsFlashcardFlipped(false);
       setIsFlipInProgress(true);
       setHint("");
+      // Hide answer while flipping the card back to not to spoil answer for the next question
       setTimeout(() => {
         setIsFlipInProgress(false);
-      }, 1000);
+      }, 1000); // This timeout should be equal to flip transition duration
+      //           (see .card {} in page.flashcards.module.css)
       setCurrentFlashcardNumber(
         currentFlashcardNumber + (direction === "next" ? 1 : -1),
       );
