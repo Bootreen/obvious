@@ -1,48 +1,117 @@
 "use client";
 
 import ReactFlipCard from "reactjs-flip-card";
+import { Button } from "@nextui-org/button";
 
 import MarkdownRenderer from "@/utils/md-renderer";
-import { useAppStates } from "@/store/app-states";
+import { useAppStates, useAppActions } from "@/store/app-states";
 import common from "@/styles/page.default.module.css";
 import styles from "@/styles/page.flashcards.module.css";
 
 const GuidePage = () => {
-  const { topic, flashcards } = useAppStates((state) => state);
-  // const styles = {
-  //   card: { background: "gray", color: "white", borderRadius: 15 },
-  // };
+  const {
+    topic,
+    flashcards,
+    currentFlashcardNumber,
+    isFlashcardFlipped,
+    isFlipInProgress,
+  } = useAppStates((state) => state);
+  const {
+    setCurrentFlashcardNumber,
+    setIsFlashcardFlipped,
+    setIsFlipInProgress,
+  } = useAppActions();
+
+  const onFlashCardClick = () => setIsFlashcardFlipped(!isFlashcardFlipped);
+  const onPreviousButtonClick = () => {
+    setIsFlashcardFlipped(false);
+    setIsFlipInProgress(true);
+    setTimeout(() => {
+      setIsFlipInProgress(false);
+    }, 1000);
+    if (currentFlashcardNumber !== 1)
+      setCurrentFlashcardNumber(currentFlashcardNumber - 1);
+  };
+  const onNextButtonClick = () => {
+    setIsFlashcardFlipped(false);
+    setIsFlipInProgress(true);
+    setTimeout(() => {
+      setIsFlipInProgress(false);
+    }, 1000);
+    if (currentFlashcardNumber !== flashcards.length)
+      setCurrentFlashcardNumber(currentFlashcardNumber + 1);
+  };
 
   return (
     <article className={common.container}>
-      {/* <h2>{topic}: Flashcards</h2>
-      {flashcards.map((e, i) => (
-        <div key={i}>
-          <span>Q{i + 1}:</span>
-          <MarkdownRenderer content={e.question} />
-          <span>A{i + 1}:</span>
-          <MarkdownRenderer content={e.answer} />
-        </div>
-      ))} */}
+      <h2>{topic}: Flashcards</h2>
       <ReactFlipCard
         backComponent={
-          <div>
-            {/* <MarkdownRenderer content={flashcards[0].answer} /> */}
-            THIS IS BACK
-          </div>
+          <>
+            <div className={styles.cardNumber}>
+              {currentFlashcardNumber}/{flashcards.length}
+            </div>
+            <div className={styles.cardMark}>Answer:</div>
+            <MarkdownRenderer
+              content={
+                !isFlipInProgress
+                  ? flashcards[currentFlashcardNumber - 1].answer
+                  : ""
+              }
+            />
+          </>
         }
         backCss={styles.cardBack}
-        containerCss={styles.card}
+        containerCss={styles.container}
         direction="vertical"
-        flipTrigger="onClick"
+        flipByProp={isFlashcardFlipped}
+        flipCardCss={styles.card}
+        flipTrigger="disabled"
         frontComponent={
-          <div>
-            {/* <MarkdownRenderer content={flashcards[0].question} /> */}
-            THIS IS FRONT
-          </div>
+          <>
+            <div className={styles.cardNumber}>
+              {currentFlashcardNumber}/{flashcards.length}
+            </div>
+            <div className={styles.cardMark}>Question:</div>
+            <MarkdownRenderer
+              content={flashcards[currentFlashcardNumber - 1].question}
+            />
+          </>
         }
         frontCss={styles.cardFront}
+        onClick={onFlashCardClick}
       />
+      <div className={styles.buttonGroup}>
+        <Button
+          className={styles.navigationButton}
+          color="primary"
+          isDisabled={currentFlashcardNumber === 1}
+          radius="sm"
+          size="lg"
+          onPress={onPreviousButtonClick}
+        >
+          ◄
+        </Button>
+        <Button
+          className={styles.hintButton}
+          color="primary"
+          radius="sm"
+          size="lg"
+          onPress={() => {}}
+        >
+          Hint
+        </Button>
+        <Button
+          className={styles.navigationButton}
+          color="primary"
+          isDisabled={currentFlashcardNumber === flashcards.length}
+          radius="sm"
+          size="lg"
+          onPress={onNextButtonClick}
+        >
+          ►
+        </Button>
+      </div>
     </article>
   );
 };

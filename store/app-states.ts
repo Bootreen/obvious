@@ -59,6 +59,18 @@ export const useAppStates = create<State>()(
         set((state) => {
           state.isBusy = value;
         }),
+      setCurrentFlashcardNumber: (cardNumber: number) =>
+        set((state) => {
+          state.currentFlashcardNumber = cardNumber;
+        }),
+      setIsFlashcardFlipped: (value: boolean) =>
+        set((state) => {
+          state.isFlashcardFlipped = value;
+        }),
+      setIsFlipInProgress: (value: boolean) =>
+        set((state) => {
+          state.isFlipInProgress = value;
+        }),
       resetContent: () => {
         get().actions.setTopic("");
         get().actions.setGuide([]);
@@ -67,6 +79,9 @@ export const useAppStates = create<State>()(
         get().actions.setPairmatch([]);
         get().actions.setQuiz([]);
         get().actions.setSubtopics([]);
+        get().actions.setCurrentFlashcardNumber(1);
+        get().actions.setIsFlashcardFlipped(false);
+        get().actions.setIsFlipInProgress(false);
       },
     },
   })),

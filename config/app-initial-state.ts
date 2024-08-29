@@ -22,7 +22,7 @@ export const initialState = {
       label: "Flashcards",
       href: "/flashcards",
       icon: FlashcardsIcon,
-      isLoaded: true,
+      isLoaded: false,
     },
     pairmatch: {
       label: "Pair Match",
@@ -55,8 +55,11 @@ export const initialState = {
   }[],
   subtopics: [] as string[],
 
-  // Semaphores
+  // Semaphores and counters
   isBusy: false, // temporarily blocks input, when App is waiting for API response
+  currentFlashcardNumber: 1,
+  isFlashcardFlipped: false,
+  isFlipInProgress: false,
 };
 
 export type State = typeof initialState & {
@@ -84,5 +87,8 @@ export type State = typeof initialState & {
     setSubtopics: (subtopics: string[]) => void;
     resetContent: () => void;
     setIsBusy: (value: boolean) => void;
+    setCurrentFlashcardNumber: (value: number) => void;
+    setIsFlashcardFlipped: (value: boolean) => void;
+    setIsFlipInProgress: (value: boolean) => void;
   };
 };
