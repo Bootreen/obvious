@@ -60,6 +60,7 @@ export const initialState = {
   currentFlashcardNumber: 1,
   isFlashcardFlipped: false,
   isFlipInProgress: false,
+  hint: "",
 };
 
 export type State = typeof initialState & {
@@ -90,5 +91,6 @@ export type State = typeof initialState & {
     setCurrentFlashcardNumber: (value: number) => void;
     setIsFlashcardFlipped: (value: boolean) => void;
     setIsFlipInProgress: (value: boolean) => void;
+    setHint: (value: string) => void;
   };
 };

@@ -71,6 +71,11 @@ export const useAppStates = create<State>()(
         set((state) => {
           state.isFlipInProgress = value;
         }),
+      setHint: (value) => {
+        set((state) => {
+          state.hint = value;
+        });
+      },
       resetContent: () => {
         get().actions.setTopic("");
         get().actions.setGuide([]);
@@ -82,6 +87,7 @@ export const useAppStates = create<State>()(
         get().actions.setCurrentFlashcardNumber(1);
         get().actions.setIsFlashcardFlipped(false);
         get().actions.setIsFlipInProgress(false);
+        get().actions.setHint("");
       },
     },
   })),

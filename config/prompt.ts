@@ -1,5 +1,5 @@
 const promptParams = {
-  flashcards: 8,
+  flashcards: 10,
   flashcardLength: 200,
   pairs: 5,
   questions: 10,

@@ -33,3 +33,7 @@
 .hintButton {
   @apply block;
 }
+
+.hint {
+  @apply text-center;
+}

@@ -15,31 +15,39 @@ const GuidePage = () => {
     currentFlashcardNumber,
     isFlashcardFlipped,
     isFlipInProgress,
+    hint,
   } = useAppStates((state) => state);
   const {
     setCurrentFlashcardNumber,
     setIsFlashcardFlipped,
     setIsFlipInProgress,
+    setHint,
   } = useAppActions();
 
+  const currentAnswer = flashcards[currentFlashcardNumber - 1].answer;
+
   const onFlashCardClick = () => setIsFlashcardFlipped(!isFlashcardFlipped);
-  const onPreviousButtonClick = () => {
-    setIsFlashcardFlipped(false);
-    setIsFlipInProgress(true);
-    setTimeout(() => {
-      setIsFlipInProgress(false);
-    }, 1000);
-    if (currentFlashcardNumber !== 1)
-      setCurrentFlashcardNumber(currentFlashcardNumber - 1);
+
+  const onHintButtonClick = () => {
+    if (hint.length < currentAnswer.length - 6)
+      setHint(hint + currentAnswer.slice(hint.length, hint.length + 4));
   };
-  const onNextButtonClick = () => {
-    setIsFlashcardFlipped(false);
-    setIsFlipInProgress(true);
-    setTimeout(() => {
-      setIsFlipInProgress(false);
-    }, 1000);
-    if (currentFlashcardNumber !== flashcards.length)
-      setCurrentFlashcardNumber(currentFlashcardNumber + 1);
+
+  const onFlashcardsNavigateButtonClick = (direction: "prev" | "next") => {
+    if (
+      (direction === "prev" && currentFlashcardNumber !== 1) ||
+      (direction === "next" && currentFlashcardNumber !== flashcards.length)
+    ) {
+      setIsFlashcardFlipped(false);
+      setIsFlipInProgress(true);
+      setHint("");
+      setTimeout(() => {
+        setIsFlipInProgress(false);
+      }, 1000);
+      setCurrentFlashcardNumber(
+        currentFlashcardNumber + (direction === "next" ? 1 : -1),
+      );
+    }
   };
 
   return (
@@ -88,16 +96,19 @@ const GuidePage = () => {
           isDisabled={currentFlashcardNumber === 1}
           radius="sm"
           size="lg"
-          onPress={onPreviousButtonClick}
+          onPress={() => onFlashcardsNavigateButtonClick("prev")}
         >
           ◄
         </Button>
         <Button
           className={styles.hintButton}
           color="primary"
+          isDisabled={
+            isFlashcardFlipped || !(hint.length < currentAnswer.length - 6)
+          }
           radius="sm"
           size="lg"
-          onPress={() => {}}
+          onPress={onHintButtonClick}
         >
           Hint
         </Button>
@@ -107,11 +118,12 @@ const GuidePage = () => {
           isDisabled={currentFlashcardNumber === flashcards.length}
           radius="sm"
           size="lg"
-          onPress={onNextButtonClick}
+          onPress={() => onFlashcardsNavigateButtonClick("next")}
         >
           ►
         </Button>
       </div>
+      <h3 className={styles.hint}>{hint + (hint.length > 0 ? "..." : "")}</h3>
     </article>
   );
 };
