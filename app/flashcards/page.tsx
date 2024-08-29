@@ -24,8 +24,10 @@ const GuidePage = () => {
     setHint,
   } = useAppActions();
 
-  const currentAnswer =
-    flashcards.length > 0 ? flashcards[currentFlashcardNumber - 1].answer : "";
+  let currentAnswer = "";
+
+  if (flashcards.length > 0)
+    currentAnswer = flashcards[currentFlashcardNumber - 1].answer;
 
   const onFlashCardClick = () => setIsFlashcardFlipped(!isFlashcardFlipped);
 
