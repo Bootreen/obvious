@@ -1,0 +1,39 @@
+.card {
+  @apply duration-1000 cursor-pointer;
+}
+
+.container {
+  @apply prose-xl w-96 h-60 text-white mx-auto;
+}
+
+.cardFront {
+  @apply bg-amber-600 border-foreground py-8 px-3 border-3 rounded-lg flex flex-col justify-center text-center;
+}
+
+.cardBack {
+  @apply bg-emerald-600 border-foreground py-8 px-3 border-3 rounded-lg flex flex-col justify-center text-center;
+}
+
+.cardNumber {
+  @apply absolute bottom-1 right-3 text-lg font-semibold;
+}
+
+.cardMark {
+  @apply absolute top-1 left-3 text-lg font-semibold;
+}
+
+.buttonGroup {
+  @apply mt-6 flex flex-row gap-2 justify-center;
+}
+
+.navigationButton {
+  @apply block;
+}
+
+.hintButton {
+  @apply block;
+}
+
+.hint {
+  @apply text-center;
+}

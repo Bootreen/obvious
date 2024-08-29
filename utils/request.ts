@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import axios from "axios";
 
 import { requestInstructions, responseSchemas } from "@/config/prompt";
@@ -64,6 +63,7 @@ export const geminiApiRequest = async (
     if (status >= 200 && status < 300) {
       const response = data.output;
 
+      // No response error handling
       if (!response) throw new Error("No response error");
 
       try {
@@ -76,13 +76,12 @@ export const geminiApiRequest = async (
           ),
         ) as Response;
       } catch (error) {
+        // Invalid JSON handling
         throw new Error("JSON error");
       }
-    } else {
-      console.log(data.error);
-      throw new Error("Request failed with status " + status);
-    }
+    } else throw new Error("Request failed with status " + status);
   } catch (error) {
+    // Gather all errors from the nested scopes
     result.error = { isError: true, message: (error as Error).message };
   }
 

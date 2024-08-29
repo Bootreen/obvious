@@ -17,7 +17,9 @@
     "@nextui-org/kbd": "2.0.33",
     "@nextui-org/link": "2.0.34",
     "@nextui-org/listbox": "2.1.25",
+    "@nextui-org/modal": "^2.0.39",
     "@nextui-org/navbar": "2.0.36",
+    "@nextui-org/react": "^2.4.6",
     "@nextui-org/snippet": "2.0.41",
     "@nextui-org/switch": "2.0.33",
     "@nextui-org/system": "2.2.5",
@@ -36,11 +38,13 @@
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-markdown": "^9.0.1",
+    "reactjs-flip-card": "^2.0.3",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0",
     "zustand": "^4.5.5"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.14",
     "@types/node": "20.5.7",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",

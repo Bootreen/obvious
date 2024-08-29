@@ -1,9 +1,13 @@
 .homePage {
-  @apply flex flex-col items-center justify-center text-center gap-4 py-8 md:py-10;
+  @apply prose prose-lg text-foreground prose-headings:text-foreground prose-strong:text-foreground prose-ol:text-foreground prose-ul:text-foreground prose-li:text-foreground flex flex-col items-center justify-center pt-6;
 }
 
 .contentContainer {
   @apply flex flex-col gap-y-8;
+}
+
+.title {
+  @apply text-center font-semibold;
 }
 
 .paragraph {
