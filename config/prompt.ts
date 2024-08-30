@@ -2,7 +2,7 @@ const promptParams = {
   flashcards: 10,
   flashcardLength: 200,
   pairs: 5,
-  pairLength: 150,
+  pairLength: 100,
   questions: 10,
   options: 4,
   stepsMin: 3,

@@ -34,20 +34,15 @@ export const useAppStates = create<State>()(
         set((state) => {
           state.summary = summary;
         }),
-      setFlashcards: (flashcards: { question: string; answer: string }[]) =>
+      setFlashcards: (flashcards: typeof initialState.flashcards) =>
         set((state) => {
           state.flashcards = flashcards;
         }),
-      setPairmatch: (pairmatch: { question: string; answer: string }[]) =>
+      setPairMatcher: (value: typeof initialState.pairMatcher) =>
         set((state) => {
-          state.pairmatch = pairmatch;
+          state.pairMatcher = value;
         }),
-      setQuiz: (
-        quiz: {
-          question: string;
-          options: { text: string; isCorrect: boolean }[];
-        }[],
-      ) =>
+      setQuiz: (quiz: typeof initialState.quiz) =>
         set((state) => {
           state.quiz = quiz;
         }),
@@ -81,7 +76,6 @@ export const useAppStates = create<State>()(
         get().actions.setGuide([]);
         get().actions.setSummary("");
         get().actions.setFlashcards([]);
-        get().actions.setPairmatch([]);
         get().actions.setQuiz([]);
         get().actions.setSubtopics([]);
         get().actions.setCurrentFlashcardNumber(1);

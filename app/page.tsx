@@ -17,6 +17,7 @@ import { ChangeEvent } from "react";
 import styles from "@/styles/page.home.module.css";
 import { Parts, geminiApiRequest } from "@/utils/request";
 import { useAppStates, useAppActions } from "@/store/app-states";
+import { shuffleIndices } from "@/utils/shuffle";
 
 const Home = () => {
   // Store variables...
@@ -30,7 +31,7 @@ const Home = () => {
     setGuide,
     setSummary,
     setFlashcards,
-    setPairmatch,
+    setPairMatcher,
     setQuiz,
     setSubtopics,
     resetContent,
@@ -109,7 +110,23 @@ const Home = () => {
         setTabState("flashcards", true);
       }
       if (pairmatch && pairmatch.length > 0) {
-        setPairmatch(pairmatch);
+        const leftColumnIndecies = shuffleIndices(pairmatch.length);
+        const rightColumnIndecies = shuffleIndices(pairmatch.length);
+
+        const shuffledPairs = pairmatch.map((_, i) => ({
+          question: pairmatch[leftColumnIndecies[i]].question,
+          answer: pairmatch[rightColumnIndecies[i]].answer,
+          i: leftColumnIndecies[i],
+          j: rightColumnIndecies[i],
+        }));
+
+        setPairMatcher({
+          isReady: true,
+          isSolved: false,
+          matchedPairs: 0,
+          pairs: shuffledPairs,
+        });
+
         setTabState("pairmatch", true);
       }
       if (quiz && quiz.length > 0) {

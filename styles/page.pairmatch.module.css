@@ -10,7 +10,6 @@
   @apply h-20 text-lg;
 }
 
-.pairPartLeft,
-.pairPartRight {
-  @apply flex h-20 text-center place-content-center bg-slate-200;
+.pairPart {
+  @apply flex h-20 text-center place-content-center bg-blue-200 text-black overflow-hidden px-6;
 }
