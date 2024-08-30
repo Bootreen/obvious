@@ -114,18 +114,22 @@ const Home = () => {
         const rightColumnIndecies = shuffleIndices(pairmatch.length);
 
         const shuffledPairs = pairmatch.map((_, i) => ({
-          question: pairmatch[leftColumnIndecies[i]].question,
-          isQuestionSelected: false,
-          answer: pairmatch[rightColumnIndecies[i]].answer,
-          isAnswerSelected: false,
-          i: leftColumnIndecies[i],
-          j: rightColumnIndecies[i],
+          question: {
+            value: pairmatch[leftColumnIndecies[i]].question,
+            index: leftColumnIndecies[i],
+            isSelected: false,
+          },
+          answer: {
+            value: pairmatch[rightColumnIndecies[i]].answer,
+            index: rightColumnIndecies[i],
+            isSelected: false,
+          },
         }));
 
         setPairMatcher({
           isReady: true,
           isSolved: false,
-          matchedPairs: 0,
+          matchedPairsCounter: 0,
           pairs: shuffledPairs,
         });
 

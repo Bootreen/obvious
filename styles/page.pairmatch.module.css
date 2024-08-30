@@ -7,7 +7,7 @@
 }
 
 .pairLabelContainer {
-  @apply h-20 text-lg;
+  @apply h-24 text-lg leading-snug select-none;
 }
 
 .pairPart {
@@ -16,4 +16,8 @@
 
 .pairPartSelected {
   @apply bg-blue-400;
+}
+
+.pairPartMatched {
+  @apply bg-green-500 pointer-events-none;
 }

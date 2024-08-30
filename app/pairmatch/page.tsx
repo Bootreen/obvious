@@ -17,7 +17,11 @@ import common from "@/styles/page.default.module.css";
 import styles from "@/styles/page.pairmatch.module.css";
 
 const PairsPage = () => {
-  const { topic, pairMatcher } = useAppStates((state) => state);
+  const {
+    topic,
+    pairMatcher,
+    pairMatcher: { matchedPairsCounter, pairs },
+  } = useAppStates((state) => state);
   const { setPairPartSelected } = useAppActions();
 
   const onPairPartClick = (type: "question" | "answer", index: number) =>
@@ -33,62 +37,54 @@ const PairsPage = () => {
             <TableColumn> </TableColumn>
           </TableHeader>
           <TableBody>
-            {pairMatcher.pairs.map(
-              (
-                {
-                  question,
-                  answer,
-                  i,
-                  j,
-                  isQuestionSelected,
-                  isAnswerSelected,
-                },
-                index,
-              ) => (
-                <TableRow key={index} className={styles.tableRow}>
-                  <TableCell className={styles.tableCell}>
-                    <Card
-                      isPressable
-                      className={styles.pairLabelContainer}
-                      fullWidth={true}
-                      onPress={() => onPairPartClick("question", index)}
+            {pairs.map(({ question, answer }, i) => (
+              <TableRow key={i} className={styles.tableRow}>
+                <TableCell className={styles.tableCell}>
+                  <Card
+                    isPressable
+                    className={styles.pairLabelContainer}
+                    fullWidth={true}
+                    onPress={() => onPairPartClick("question", i)}
+                  >
+                    <CardBody
+                      className={clsx(
+                        styles.pairPart,
+                        question.isSelected && styles.pairPartSelected,
+                        matchedPairsCounter > i && styles.pairPartMatched,
+                      )}
                     >
-                      <CardBody
-                        className={clsx(
-                          styles.pairPart,
-                          isQuestionSelected && styles.pairPartSelected,
-                        )}
-                      >
-                        <MarkdownRenderer
-                          // Temp show real order
-                          content={question + " - " + i.toString()}
-                        />
-                      </CardBody>
-                    </Card>
-                  </TableCell>
-                  <TableCell className={styles.tableCell}>
-                    <Card
-                      isPressable
-                      className={styles.pairLabelContainer}
-                      fullWidth={true}
-                      onPress={() => onPairPartClick("answer", index)}
+                      <MarkdownRenderer
+                        // Temp show real order
+                        content={
+                          question.value + " - " + question.index.toString()
+                        }
+                      />
+                    </CardBody>
+                  </Card>
+                </TableCell>
+                <TableCell className={styles.tableCell}>
+                  <Card
+                    isPressable
+                    className={styles.pairLabelContainer}
+                    fullWidth={true}
+                    onPress={() => onPairPartClick("answer", i)}
+                  >
+                    <CardBody
+                      className={clsx(
+                        styles.pairPart,
+                        answer.isSelected && styles.pairPartSelected,
+                        matchedPairsCounter > i && styles.pairPartMatched,
+                      )}
                     >
-                      <CardBody
-                        className={clsx(
-                          styles.pairPart,
-                          isAnswerSelected && styles.pairPartSelected,
-                        )}
-                      >
-                        <MarkdownRenderer
-                          // Temp show real order
-                          content={answer + " - " + j.toString()}
-                        />
-                      </CardBody>
-                    </Card>
-                  </TableCell>
-                </TableRow>
-              ),
-            )}
+                      <MarkdownRenderer
+                        // Temp show real order
+                        content={answer.value + " - " + answer.index.toString()}
+                      />
+                    </CardBody>
+                  </Card>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       )}
