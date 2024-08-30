@@ -1,5 +1,6 @@
 "use client";
 
+import clsx from "clsx";
 import { Card, CardBody } from "@nextui-org/card";
 import {
   Table,
@@ -17,7 +18,10 @@ import styles from "@/styles/page.pairmatch.module.css";
 
 const PairsPage = () => {
   const { topic, pairMatcher } = useAppStates((state) => state);
-  const {} = useAppActions();
+  const { setPairPartSelected } = useAppActions();
+
+  const onPairPartClick = (type: "question" | "answer", index: number) =>
+    setPairPartSelected(type, index);
 
   return (
     <article className={common.container}>
@@ -29,38 +33,62 @@ const PairsPage = () => {
             <TableColumn> </TableColumn>
           </TableHeader>
           <TableBody>
-            {pairMatcher.pairs.map(({ question, answer, i, j }, index) => (
-              <TableRow key={index} className={styles.tableRow}>
-                <TableCell className={styles.tableCell}>
-                  <Card
-                    isPressable
-                    className={styles.pairLabelContainer}
-                    fullWidth={true}
-                    onPress={() => {}}
-                  >
-                    <CardBody className={styles.pairPart}>
-                      <MarkdownRenderer
-                        content={question + " - " + i.toString()}
-                      />
-                    </CardBody>
-                  </Card>
-                </TableCell>
-                <TableCell className={styles.tableCell}>
-                  <Card
-                    isPressable
-                    className={styles.pairLabelContainer}
-                    fullWidth={true}
-                    onPress={() => {}}
-                  >
-                    <CardBody className={styles.pairPart}>
-                      <MarkdownRenderer
-                        content={answer + " - " + j.toString()}
-                      />
-                    </CardBody>
-                  </Card>
-                </TableCell>
-              </TableRow>
-            ))}
+            {pairMatcher.pairs.map(
+              (
+                {
+                  question,
+                  answer,
+                  i,
+                  j,
+                  isQuestionSelected,
+                  isAnswerSelected,
+                },
+                index,
+              ) => (
+                <TableRow key={index} className={styles.tableRow}>
+                  <TableCell className={styles.tableCell}>
+                    <Card
+                      isPressable
+                      className={styles.pairLabelContainer}
+                      fullWidth={true}
+                      onPress={() => onPairPartClick("question", index)}
+                    >
+                      <CardBody
+                        className={clsx(
+                          styles.pairPart,
+                          isQuestionSelected && styles.pairPartSelected,
+                        )}
+                      >
+                        <MarkdownRenderer
+                          // Temp show real order
+                          content={question + " - " + i.toString()}
+                        />
+                      </CardBody>
+                    </Card>
+                  </TableCell>
+                  <TableCell className={styles.tableCell}>
+                    <Card
+                      isPressable
+                      className={styles.pairLabelContainer}
+                      fullWidth={true}
+                      onPress={() => onPairPartClick("answer", index)}
+                    >
+                      <CardBody
+                        className={clsx(
+                          styles.pairPart,
+                          isAnswerSelected && styles.pairPartSelected,
+                        )}
+                      >
+                        <MarkdownRenderer
+                          // Temp show real order
+                          content={answer + " - " + j.toString()}
+                        />
+                      </CardBody>
+                    </Card>
+                  </TableCell>
+                </TableRow>
+              ),
+            )}
           </TableBody>
         </Table>
       )}

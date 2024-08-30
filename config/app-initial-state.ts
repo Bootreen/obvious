@@ -54,7 +54,9 @@ export const initialState = {
     matchedPairs: 0,
     pairs: [] as {
       question: string;
+      isQuestionSelected: boolean;
       answer: string;
+      isAnswerSelected: boolean;
       i: number; // original question index from pairmatch object
       j: number; // original answer index from pairmatch object
     }[],
@@ -96,6 +98,7 @@ export type State = typeof initialState & {
     setIsFlipInProgress: (value: boolean) => void;
     setHint: (value: string) => void;
     setPairMatcher: (value: typeof initialState.pairMatcher) => void;
+    setPairPartSelected: (type: "question" | "answer", index: number) => void;
     resetContent: () => void;
   };
 };

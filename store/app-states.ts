@@ -71,11 +71,68 @@ export const useAppStates = create<State>()(
           state.hint = value;
         });
       },
+      setPairPartSelected: (type: "question" | "answer", index: number) => {
+        if (
+          type === "question" &&
+          // Skip if already selected
+          !get().pairMatcher.pairs[index].isQuestionSelected
+        ) {
+          // Drop other selection to false and set new selection
+          const newMatcher: typeof initialState.pairMatcher = {
+            isReady: get().pairMatcher.isReady,
+            isSolved: get().pairMatcher.isSolved,
+            matchedPairs: get().pairMatcher.matchedPairs,
+            pairs: get().pairMatcher.pairs.map(
+              ({ question, answer, i, j, isAnswerSelected }) => ({
+                question,
+                answer,
+                i,
+                j,
+                isQuestionSelected: i === index ? true : false,
+                isAnswerSelected,
+              }),
+            ),
+          };
+
+          // Update matcher state
+          get().actions.setPairMatcher(newMatcher);
+        } else if (
+          type === "answer" &&
+          // Skip if already selected
+          !get().pairMatcher.pairs[index].isAnswerSelected
+        ) {
+          // Drop other selection to false and set new selection
+          const newMatcher: typeof initialState.pairMatcher = {
+            isReady: get().pairMatcher.isReady,
+            isSolved: get().pairMatcher.isSolved,
+            matchedPairs: get().pairMatcher.matchedPairs,
+            pairs: get().pairMatcher.pairs.map(
+              ({ question, answer, i, j, isQuestionSelected }) => ({
+                question,
+                answer,
+                i,
+                j,
+                isQuestionSelected,
+                isAnswerSelected: i === index ? true : false,
+              }),
+            ),
+          };
+
+          // Update matcher state
+          get().actions.setPairMatcher(newMatcher);
+        }
+      },
       resetContent: () => {
         get().actions.setTopic("");
         get().actions.setGuide([]);
         get().actions.setSummary("");
         get().actions.setFlashcards([]);
+        get().actions.setPairMatcher({
+          isReady: false,
+          isSolved: false,
+          matchedPairs: 0,
+          pairs: [],
+        });
         get().actions.setQuiz([]);
         get().actions.setSubtopics([]);
         get().actions.setCurrentFlashcardNumber(1);

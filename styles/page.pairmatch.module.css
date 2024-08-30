@@ -13,3 +13,7 @@
 .pairPart {
   @apply flex h-20 text-center place-content-center bg-blue-200 text-black overflow-hidden px-6;
 }
+
+.pairPartSelected {
+  @apply bg-blue-400;
+}
