@@ -20,7 +20,7 @@ const PairsPage = () => {
   const {
     topic,
     pairMatcher,
-    pairMatcher: { matchedPairsCounter, pairs, mistakes },
+    pairMatcher: { matchedPairsCounter, pairs, mistakesCounter },
   } = useAppStates((state) => state);
   const { setPairPartSelected } = useAppActions();
 
@@ -86,8 +86,8 @@ const PairsPage = () => {
           </TableBody>
         </Table>
       )}
-      {mistakes > 0 && (
-        <h3 className={styles.mistakes}>Mistakes: {mistakes}</h3>
+      {mistakesCounter > 0 && (
+        <h3 className={styles.mistakes}>Mistakes: {mistakesCounter}</h3>
       )}
     </article>
   );

@@ -1,0 +1,11 @@
+.tableRow {
+  @apply h-full border-none;
+}
+
+.isCorrect {
+  @apply bg-green-300;
+}
+
+.isNotCorrect {
+  @apply bg-red-300;
+}

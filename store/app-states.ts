@@ -39,6 +39,10 @@ export const useAppStates = create<State>()(
       setFlashcards: (flashcards) =>
         set(({ deck }) => {
           deck.flashcards = flashcards;
+          deck.currentFlashcardNumber = 1;
+          deck.isFlashcardFlipped = false;
+          deck.isFlipInProgress = false;
+          deck.hint = "";
           deck.hintsCounter = 0;
         }),
       setCurrentFlashcardNumber: (cardNumber) =>
@@ -53,60 +57,60 @@ export const useAppStates = create<State>()(
         set(({ deck }) => {
           deck.isFlipInProgress = value;
         }),
-      setHint: (value) => {
+      setHint: (value) =>
         set(({ deck }) => {
           deck.hint = value;
-        });
-      },
-      incHintsCounter: () => {
+        }),
+      incHintsCounter: () =>
         set(({ deck }) => {
           ++deck.hintsCounter;
+        }),
+      incMatchedPairsCounter: () =>
+        set(({ pairMatcher }) => {
+          ++pairMatcher.matchedPairsCounter;
+        }),
+      incMistakesCounter: () =>
+        set(({ pairMatcher }) => {
+          ++pairMatcher.mistakesCounter;
+        }),
+      setPairs: (value) =>
+        set(({ pairMatcher }) => {
+          pairMatcher.pairs = value;
+        }),
+      setPairMatcher: (value) => {
+        set(({ pairMatcher }) => {
+          pairMatcher.isReady = true;
+          pairMatcher.isSolved = false;
+          pairMatcher.matchedPairsCounter = 0;
+          pairMatcher.mistakesCounter = 0;
         });
+        get().actions.setPairs(value);
       },
-      setPairMatcher: (value) =>
-        set((state) => {
-          state.pairMatcher = value;
-        }),
-      setQuiz: (quiz) =>
-        set((state) => {
-          state.quiz = quiz;
-        }),
-      setSubtopics: (subtopics) =>
-        set((state) => {
-          state.subtopics = subtopics;
-        }),
 
       setPairPartSelected: (type, index) => {
         // Get state, destruct pairMatcher, its pairs and setter
         const {
-          pairMatcher,
           pairMatcher: { pairs },
-          actions: { setPairMatcher, matchPair },
+          actions: { setPairs, matchPair },
         } = get();
 
         // Update only question selections
         if (type === "question" && !pairs[index].question.isSelected) {
-          const newMatcher = {
-            ...pairMatcher,
-            pairs: pairs.map(({ question, answer }, i) => ({
-              question: { ...question, isSelected: i === index },
-              answer,
-            })),
-          };
+          const newPairs = pairs.map(({ question, answer }, i) => ({
+            question: { ...question, isSelected: i === index },
+            answer,
+          }));
 
-          setPairMatcher(newMatcher);
+          setPairs(newPairs);
         }
         // Update only answer selections
         else if (type === "answer" && !pairs[index].answer.isSelected) {
-          const newMatcher = {
-            ...pairMatcher,
-            pairs: pairs.map(({ question, answer }, i) => ({
-              question,
-              answer: { ...answer, isSelected: i === index },
-            })),
-          };
+          const newPairs = pairs.map(({ question, answer }, i) => ({
+            question,
+            answer: { ...answer, isSelected: i === index },
+          }));
 
-          setPairMatcher(newMatcher);
+          setPairs(newPairs);
         }
         // Use get() again to retrive the updated pairs
         const {
@@ -126,9 +130,8 @@ export const useAppStates = create<State>()(
 
       matchPair: (questionIndex, answerIndex) => {
         const {
-          pairMatcher,
-          pairMatcher: { matchedPairsCounter, pairs, mistakes },
-          actions: { setPairMatcher },
+          pairMatcher: { matchedPairsCounter, pairs },
+          actions: { setPairs, incMatchedPairsCounter, incMistakesCounter },
         } = get();
         const selectedQuestion = pairs[questionIndex].question;
         const selectedAnswer = pairs[answerIndex].answer;
@@ -142,72 +145,93 @@ export const useAppStates = create<State>()(
           const answerInSelectionCell = pairs[answerIndex].answer;
 
           // Update and reset selections
-          const newMatcher: typeof initialState.pairMatcher = {
-            ...pairMatcher,
-            matchedPairsCounter: matchedPairsCounter + 1,
-            pairs: pairs.map(({ question, answer }, index) => {
-              if (index === matchedPairsCounter)
-                return {
-                  question: { ...questionInSelectionCell, isSelected: false },
-                  answer: { ...answerInSelectionCell, isSelected: false },
-                };
-              else if (index === questionIndex && index === answerIndex)
-                return {
-                  question: { ...questionInFreeCell, isSelected: false },
-                  answer: { ...answerInFreeCell, isSelected: false },
-                };
-              else if (index === questionIndex)
-                return {
-                  question: { ...questionInFreeCell, isSelected: false },
-                  answer,
-                };
-              else if (index === answerIndex)
-                return {
-                  question,
-                  answer: { ...answerInFreeCell, isSelected: false },
-                };
-              else
-                return {
-                  question: { ...question, isSelected: false },
-                  answer: { ...answer, isSelected: false },
-                };
-            }),
-            isSolved: matchedPairsCounter + 1 === pairs.length,
-          };
+          incMatchedPairsCounter();
+          const newPairs = pairs.map(({ question, answer }, index) => {
+            // The first free row to swap with matched pair
+            if (index === matchedPairsCounter)
+              return {
+                question: { ...questionInSelectionCell, isSelected: false },
+                answer: { ...answerInSelectionCell, isSelected: false },
+              };
+            // Matched question and answer are in the same row?
+            // Then swap them together
+            else if (index === questionIndex && index === answerIndex)
+              return {
+                question: { ...questionInFreeCell, isSelected: false },
+                answer: { ...answerInFreeCell, isSelected: false },
+              };
+            // Swap the question, leave the answer
+            else if (index === questionIndex)
+              return {
+                question: { ...questionInFreeCell, isSelected: false },
+                answer,
+              };
+            // And vice versa
+            else if (index === answerIndex)
+              return {
+                question,
+                answer: { ...answerInFreeCell, isSelected: false },
+              };
+            // Don't swap, leave the original row
+            else
+              return {
+                question: { ...question, isSelected: false },
+                answer: { ...answer, isSelected: false },
+              };
+          });
 
-          setPairMatcher(newMatcher);
+          // isSolved: matchedPairsCounter + 1 === pairs.length,
+
+          setPairs(newPairs);
         } else {
           // Incorrect pair, reset selections
-          const newMatcher: typeof initialState.pairMatcher = {
-            ...pairMatcher,
-            mistakes: mistakes + 1,
-            pairs: pairs.map(({ question, answer }) => ({
-              question: { ...question, isSelected: false },
-              answer: { ...answer, isSelected: false },
-            })),
-          };
+          incMistakesCounter();
+          const newPairs = pairs.map(({ question, answer }) => ({
+            question: { ...question, isSelected: false },
+            answer: { ...answer, isSelected: false },
+          }));
 
-          setPairMatcher(newMatcher);
+          setPairs(newPairs);
         }
       },
+
+      setQuiz: (value) =>
+        set(({ quiz }) => {
+          quiz.isSolved = false;
+          quiz.currentQuestionNumber = 0;
+          quiz.correctAnswersCounter = 0;
+          quiz.questions = value;
+        }),
+      incCurrentQuestionNumber: () =>
+        set(({ quiz }) => {
+          ++quiz.currentQuestionNumber;
+        }),
+      incCorrectAnswersCounter: () =>
+        set(({ quiz }) => {
+          ++quiz.correctAnswersCounter;
+        }),
+      setIsAnswered: (index) =>
+        set(({ quiz }) => {
+          quiz.questions[index].isAnswered = true;
+        }),
+      setSelectedIncorrectOptionIndex: (questionIndex, optionIndex) =>
+        set(({ quiz }) => {
+          quiz.questions[questionIndex].selectedIncorrectOptionIndex =
+            optionIndex;
+        }),
+      setSubtopics: (subtopics) =>
+        set((state) => {
+          state.subtopics = subtopics;
+        }),
+
       resetContent: () => {
         get().actions.setTopic("");
         get().actions.setGuide([]);
         get().actions.setSummary("");
         get().actions.setFlashcards([]);
-        get().actions.setPairMatcher({
-          isReady: false,
-          isSolved: false,
-          matchedPairsCounter: 0,
-          mistakes: 0,
-          pairs: [],
-        });
+        get().actions.setPairMatcher([]);
         get().actions.setQuiz([]);
         get().actions.setSubtopics([]);
-        get().actions.setCurrentFlashcardNumber(1);
-        get().actions.setIsFlashcardFlipped(false);
-        get().actions.setIsFlipInProgress(false);
-        get().actions.setHint("");
       },
     },
   })),
