@@ -11,6 +11,7 @@
   "dependencies": {
     "@google/generative-ai": "^0.17.1",
     "@nextui-org/button": "2.0.37",
+    "@nextui-org/card": "^2.0.33",
     "@nextui-org/checkbox": "^2.1.4",
     "@nextui-org/code": "2.0.32",
     "@nextui-org/input": "2.2.4",
@@ -23,6 +24,7 @@
     "@nextui-org/snippet": "2.0.41",
     "@nextui-org/switch": "2.0.33",
     "@nextui-org/system": "2.2.5",
+    "@nextui-org/table": "^2.0.39",
     "@nextui-org/tabs": "^2.0.35",
     "@nextui-org/theme": "^2.2.9",
     "@react-aria/ssr": "3.9.4",

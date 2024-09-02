@@ -48,7 +48,16 @@ export const initialState = {
   guide: [] as string[],
   summary: "",
   flashcards: [] as { question: string; answer: string }[],
-  pairmatch: [] as { question: string; answer: string }[],
+  pairMatcher: {
+    isReady: false,
+    isSolved: false,
+    matchedPairsCounter: 0,
+    mistakes: 0,
+    pairs: [] as {
+      question: { value: string; index: number; isSelected: boolean };
+      answer: { value: string; index: number; isSelected: boolean };
+    }[],
+  },
   quiz: [] as {
     question: string;
     options: { text: string; isCorrect: boolean }[];
@@ -77,20 +86,17 @@ export type State = typeof initialState & {
     setTopic: (topic: string) => void;
     setGuide: (guide: string[]) => void;
     setSummary: (summary: string) => void;
-    setFlashcards: (flashcards: { question: string; answer: string }[]) => void;
-    setPairmatch: (pairmatch: { question: string; answer: string }[]) => void;
-    setQuiz: (
-      quiz: {
-        question: string;
-        options: { text: string; isCorrect: boolean }[];
-      }[],
-    ) => void;
+    setFlashcards: (flashcards: typeof initialState.flashcards) => void;
+    setQuiz: (quiz: typeof initialState.quiz) => void;
     setSubtopics: (subtopics: string[]) => void;
-    resetContent: () => void;
     setIsBusy: (value: boolean) => void;
     setCurrentFlashcardNumber: (value: number) => void;
     setIsFlashcardFlipped: (value: boolean) => void;
     setIsFlipInProgress: (value: boolean) => void;
     setHint: (value: string) => void;
+    setPairMatcher: (value: typeof initialState.pairMatcher) => void;
+    setPairPartSelected: (type: "question" | "answer", index: number) => void;
+    matchPair: (questionIndex: number, answerIndex: number) => void;
+    resetContent: () => void;
   };
 };

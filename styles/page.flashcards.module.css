@@ -3,7 +3,7 @@
 }
 
 .container {
-  @apply prose-xl w-96 h-60 text-white mx-auto;
+  @apply prose-xl w-96 h-60 text-white mx-auto select-none;
 }
 
 .cardFront {

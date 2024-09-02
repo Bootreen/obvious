@@ -1,0 +1,31 @@
+.tableRow {
+  @apply h-full border-none;
+}
+
+.tableCell {
+  @apply h-full align-top;
+}
+
+.pairLabelContainer {
+  @apply h-24 text-lg leading-snug select-none;
+}
+
+.pairLabelMatched {
+  @apply pointer-events-none;
+}
+
+.pairPart {
+  @apply flex h-20 text-center place-content-center bg-blue-200 text-black overflow-hidden px-6;
+}
+
+.pairPartSelected {
+  @apply bg-blue-400;
+}
+
+.pairPartMatched {
+  @apply bg-green-500;
+}
+
+.mistakes {
+  @apply text-center;
+}
