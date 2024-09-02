@@ -45,9 +45,18 @@ export const initialState = {
   // Request and response
   request: "",
   topic: "",
+
   guide: [] as string[],
   summary: "",
-  flashcards: [] as { question: string; answer: string }[],
+  deck: {
+    flashcards: [] as { question: string; answer: string }[],
+    currentFlashcardNumber: 1,
+    isFlashcardFlipped: false,
+    isFlipInProgress: false,
+    hint: "",
+    hintsCounter: 0,
+  },
+
   pairMatcher: {
     isReady: false,
     isSolved: false,
@@ -66,14 +75,11 @@ export const initialState = {
 
   // Semaphores and counters
   isBusy: false, // temporarily blocks input, when App is waiting for API response
-  currentFlashcardNumber: 1,
-  isFlashcardFlipped: false,
-  isFlipInProgress: false,
-  hint: "",
 };
 
 export type State = typeof initialState & {
   actions: {
+    setIsBusy: (value: boolean) => void;
     setTabState: (
       tab: keyof typeof initialState.tabs,
       isLoaded: boolean,
@@ -86,14 +92,14 @@ export type State = typeof initialState & {
     setTopic: (topic: string) => void;
     setGuide: (guide: string[]) => void;
     setSummary: (summary: string) => void;
-    setFlashcards: (flashcards: typeof initialState.flashcards) => void;
-    setQuiz: (quiz: typeof initialState.quiz) => void;
-    setSubtopics: (subtopics: string[]) => void;
-    setIsBusy: (value: boolean) => void;
+    setFlashcards: (flashcards: typeof initialState.deck.flashcards) => void;
     setCurrentFlashcardNumber: (value: number) => void;
     setIsFlashcardFlipped: (value: boolean) => void;
     setIsFlipInProgress: (value: boolean) => void;
     setHint: (value: string) => void;
+    incHintsCounter: () => void;
+    setQuiz: (quiz: typeof initialState.quiz) => void;
+    setSubtopics: (subtopics: string[]) => void;
     setPairMatcher: (value: typeof initialState.pairMatcher) => void;
     setPairPartSelected: (type: "question" | "answer", index: number) => void;
     matchPair: (questionIndex: number, answerIndex: number) => void;

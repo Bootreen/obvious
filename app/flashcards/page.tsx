@@ -11,17 +11,21 @@ import styles from "@/styles/page.flashcards.module.css";
 const GuidePage = () => {
   const {
     topic,
-    flashcards,
-    currentFlashcardNumber,
-    isFlashcardFlipped,
-    isFlipInProgress,
-    hint,
+    deck: {
+      flashcards,
+      currentFlashcardNumber,
+      isFlashcardFlipped,
+      isFlipInProgress,
+      hint,
+      hintsCounter,
+    },
   } = useAppStates((state) => state);
   const {
     setCurrentFlashcardNumber,
     setIsFlashcardFlipped,
     setIsFlipInProgress,
     setHint,
+    incHintsCounter,
   } = useAppActions();
 
   // Prevent access to the flashcard properties if flashcards is not loaded yet
@@ -36,7 +40,8 @@ const GuidePage = () => {
   const onFlashCardClick = () => setIsFlashcardFlipped(!isFlashcardFlipped);
 
   const onHintButtonClick = () => {
-    if (hint.length < currentAnswer.length - 6)
+    if (hint.length < currentAnswer.length - 6) {
+      incHintsCounter();
       setHint(
         hint +
           currentAnswer
@@ -44,6 +49,7 @@ const GuidePage = () => {
             .replaceAll("+++", "")
             .slice(hint.length, hint.length + 4),
       );
+    }
   };
 
   const onFlashcardsNavigateButtonClick = (direction: "prev" | "next") => {
@@ -137,6 +143,9 @@ const GuidePage = () => {
         </Button>
       </div>
       <h3 className={styles.hint}>{hint + (hint.length > 0 ? "..." : "")}</h3>
+      {hintsCounter > 0 && (
+        <h3 className={styles.hint}>Hints used: {hintsCounter}</h3>
+      )}
     </article>
   );
 };

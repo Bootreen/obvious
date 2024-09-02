@@ -8,16 +8,20 @@ export const useAppStates = create<State>()(
   immer((set, get) => ({
     ...initialState,
     actions: {
+      setIsBusy: (value) =>
+        set((state) => {
+          state.isBusy = value;
+        }),
       setTabState: (tab, isLoaded) =>
-        set((state: State) => {
+        set((state) => {
           state.tabs[tab].isLoaded = isLoaded;
         }),
       setCheckboxState: (checkbox, isChecked) =>
-        set((state: State) => {
+        set((state) => {
           state.checkboxes[checkbox].isChecked = isChecked;
         }),
       setRequest: (content) =>
-        set((state: State) => {
+        set((state) => {
           state.request = content;
         }),
       setTopic: (topic) =>
@@ -33,9 +37,32 @@ export const useAppStates = create<State>()(
           state.summary = summary;
         }),
       setFlashcards: (flashcards) =>
-        set((state) => {
-          state.flashcards = flashcards;
+        set(({ deck }) => {
+          deck.flashcards = flashcards;
+          deck.hintsCounter = 0;
         }),
+      setCurrentFlashcardNumber: (cardNumber) =>
+        set(({ deck }) => {
+          deck.currentFlashcardNumber = cardNumber;
+        }),
+      setIsFlashcardFlipped: (value) =>
+        set(({ deck }) => {
+          deck.isFlashcardFlipped = value;
+        }),
+      setIsFlipInProgress: (value) =>
+        set(({ deck }) => {
+          deck.isFlipInProgress = value;
+        }),
+      setHint: (value) => {
+        set(({ deck }) => {
+          deck.hint = value;
+        });
+      },
+      incHintsCounter: () => {
+        set(({ deck }) => {
+          ++deck.hintsCounter;
+        });
+      },
       setPairMatcher: (value) =>
         set((state) => {
           state.pairMatcher = value;
@@ -48,27 +75,6 @@ export const useAppStates = create<State>()(
         set((state) => {
           state.subtopics = subtopics;
         }),
-      setIsBusy: (value) =>
-        set((state) => {
-          state.isBusy = value;
-        }),
-      setCurrentFlashcardNumber: (cardNumber) =>
-        set((state) => {
-          state.currentFlashcardNumber = cardNumber;
-        }),
-      setIsFlashcardFlipped: (value) =>
-        set((state) => {
-          state.isFlashcardFlipped = value;
-        }),
-      setIsFlipInProgress: (value) =>
-        set((state) => {
-          state.isFlipInProgress = value;
-        }),
-      setHint: (value) => {
-        set((state) => {
-          state.hint = value;
-        });
-      },
 
       setPairPartSelected: (type, index) => {
         // Get state, destruct pairMatcher, its pairs and setter
