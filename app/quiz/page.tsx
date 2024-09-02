@@ -21,7 +21,7 @@ import styles from "@/styles/page.quiz.module.css";
 const QuizPage = () => {
   const {
     topic,
-    quiz: { currentQuestionNumber, correctAnswersCounter, questions },
+    quiz: { isReady, currentQuestionNumber, correctAnswersCounter, questions },
   } = useAppStates((state) => state);
   const {
     incCurrentQuestionNumber,
@@ -38,64 +38,71 @@ const QuizPage = () => {
   };
   const onNextQuestionButtonClick = () => incCurrentQuestionNumber();
 
-  const isAnswered = questions[currentQuestionNumber].isAnswered;
-  const selectedIncorrectOptionIndex =
-    questions[currentQuestionNumber].selectedIncorrectOptionIndex;
-
   return (
     <article className={common.container}>
-      <h2>{topic}: Quiz</h2>
-      <Table hideHeader removeWrapper aria-label="Quiz">
-        <TableHeader>
-          <TableColumn> </TableColumn>
-        </TableHeader>
-        <TableBody>
-          <TableRow className={styles.tableRow}>
-            <TableCell className="text-2xl">
-              {currentQuestionNumber + 1} of {questions.length}, correct:{" "}
-              {correctAnswersCounter}
-            </TableCell>
-          </TableRow>
-          <TableRow className={styles.tableRow}>
-            <TableCell className="text-2xl">
-              {questions[currentQuestionNumber].question}
-            </TableCell>
-          </TableRow>
-          {
-            questions[currentQuestionNumber].options.map(
-              ({ option, isCorrect }, index) => (
-                <TableRow key={index} className={styles.tableRow}>
-                  <TableCell className="text-2xl">
-                    <Card
-                      isPressable
-                      className={clsx(
-                        isAnswered && isCorrect && styles.isCorrect,
-                        isAnswered &&
-                          !isCorrect &&
-                          index === selectedIncorrectOptionIndex &&
-                          styles.isNotCorrect,
-                      )}
-                      fullWidth={true}
-                      isDisabled={isAnswered}
-                      onPress={() => onAnswerOptionClick(index)}
-                    >
-                      <CardBody>{option}</CardBody>
-                    </Card>
-                  </TableCell>
-                </TableRow>
-              ),
-            ) as unknown as JSX.Element
-          }
-        </TableBody>
-      </Table>
-      <Button
-        isDisabled={
-          !isAnswered || questions.length === currentQuestionNumber + 1
-        }
-        onPress={onNextQuestionButtonClick}
-      >
-        Next Question
-      </Button>
+      {isReady && (
+        <>
+          <h2>{topic}: Quiz</h2>
+          <Table hideHeader removeWrapper aria-label="Quiz">
+            <TableHeader>
+              <TableColumn> </TableColumn>
+            </TableHeader>
+            <TableBody>
+              <TableRow className={styles.tableRow}>
+                <TableCell className="text-2xl">
+                  {currentQuestionNumber + 1} of {questions.length}, correct:{" "}
+                  {correctAnswersCounter}
+                </TableCell>
+              </TableRow>
+              <TableRow className={styles.tableRow}>
+                <TableCell className="text-2xl">
+                  {questions[currentQuestionNumber].question}
+                </TableCell>
+              </TableRow>
+              {
+                questions[currentQuestionNumber].options.map(
+                  ({ option, isCorrect }, index) => (
+                    <TableRow key={index} className={styles.tableRow}>
+                      <TableCell className="text-2xl">
+                        <Card
+                          isPressable
+                          className={clsx(
+                            questions[currentQuestionNumber].isAnswered &&
+                              isCorrect &&
+                              styles.isCorrect,
+                            questions[currentQuestionNumber].isAnswered &&
+                              !isCorrect &&
+                              index ===
+                                questions[currentQuestionNumber]
+                                  .selectedIncorrectOptionIndex &&
+                              styles.isNotCorrect,
+                          )}
+                          fullWidth={true}
+                          isDisabled={
+                            questions[currentQuestionNumber].isAnswered
+                          }
+                          onPress={() => onAnswerOptionClick(index)}
+                        >
+                          <CardBody>{option}</CardBody>
+                        </Card>
+                      </TableCell>
+                    </TableRow>
+                  ),
+                ) as unknown as JSX.Element
+              }
+            </TableBody>
+          </Table>
+          <Button
+            isDisabled={
+              !questions[currentQuestionNumber].isAnswered ||
+              questions.length === currentQuestionNumber + 1
+            }
+            onPress={onNextQuestionButtonClick}
+          >
+            Next Question
+          </Button>
+        </>
+      )}
     </article>
   );
 };

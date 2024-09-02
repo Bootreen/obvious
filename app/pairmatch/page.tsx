@@ -19,8 +19,7 @@ import styles from "@/styles/page.pairmatch.module.css";
 const PairsPage = () => {
   const {
     topic,
-    pairMatcher,
-    pairMatcher: { matchedPairsCounter, pairs, mistakesCounter },
+    pairMatcher: { isReady, matchedPairsCounter, pairs, mistakesCounter },
   } = useAppStates((state) => state);
   const { setPairPartSelected } = useAppActions();
 
@@ -30,7 +29,7 @@ const PairsPage = () => {
   return (
     <article className={common.container}>
       <h2>{topic}: Pair match</h2>
-      {pairMatcher.isReady && (
+      {isReady && (
         <Table hideHeader removeWrapper aria-label="Matching pairs">
           <TableHeader>
             <TableColumn> </TableColumn>

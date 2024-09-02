@@ -68,6 +68,7 @@ export const initialState = {
     }[],
   },
   quiz: {
+    isReady: false,
     isSolved: false,
     currentQuestionNumber: 0,
     correctAnswersCounter: 0,
