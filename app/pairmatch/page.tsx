@@ -42,7 +42,10 @@ const PairsPage = () => {
                 <TableCell className={styles.tableCell}>
                   <Card
                     isPressable
-                    className={styles.pairLabelContainer}
+                    className={clsx(
+                      styles.pairLabelContainer,
+                      matchedPairsCounter > i && styles.pairLabelMatched,
+                    )}
                     fullWidth={true}
                     onPress={() => onPairPartClick("question", i)}
                   >
@@ -65,7 +68,10 @@ const PairsPage = () => {
                 <TableCell className={styles.tableCell}>
                   <Card
                     isPressable
-                    className={styles.pairLabelContainer}
+                    className={clsx(
+                      styles.pairLabelContainer,
+                      matchedPairsCounter > i && styles.pairLabelMatched,
+                    )}
                     fullWidth={true}
                     onPress={() => onPairPartClick("answer", i)}
                   >

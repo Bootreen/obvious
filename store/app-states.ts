@@ -113,7 +113,11 @@ export const useAppStates = create<State>()(
           ({ answer: { isSelected } }) => isSelected,
         );
 
-        console.log(selectedQuestionIndex, selectedAnswerIndex);
+        // console.log(
+        //   "Selection:",
+        //   selectedQuestionIndex > 0 ? selectedQuestionIndex + 1 : "-",
+        //   selectedAnswerIndex > 0 ? selectedAnswerIndex + 1 : "-",
+        // );
 
         if (selectedQuestionIndex !== -1 && selectedAnswerIndex !== -1)
           // Check the pair
@@ -138,10 +142,12 @@ export const useAppStates = create<State>()(
           const answer1 = pairs[matchedPairsCounter].answer;
           const answer2 = pairs[answerIndex].answer;
 
-          console.log(`i:${matchedPairsCounter} Q1: ${question1}`);
-          console.log(`i:${questionIndex} Q2: ${question2}`);
-          console.log(`i:${matchedPairsCounter} A1: ${answer1}`);
-          console.log(`i:${answerIndex} A2: ${answer2}`);
+          console.log(
+            `TOP: i${question1.index}/p${matchedPairsCounter + 1} i${answer1.index}/p${matchedPairsCounter + 1}`,
+          );
+          console.log(
+            `SUB: i${question2.index}/p${questionIndex + 1} i${answer2.index}/p${answerIndex + 1}`,
+          );
 
           // Update and reset selections
           const newMatcher: typeof initialState.pairMatcher = {
@@ -152,6 +158,11 @@ export const useAppStates = create<State>()(
                 return {
                   question: { ...question2, isSelected: false },
                   answer: { ...answer2, isSelected: false },
+                };
+              else if (index === questionIndex && index === answerIndex)
+                return {
+                  question: { ...question1, isSelected: false },
+                  answer: { ...answer1, isSelected: false },
                 };
               else if (index === questionIndex)
                 return {
