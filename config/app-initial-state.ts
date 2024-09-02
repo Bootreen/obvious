@@ -52,6 +52,7 @@ export const initialState = {
     isReady: false,
     isSolved: false,
     matchedPairsCounter: 0,
+    mistakes: 0,
     pairs: [] as {
       question: { value: string; index: number; isSelected: boolean };
       answer: { value: string; index: number; isSelected: boolean };

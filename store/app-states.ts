@@ -12,7 +12,7 @@ export const useAppStates = create<State>()(
         set((state: State) => {
           state.tabs[tab].isLoaded = isLoaded;
         }),
-      setCheckboxState: (checkbox, isChecked: boolean) =>
+      setCheckboxState: (checkbox, isChecked) =>
         set((state: State) => {
           state.checkboxes[checkbox].isChecked = isChecked;
         }),
@@ -113,12 +113,6 @@ export const useAppStates = create<State>()(
           ({ answer: { isSelected } }) => isSelected,
         );
 
-        // console.log(
-        //   "Selection:",
-        //   selectedQuestionIndex > 0 ? selectedQuestionIndex + 1 : "-",
-        //   selectedAnswerIndex > 0 ? selectedAnswerIndex + 1 : "-",
-        // );
-
         if (selectedQuestionIndex !== -1 && selectedAnswerIndex !== -1)
           // Check the pair
           matchPair(selectedQuestionIndex, selectedAnswerIndex);
@@ -127,7 +121,7 @@ export const useAppStates = create<State>()(
       matchPair: (questionIndex, answerIndex) => {
         const {
           pairMatcher,
-          pairMatcher: { matchedPairsCounter, pairs },
+          pairMatcher: { matchedPairsCounter, pairs, mistakes },
           actions: { setPairMatcher },
         } = get();
         const selectedQuestion = pairs[questionIndex].question;
@@ -135,19 +129,11 @@ export const useAppStates = create<State>()(
 
         // Check if the pair is correct
         if (selectedQuestion.index === selectedAnswer.index) {
-          // Swap fields for questions at matchedPairsCounter index
-
-          const question1 = pairs[matchedPairsCounter].question;
-          const question2 = pairs[questionIndex].question;
-          const answer1 = pairs[matchedPairsCounter].answer;
-          const answer2 = pairs[answerIndex].answer;
-
-          console.log(
-            `TOP: i${question1.index}/p${matchedPairsCounter + 1} i${answer1.index}/p${matchedPairsCounter + 1}`,
-          );
-          console.log(
-            `SUB: i${question2.index}/p${questionIndex + 1} i${answer2.index}/p${answerIndex + 1}`,
-          );
+          // Swap selected QA-pairs with the QA at the first free line
+          const questionInFreeCell = pairs[matchedPairsCounter].question;
+          const questionInSelectionCell = pairs[questionIndex].question;
+          const answerInFreeCell = pairs[matchedPairsCounter].answer;
+          const answerInSelectionCell = pairs[answerIndex].answer;
 
           // Update and reset selections
           const newMatcher: typeof initialState.pairMatcher = {
@@ -156,23 +142,23 @@ export const useAppStates = create<State>()(
             pairs: pairs.map(({ question, answer }, index) => {
               if (index === matchedPairsCounter)
                 return {
-                  question: { ...question2, isSelected: false },
-                  answer: { ...answer2, isSelected: false },
+                  question: { ...questionInSelectionCell, isSelected: false },
+                  answer: { ...answerInSelectionCell, isSelected: false },
                 };
               else if (index === questionIndex && index === answerIndex)
                 return {
-                  question: { ...question1, isSelected: false },
-                  answer: { ...answer1, isSelected: false },
+                  question: { ...questionInFreeCell, isSelected: false },
+                  answer: { ...answerInFreeCell, isSelected: false },
                 };
               else if (index === questionIndex)
                 return {
-                  question: { ...question1, isSelected: false },
+                  question: { ...questionInFreeCell, isSelected: false },
                   answer,
                 };
               else if (index === answerIndex)
                 return {
                   question,
-                  answer: { ...answer1, isSelected: false },
+                  answer: { ...answerInFreeCell, isSelected: false },
                 };
               else
                 return {
@@ -188,6 +174,7 @@ export const useAppStates = create<State>()(
           // Incorrect pair, reset selections
           const newMatcher: typeof initialState.pairMatcher = {
             ...pairMatcher,
+            mistakes: mistakes + 1,
             pairs: pairs.map(({ question, answer }) => ({
               question: { ...question, isSelected: false },
               answer: { ...answer, isSelected: false },
@@ -206,6 +193,7 @@ export const useAppStates = create<State>()(
           isReady: false,
           isSolved: false,
           matchedPairsCounter: 0,
+          mistakes: 0,
           pairs: [],
         });
         get().actions.setQuiz([]);

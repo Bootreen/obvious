@@ -20,7 +20,7 @@ const PairsPage = () => {
   const {
     topic,
     pairMatcher,
-    pairMatcher: { matchedPairsCounter, pairs },
+    pairMatcher: { matchedPairsCounter, pairs, mistakes },
   } = useAppStates((state) => state);
   const { setPairPartSelected } = useAppActions();
 
@@ -56,12 +56,7 @@ const PairsPage = () => {
                         matchedPairsCounter > i && styles.pairPartMatched,
                       )}
                     >
-                      <MarkdownRenderer
-                        // Temp show real order
-                        content={
-                          question.value + " - " + question.index.toString()
-                        }
-                      />
+                      <MarkdownRenderer content={question.value} />
                     </CardBody>
                   </Card>
                 </TableCell>
@@ -82,10 +77,7 @@ const PairsPage = () => {
                         matchedPairsCounter > i && styles.pairPartMatched,
                       )}
                     >
-                      <MarkdownRenderer
-                        // Temp show real order
-                        content={answer.value + " - " + answer.index.toString()}
-                      />
+                      <MarkdownRenderer content={answer.value} />
                     </CardBody>
                   </Card>
                 </TableCell>
@@ -93,6 +85,9 @@ const PairsPage = () => {
             ))}
           </TableBody>
         </Table>
+      )}
+      {mistakes > 0 && (
+        <h3 className={styles.mistakes}>Mistakes: {mistakes}</h3>
       )}
     </article>
   );

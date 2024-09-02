@@ -130,6 +130,7 @@ const Home = () => {
           isReady: true,
           isSolved: false,
           matchedPairsCounter: 0,
+          mistakes: 0,
           pairs: shuffledPairs,
         });
 

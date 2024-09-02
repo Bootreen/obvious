@@ -25,3 +25,7 @@
 .pairPartMatched {
   @apply bg-green-500;
 }
+
+.mistakes {
+  @apply text-center;
+}
