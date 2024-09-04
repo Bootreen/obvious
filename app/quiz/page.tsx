@@ -2,6 +2,8 @@
 "use client";
 
 import clsx from "clsx";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@nextui-org/button";
 import { Card, CardBody } from "@nextui-org/card";
 import {
@@ -29,6 +31,12 @@ const QuizPage = () => {
     setIsAnswered,
     setSelectedIncorrectOptionIndex,
   } = useAppActions();
+  const router = useRouter();
+
+  // Redirect to main if no content
+  useEffect(() => {
+    if (!isReady) router.push("/");
+  }, []);
 
   const onAnswerOptionClick = (index: number) => {
     setIsAnswered(currentQuestionNumber);

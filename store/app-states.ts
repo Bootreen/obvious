@@ -38,6 +38,7 @@ export const useAppStates = create<State>()(
         }),
       setFlashcards: (flashcards) =>
         set(({ deck }) => {
+          deck.isReady = true;
           deck.flashcards = flashcards;
           deck.currentFlashcardNumber = 1;
           deck.isFlashcardFlipped = false;
@@ -197,6 +198,7 @@ export const useAppStates = create<State>()(
 
       setQuiz: (value) =>
         set(({ quiz }) => {
+          quiz.isReady = true;
           quiz.isSolved = false;
           quiz.currentQuestionNumber = 0;
           quiz.correctAnswersCounter = 0;

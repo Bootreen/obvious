@@ -49,6 +49,7 @@ export const initialState = {
   summary: "",
   // Flashcards state object
   deck: {
+    isReady: false,
     flashcards: [] as { question: string; answer: string }[],
     currentFlashcardNumber: 1,
     isFlashcardFlipped: false,
