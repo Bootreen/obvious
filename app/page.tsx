@@ -139,7 +139,7 @@ const Home = () => {
         setQuiz(
           quiz.map((question) => ({
             ...question,
-            options: shuffledOptions.map((_, i) => question.options[i]),
+            options: shuffledOptions.map((i) => question.options[i]),
             isAnswered: false,
             isAnswerCorrect: false,
           })) as unknown as typeof initialState.quiz.questions,
