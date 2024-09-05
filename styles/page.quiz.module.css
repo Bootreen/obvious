@@ -1,5 +1,5 @@
 .quizContainer {
-  @apply flex flex-col;
+  @apply flex flex-col prose-p:my-0;
 }
 
 .tableRow {
