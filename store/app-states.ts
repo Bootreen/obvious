@@ -235,6 +235,11 @@ export const useAppStates = create<State>()(
         get().actions.setQuiz([]);
         get().actions.setSubtopics([]);
       },
+
+      setUserId: (userId) =>
+        set((state) => {
+          state.userId = userId;
+        }),
     },
   })),
 );

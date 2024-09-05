@@ -1,5 +1,7 @@
 "use client";
 
+import { useUser } from "@clerk/clerk-react";
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Navbar as DefaultNavbar, NavbarContent } from "@nextui-org/navbar";
 import { Tabs, Tab } from "@nextui-org/tabs";
 import { Button } from "@nextui-org/button";
@@ -13,12 +15,13 @@ import {
 } from "@nextui-org/modal";
 import { useDisclosure } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 import NextLink from "next/link";
 import clsx from "clsx";
 
 import styles from "@/styles/navbar.module.css";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { useAppStates } from "@/store/app-states";
+import { useAppActions, useAppStates } from "@/store/app-states";
 
 export const Navbar = () => {
   const {
@@ -26,16 +29,38 @@ export const Navbar = () => {
     onOpen: onHelpOpen,
     onOpenChange: onHelpOpenChange,
   } = useDisclosure();
+  const { isSignedIn, user } = useUser();
   const currentPath = usePathname();
   const tabs = useAppStates(({ tabs }) => tabs);
+  const userId = useAppStates(({ userId }) => userId);
+  const { setUserId } = useAppActions();
   const disabledTabs = Object.entries(tabs)
     .filter(([, { isLoaded }]) => !isLoaded)
     .map(([key]) => key);
+
+  useEffect(() => {
+    setUserId(isSignedIn ? user.id : null);
+  }, [isSignedIn]);
+
+  // eslint-disable-next-line no-console
+  console.log(userId);
 
   return (
     <>
       <DefaultNavbar maxWidth="xl" position="sticky">
         <NavbarContent>
+          <SignedOut>
+            <SignInButton>
+              <Button className={styles.signInButton} radius="full">
+                Sign
+                <br />
+                in
+              </Button>
+            </SignInButton>
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
           <Button
             className={styles.helpButton}
             color="success"
