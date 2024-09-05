@@ -129,7 +129,6 @@ const Home = () => {
         }));
 
         setPairs(shuffledPairs);
-
         setTabState("pairmatch", true);
       }
       if (quiz && quiz.length > 0) {
@@ -237,13 +236,13 @@ const Home = () => {
         <ModalContent>
           {(onErrorClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
+              <ModalHeader className={styles.modalHeader}>
                 Unable to fulfill the request
               </ModalHeader>
               <ModalBody>
                 <p>
-                  Failed to generate tutorials for your question after three
-                  attempts. This usually happens when the query is not
+                  Failed to generate learning materials for your request after
+                  three attempts. This usually happens when the query is not
                   formulated well, or you are trying to request materials that
                   violate the ethical principles of using AI. Try rephrasing
                   your question or change the subject.

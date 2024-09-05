@@ -21,3 +21,7 @@
 .submitButton {
   @apply w-fit m-auto;
 }
+
+.modalHeader {
+  @apply flex flex-col gap-1;
+}

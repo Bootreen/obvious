@@ -47,7 +47,7 @@ const QuizPage = () => {
   const onNextQuestionButtonClick = () => incCurrentQuestionNumber();
 
   return (
-    <article className={common.container}>
+    <article className={clsx(common.container, styles.quizContainer)}>
       {isReady && (
         <>
           <h2>{topic}: Quiz</h2>
@@ -57,13 +57,13 @@ const QuizPage = () => {
             </TableHeader>
             <TableBody>
               <TableRow className={styles.tableRow}>
-                <TableCell className="text-2xl">
+                <TableCell className={styles.tableCellCentered}>
                   {currentQuestionNumber + 1} of {questions.length}, correct:{" "}
                   {correctAnswersCounter}
                 </TableCell>
               </TableRow>
               <TableRow className={styles.tableRow}>
-                <TableCell className="text-2xl">
+                <TableCell className={styles.tableCell}>
                   {questions[currentQuestionNumber].question}
                 </TableCell>
               </TableRow>
@@ -71,10 +71,11 @@ const QuizPage = () => {
                 questions[currentQuestionNumber].options.map(
                   ({ option, isCorrect }, index) => (
                     <TableRow key={index} className={styles.tableRow}>
-                      <TableCell className="text-2xl">
+                      <TableCell className={styles.tableCell}>
                         <Card
                           isPressable
                           className={clsx(
+                            styles.option,
                             questions[currentQuestionNumber].isAnswered &&
                               isCorrect &&
                               styles.isCorrect,
@@ -101,10 +102,14 @@ const QuizPage = () => {
             </TableBody>
           </Table>
           <Button
+            className={styles.nextQuestionButton}
+            color="primary"
             isDisabled={
               !questions[currentQuestionNumber].isAnswered ||
               questions.length === currentQuestionNumber + 1
             }
+            radius="sm"
+            size="lg"
             onPress={onNextQuestionButtonClick}
           >
             Next Question

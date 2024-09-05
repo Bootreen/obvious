@@ -1,5 +1,21 @@
+.quizContainer {
+  @apply flex flex-col;
+}
+
 .tableRow {
   @apply h-full border-none;
+}
+
+.tableCell {
+  @apply text-2xl;
+}
+
+.tableCellCentered {
+  @apply text-2xl text-center;
+}
+
+.option {
+  @apply bg-blue-200 text-black;
 }
 
 .isCorrect {
@@ -8,4 +24,8 @@
 
 .isNotCorrect {
   @apply bg-red-300;
+}
+
+.nextQuestionButton {
+  @apply mx-auto;
 }
