@@ -21,7 +21,7 @@ export const requestInstructions = {
 
   pairmatch: `- Matching Pairs (${promptParams.pairs} pairs related to the topic, with a content length limit of ${promptParams.pairLength} symbols for each part of the pair. Create pairs where even incorrect matches appear plausible and do not seem absurd or obviously wrong at first glance. These pairs should create doubt and require thoughtful consideration. All items should be related to a single theme or aspect of the given topic, so that even incorrect matches could seem potentially correct, requiring careful evaluation to identify the right answers. Super important: all questions and answers must be unique — no repetitions allowed for any individual question or answer! If it is absolutely impossible to generate ${promptParams.pairs} pairs following the above instructions, reduce its number up to 3 or return an empty pairmatch array.)\n`,
 
-  quiz: `- Quiz (${promptParams.questions} multiple-choice questions, each with ${promptParams.options} answer options)\n`,
+  quiz: `- Quiz (${promptParams.questions} multiple-choice questions, each with STRICTLY 1 correct answer option and ${promptParams.options - 1} incorrect answer options.`,
 
   subtopics: `- Subtopics (Suggest potential subtopics for further exploration if the topic is too large or complex; provide an empty array if the main topic does not need to be divided into subtopics)\n`,
 

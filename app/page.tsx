@@ -14,10 +14,11 @@ import {
 import { useDisclosure } from "@nextui-org/react";
 import { ChangeEvent } from "react";
 
-import styles from "@/styles/page.home.module.css";
 import { Parts, geminiApiRequest } from "@/utils/request";
 import { useAppStates, useAppActions } from "@/store/app-states";
 import { shuffleIndices } from "@/utils/shuffle";
+import styles from "@/styles/page.home.module.css";
+import { initialState } from "@/config/app-initial-state";
 
 const Home = () => {
   // Store variables...
@@ -31,7 +32,7 @@ const Home = () => {
     setGuide,
     setSummary,
     setFlashcards,
-    setPairMatcher,
+    setPairs,
     setQuiz,
     setSubtopics,
     resetContent,
@@ -110,9 +111,10 @@ const Home = () => {
         setTabState("flashcards", true);
       }
       if (pairmatch && pairmatch.length > 0) {
+        // Shuffle pairs parts order
         const leftColumnIndecies = shuffleIndices(pairmatch.length);
         const rightColumnIndecies = shuffleIndices(pairmatch.length);
-
+        // Add shuffled pairs and additional store variables
         const shuffledPairs = pairmatch.map((_, i) => ({
           question: {
             value: pairmatch[leftColumnIndecies[i]].question,
@@ -126,18 +128,21 @@ const Home = () => {
           },
         }));
 
-        setPairMatcher({
-          isReady: true,
-          isSolved: false,
-          matchedPairsCounter: 0,
-          mistakes: 0,
-          pairs: shuffledPairs,
-        });
-
+        setPairs(shuffledPairs);
         setTabState("pairmatch", true);
       }
       if (quiz && quiz.length > 0) {
-        setQuiz(quiz);
+        // Shuffle answer options order, 'cause AI tends to place correct option as #1
+        const shuffledOptions = shuffleIndices(4);
+
+        setQuiz(
+          quiz.map((question) => ({
+            ...question,
+            options: shuffledOptions.map((i) => question.options[i]),
+            isAnswered: false,
+            isAnswerCorrect: false,
+          })) as unknown as typeof initialState.quiz.questions,
+        );
         setTabState("quiz", true);
       }
       if (subtopics) setSubtopics(subtopics);
@@ -231,13 +236,13 @@ const Home = () => {
         <ModalContent>
           {(onErrorClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
+              <ModalHeader className={styles.modalHeader}>
                 Unable to fulfill the request
               </ModalHeader>
               <ModalBody>
                 <p>
-                  Failed to generate tutorials for your question after three
-                  attempts. This usually happens when the query is not
+                  Failed to generate learning materials for your request after
+                  three attempts. This usually happens when the query is not
                   formulated well, or you are trying to request materials that
                   violate the ethical principles of using AI. Try rephrasing
                   your question or change the subject.

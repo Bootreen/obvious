@@ -1,0 +1,31 @@
+.quizContainer {
+  @apply flex flex-col prose-p:my-0;
+}
+
+.tableRow {
+  @apply h-full border-none;
+}
+
+.tableCell {
+  @apply text-2xl;
+}
+
+.tableCellCentered {
+  @apply text-2xl text-center;
+}
+
+.option {
+  @apply bg-blue-200 text-black;
+}
+
+.isCorrect {
+  @apply bg-green-300;
+}
+
+.isNotCorrect {
+  @apply bg-red-300;
+}
+
+.nextQuestionButton {
+  @apply mx-auto;
+}

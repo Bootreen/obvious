@@ -47,56 +47,87 @@ export const initialState = {
   topic: "",
   guide: [] as string[],
   summary: "",
-  flashcards: [] as { question: string; answer: string }[],
+  // Flashcards state object
+  deck: {
+    isReady: false,
+    flashcards: [] as { question: string; answer: string }[],
+    currentFlashcardNumber: 1,
+    isFlashcardFlipped: false,
+    isFlipInProgress: false,
+    hint: "",
+    hintsCounter: 0,
+  },
+  // Matching pairs state object
   pairMatcher: {
     isReady: false,
     isSolved: false,
     matchedPairsCounter: 0,
-    mistakes: 0,
+    mistakesCounter: 0,
     pairs: [] as {
       question: { value: string; index: number; isSelected: boolean };
       answer: { value: string; index: number; isSelected: boolean };
     }[],
   },
-  quiz: [] as {
-    question: string;
-    options: { text: string; isCorrect: boolean }[];
-  }[],
+  quiz: {
+    isReady: false,
+    isSolved: false,
+    currentQuestionNumber: 0,
+    correctAnswersCounter: 0,
+    questions: [] as {
+      question: string;
+      options: { option: string; isCorrect: boolean }[];
+      isAnswered: boolean;
+      selectedIncorrectOptionIndex: number;
+    }[],
+  },
   subtopics: [] as string[],
 
-  // Semaphores and counters
   isBusy: false, // temporarily blocks input, when App is waiting for API response
-  currentFlashcardNumber: 1,
-  isFlashcardFlipped: false,
-  isFlipInProgress: false,
-  hint: "",
 };
 
 export type State = typeof initialState & {
   actions: {
+    setIsBusy: (value: boolean) => void;
+
     setTabState: (
       tab: keyof typeof initialState.tabs,
       isLoaded: boolean,
     ) => void;
+
     setCheckboxState: (
       checkbox: keyof typeof initialState.checkboxes,
       isChecked: boolean,
     ) => void;
+
     setRequest: (content: string) => void;
     setTopic: (topic: string) => void;
     setGuide: (guide: string[]) => void;
     setSummary: (summary: string) => void;
-    setFlashcards: (flashcards: typeof initialState.flashcards) => void;
-    setQuiz: (quiz: typeof initialState.quiz) => void;
-    setSubtopics: (subtopics: string[]) => void;
-    setIsBusy: (value: boolean) => void;
+
+    setFlashcards: (flashcards: typeof initialState.deck.flashcards) => void;
     setCurrentFlashcardNumber: (value: number) => void;
     setIsFlashcardFlipped: (value: boolean) => void;
     setIsFlipInProgress: (value: boolean) => void;
     setHint: (value: string) => void;
-    setPairMatcher: (value: typeof initialState.pairMatcher) => void;
+    incHintsCounter: () => void;
+
+    incMatchedPairsCounter: () => void;
+    incMistakesCounter: () => void;
+    setPairMatcher: (value: typeof initialState.pairMatcher.pairs) => void;
+    setPairs: (value: typeof initialState.pairMatcher.pairs) => void;
     setPairPartSelected: (type: "question" | "answer", index: number) => void;
     matchPair: (questionIndex: number, answerIndex: number) => void;
+
+    setQuiz: (quiz: typeof initialState.quiz.questions) => void;
+    incCurrentQuestionNumber: () => void;
+    incCorrectAnswersCounter: () => void;
+    setIsAnswered: (index: number) => void;
+    setSelectedIncorrectOptionIndex: (
+      questionIndex: number,
+      optionIndex: number,
+    ) => void;
+
+    setSubtopics: (subtopics: string[]) => void;
     resetContent: () => void;
   };
 };
