@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 "use client";
 
 import { Textarea } from "@nextui-org/input";
@@ -26,6 +25,7 @@ const Home = () => {
   // ...and setters
   const {
     setTabState,
+    turnOffTabs,
     setCheckboxState,
     setRequest,
     setTopic,
@@ -33,7 +33,9 @@ const Home = () => {
     setSummary,
     setFlashcards,
     setPairs,
+    checkPairs,
     setQuiz,
+    checkQuiz,
     setSubtopics,
     resetContent,
     setIsBusy,
@@ -71,94 +73,104 @@ const Home = () => {
     // Disable requests while awaiting for the response
     setIsBusy(true);
     // Disable content tabs until response is received
-    setTabState("guide", false);
-    setTabState("summary", false);
-    setTabState("flashcards", false);
-    setTabState("pairmatch", false);
-    setTabState("quiz", false);
+    turnOffTabs();
 
     // Make at least one request
     do {
-      const {
-        topic,
-        guide,
-        summary,
-        flashcards,
-        pairmatch,
-        quiz,
-        subtopics,
-        error,
-      } = await geminiApiRequest(
-        request,
-        // Request only selected materials to minimize Gemini token usage
-        Object.entries(checkboxes)
-          .filter(([, { isChecked }]) => isChecked)
-          .map(([key]) => key) as Parts[],
-      );
-
-      // Update content state and tabs availability
-      if (topic) setTopic(topic);
-      if (guide && guide.length > 0) {
-        setGuide(guide);
-        setTabState("guide", true);
-      }
-      if (summary && summary !== "") {
-        setSummary(summary);
-        setTabState("summary", true);
-      }
-      if (flashcards && flashcards.length > 0) {
-        setFlashcards(flashcards);
-        setTabState("flashcards", true);
-      }
-      if (pairmatch && pairmatch.length > 0) {
-        // Shuffle pairs parts order
-        const leftColumnIndecies = shuffleIndices(pairmatch.length);
-        const rightColumnIndecies = shuffleIndices(pairmatch.length);
-        // Add shuffled pairs and additional store variables
-        const shuffledPairs = pairmatch.map((_, i) => ({
-          question: {
-            value: pairmatch[leftColumnIndecies[i]].question,
-            index: leftColumnIndecies[i],
-            isSelected: false,
-          },
-          answer: {
-            value: pairmatch[rightColumnIndecies[i]].answer,
-            index: rightColumnIndecies[i],
-            isSelected: false,
-          },
-        }));
-
-        setPairs(shuffledPairs);
-        setTabState("pairmatch", true);
-      }
-      if (quiz && quiz.length > 0) {
-        // Shuffle answer options order, 'cause AI tends to place correct option as #1
-        const shuffledOptions = shuffleIndices(4);
-
-        setQuiz(
-          quiz.map((question) => ({
-            ...question,
-            options: shuffledOptions.map((i) => question.options[i]),
-            isAnswered: false,
-            isAnswerCorrect: false,
-          })) as unknown as typeof initialState.quiz.questions,
+      try {
+        const {
+          topic,
+          guide,
+          summary,
+          flashcards,
+          pairmatch,
+          quiz,
+          subtopics,
+          error,
+        } = await geminiApiRequest(
+          request,
+          // Request only selected materials to minimize Gemini token usage
+          Object.entries(checkboxes)
+            .filter(([, { isChecked }]) => isChecked)
+            .map(([key]) => key) as Parts[],
         );
-        setTabState("quiz", true);
-      }
-      if (subtopics) setSubtopics(subtopics);
 
-      // Flags an error and log error type
-      if (error) {
-        if (error.isError) addError(error.message);
+        // Update content state and tabs availability
+        if (topic) setTopic(topic);
+        if (guide && guide.length > 0) {
+          setGuide(guide);
+          setTabState("guide", true);
+        }
+        if (summary && summary !== "") {
+          setSummary(summary);
+          setTabState("summary", true);
+        }
+        if (flashcards && flashcards.length > 0) {
+          setFlashcards(flashcards);
+          setTabState("flashcards", true);
+        }
+        if (pairmatch && pairmatch.length > 0) {
+          if (checkPairs(pairmatch)) {
+            // Shuffle pairs parts order
+            const leftColumnIndecies = shuffleIndices(pairmatch.length);
+            const rightColumnIndecies = shuffleIndices(pairmatch.length);
+            // Add shuffled pairs and additional store variables
+            const shuffledPairs = pairmatch.map((_, i) => ({
+              question: {
+                value: pairmatch[leftColumnIndecies[i]].question,
+                index: leftColumnIndecies[i],
+                isSelected: false,
+              },
+              answer: {
+                value: pairmatch[rightColumnIndecies[i]].answer,
+                index: rightColumnIndecies[i],
+                isSelected: false,
+              },
+            }));
+
+            setPairs(shuffledPairs);
+            setTabState("pairmatch", true);
+          } else throw new Error("Invalid matching pairs");
+        }
+        if (quiz && quiz.length > 0) {
+          if (checkQuiz(quiz)) {
+            // Shuffle answer options order, 'cause AI tends to place correct option as #1
+            const shuffledOptions = shuffleIndices(4);
+
+            setQuiz(
+              quiz.map((question) => ({
+                ...question,
+                options: shuffledOptions.map((i) => question.options[i]),
+                isAnswered: false,
+                isAnswerCorrect: false,
+              })) as unknown as typeof initialState.quiz.questions,
+            );
+            setTabState("quiz", true);
+          } else throw new Error("Invalid quiz");
+        }
+        if (subtopics) setSubtopics(subtopics);
+
+        // Flags an error and log error type
+        if (error) {
+          if (error.isError) addError(error.message);
+          else clearErrors();
+        } // Clear error log both in 'isError = false' and 'no error object' scenarios
         else clearErrors();
-      } // Clear error log both in 'isError = false' and 'no error object' scenarios
-      else clearErrors();
+        // Catch internal errors (pairmatch & quiz check fails)
+      } catch (error) {
+        const internalError = {
+          isError: true,
+          message: (error as Error).message,
+        };
+
+        addError(internalError.message);
+      }
       // Try again until success or up to 3 consecutive fails
     } while (isError && errorLog.length < 3);
 
     if (isError) {
-      // Add proper error handling
       onErrorOpen();
+      // eslint-disable-next-line no-console
       console.log("Unable to fulfill request. See error log:", errorLog);
     }
 
