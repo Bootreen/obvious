@@ -16,7 +16,7 @@ import {
 } from "@nextui-org/table";
 
 import { useAppStates, useAppActions } from "@/store/app-states";
-// import MarkdownRenderer from "@/utils/md-renderer";
+import MarkdownRenderer from "@/utils/md-renderer";
 import common from "@/styles/page.default.module.css";
 import styles from "@/styles/page.quiz.module.css";
 
@@ -64,7 +64,9 @@ const QuizPage = () => {
               </TableRow>
               <TableRow className={styles.tableRow}>
                 <TableCell className={styles.tableCell}>
-                  {questions[currentQuestionNumber].question}
+                  <MarkdownRenderer
+                    content={questions[currentQuestionNumber].question}
+                  />
                 </TableCell>
               </TableRow>
               {
@@ -92,7 +94,9 @@ const QuizPage = () => {
                           }
                           onPress={() => onAnswerOptionClick(index)}
                         >
-                          <CardBody>{option}</CardBody>
+                          <CardBody>
+                            <MarkdownRenderer content={option} />
+                          </CardBody>
                         </Card>
                       </TableCell>
                     </TableRow>
