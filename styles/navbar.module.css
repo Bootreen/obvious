@@ -1,5 +1,5 @@
 .helpButton {
-  @apply min-w-9 min-h-9 w-9 h-9 m-auto text-xl font-medium;
+  @apply w-fit h-fit p-0 m-0 bg-none border-none;
 }
 
 .navbarMiddle {
@@ -7,7 +7,7 @@
 }
 
 .tab {
-  @apply p-0;
+  @apply !px-0;
 }
 
 .tabTitle {
@@ -19,7 +19,7 @@
 }
 
 .navMenuLink {
-  @apply data-[active=true]:text-primary font-medium gap-x-2 text-sm lg:text-lg bg-transparent py-1 px-1 lg:px-2 rounded-lg;
+  @apply font-medium gap-x-2 text-sm lg:text-lg bg-transparent py-1 px-1 lg:px-2 rounded-lg;
 }
 
 .linkActive {

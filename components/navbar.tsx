@@ -13,13 +13,13 @@ import {
   ModalBody,
   ModalFooter,
 } from "@nextui-org/modal";
-import { useDisclosure } from "@nextui-org/react";
+import { Card, CardBody, useDisclosure } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import NextLink from "next/link";
 import clsx from "clsx";
 
-import { LoginIcon } from "./icons";
+import { LoginIcon, HelpIcon } from "./icons";
 
 import styles from "@/styles/navbar.module.css";
 import { ThemeSwitch } from "@/components/theme-switch";
@@ -59,15 +59,14 @@ export const Navbar = () => {
           <SignedIn>
             <UserButton />
           </SignedIn>
-          <Button
-            className={styles.helpButton}
-            color="success"
-            radius="full"
-            size="md"
-            onPress={onHelpOpen}
-          >
-            ?
-          </Button>
+          <Card isPressable shadow="none" onPress={onHelpOpen}>
+            <CardBody className={styles.helpButton}>
+              <HelpIcon height={12} width={12} />
+            </CardBody>
+          </Card>
+          {/* <Button className={styles.helpButton} size="md" onPress={onHelpOpen}>
+            <HelpIcon />
+          </Button> */}
         </NavbarContent>
 
         <NavbarContent className={styles.navbarMiddle} justify="center">
