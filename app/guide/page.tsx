@@ -3,8 +3,8 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-import MarkdownRenderer from "@/utils/md-renderer";
 import { useAppStates } from "@/store/app-states";
+import MarkdownRenderer from "@/components/md-renderer";
 import common from "@/styles/page.default.module.css";
 
 const GuidePage = () => {

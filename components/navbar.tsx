@@ -51,22 +51,21 @@ export const Navbar = () => {
     <>
       <DefaultNavbar maxWidth="xl" position="sticky">
         <NavbarContent>
-          <SignedOut>
-            <SignInButton>
-              <LoginIcon />
-            </SignInButton>
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
+          <div className={styles.userLogin}>
+            <SignedOut>
+              <SignInButton>
+                <LoginIcon />
+              </SignInButton>
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+          </div>
           <Card isPressable shadow="none" onPress={onHelpOpen}>
             <CardBody className={styles.helpButton}>
-              <HelpIcon height={12} width={12} />
+              <HelpIcon />
             </CardBody>
           </Card>
-          {/* <Button className={styles.helpButton} size="md" onPress={onHelpOpen}>
-            <HelpIcon />
-          </Button> */}
         </NavbarContent>
 
         <NavbarContent className={styles.navbarMiddle} justify="center">

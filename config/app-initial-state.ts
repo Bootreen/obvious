@@ -83,6 +83,8 @@ export const initialState = {
   subtopics: [] as string[],
 
   isBusy: false, // temporarily blocks input, when App is waiting for API response
+  progress: 0,
+  estimatedLoadTime: 0,
 
   userId: null as null | string,
 };
@@ -90,6 +92,8 @@ export const initialState = {
 export type State = typeof initialState & {
   actions: {
     setIsBusy: (value: boolean) => void;
+    setProgress: (value: number) => void;
+    setEstimatedLoadTime: (value: number) => void;
 
     setTabState: (
       tab: keyof typeof initialState.tabs,
@@ -120,7 +124,6 @@ export type State = typeof initialState & {
     setPairs: (value: typeof initialState.pairMatcher.pairs) => void;
     setPairPartSelected: (type: "question" | "answer", index: number) => void;
     matchPair: (questionIndex: number, answerIndex: number) => void;
-    checkPairs: (pairmatch: { question: string; answer: string }[]) => boolean;
 
     setQuiz: (quiz: typeof initialState.quiz.questions) => void;
     incCurrentQuestionNumber: () => void;
@@ -130,12 +133,6 @@ export type State = typeof initialState & {
       questionIndex: number,
       optionIndex: number,
     ) => void;
-    checkQuiz: (
-      quiz: {
-        question: string;
-        options: { option: string; isCorrect: boolean }[];
-      }[],
-    ) => boolean;
 
     setSubtopics: (subtopics: string[]) => void;
     resetContent: () => void;

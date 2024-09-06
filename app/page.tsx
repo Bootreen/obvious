@@ -1,8 +1,10 @@
 "use client";
 
+import { ChangeEvent, useEffect, useRef } from "react";
 import { Textarea } from "@nextui-org/input";
 import { CheckboxGroup, Checkbox } from "@nextui-org/checkbox";
 import { Button } from "@nextui-org/button";
+import { Progress, useDisclosure } from "@nextui-org/react";
 import {
   Modal,
   ModalContent,
@@ -10,18 +12,19 @@ import {
   ModalBody,
   ModalFooter,
 } from "@nextui-org/modal";
-import { useDisclosure } from "@nextui-org/react";
-import { ChangeEvent } from "react";
 
 import { Parts, geminiApiRequest } from "@/utils/request";
 import { useAppStates, useAppActions } from "@/store/app-states";
+import { checkPairs, checkQuiz } from "@/utils/content-check";
 import { shuffleIndices } from "@/utils/shuffle";
-import styles from "@/styles/page.home.module.css";
 import { initialState } from "@/config/app-initial-state";
+import styles from "@/styles/page.home.module.css";
 
 const Home = () => {
-  // Store variables...
-  const { checkboxes, request, isBusy } = useAppStates((state) => state);
+  // State store variables...
+  const { checkboxes, request, isBusy, progress } = useAppStates(
+    (state) => state,
+  );
   // ...and setters
   const {
     setTabState,
@@ -33,31 +36,88 @@ const Home = () => {
     setSummary,
     setFlashcards,
     setPairs,
-    checkPairs,
     setQuiz,
-    checkQuiz,
     setSubtopics,
     resetContent,
     setIsBusy,
+    setProgress,
   } = useAppActions();
 
+  // Local variable to store estimated load time
+  const estimatedLoadTime = useRef<number>(0);
+
+  const estimateLoadTime = (): number => {
+    // Average time to generate tabs (determined experimentally)
+    // And made more conservative than averages
+    const tabsEstimate = {
+      summary: 1900,
+      guide: 2200,
+      flashcards: 2500,
+      pairmatch: 2500,
+      quiz: 4500,
+    };
+
+    // Check which checkboxes are selected and sum up the estimated time
+    return Object.entries(checkboxes)
+      .map(([key, { isChecked }]) =>
+        isChecked ? tabsEstimate[key as keyof typeof tabsEstimate] : 0,
+      )
+      .reduce((acc, cur) => acc + cur, 0);
+  };
+
+  // Set initial load time on first render
+  useEffect(() => {
+    estimatedLoadTime.current = estimateLoadTime();
+  }, []);
+
+  // Update load time when checkbox configuration changes
+  useEffect(() => {
+    estimatedLoadTime.current = estimateLoadTime();
+  }, [checkboxes]);
+
+  // Update progress indicator every 0.1s
+  useEffect(() => {
+    if (isBusy) {
+      const interval = setInterval(() => {
+        setProgress(
+          progress >= estimatedLoadTime.current
+            ? estimatedLoadTime.current
+            : progress + 100,
+        );
+      }, 100);
+
+      return () => clearInterval(interval);
+    } else setProgress(estimatedLoadTime.current); // Loading is complete
+  }, [isBusy, progress]);
+
+  // Error modal handlers
   const {
     isOpen: isErrorOpen,
     onOpen: onErrorOpen,
     onOpenChange: onErrorOpenChange,
   } = useDisclosure();
 
-  // Event handlers
+  // Progress modal handlers
+  const {
+    isOpen: isProgressOpen,
+    onOpen: onProgressOpen,
+    onOpenChange: onProgressOpenChange,
+    onClose: onProgressClose,
+  } = useDisclosure();
+
+  // Main window handlers
   const onCheckboxToggle = (
     checkbox: keyof typeof checkboxes,
     event: ChangeEvent<HTMLInputElement>,
-  ) => setCheckboxState(checkbox, event.target.checked);
+  ) => {
+    setCheckboxState(checkbox, event.target.checked);
+  };
 
   const onTextareaChange = (event: ChangeEvent<HTMLInputElement>) =>
     setRequest(event.target.value);
 
   const onGenerateButtonClick = async () => {
-    // Errors and retries handling logic
+    // Error handling logic
     let isError: boolean = false;
     let errorLog: string[] = [];
     const addError = (error: string): void => {
@@ -70,12 +130,12 @@ const Home = () => {
     };
 
     resetContent();
-    // Disable requests while awaiting for the response
+    // Disable requests while waiting for response
     setIsBusy(true);
-    // Disable content tabs until response is received
+    // Open loading indicator
+    onProgressOpen();
+    // Turn off content tabs until response is received
     turnOffTabs();
-
-    const startTime = performance.now();
 
     // Make at least one request
     do {
@@ -91,13 +151,13 @@ const Home = () => {
           error,
         } = await geminiApiRequest(
           request,
-          // Request only selected materials to minimize Gemini token usage
+          // Request only selected materials to minimize token usage
           Object.entries(checkboxes)
             .filter(([, { isChecked }]) => isChecked)
             .map(([key]) => key) as Parts[],
         );
 
-        // Update content state and tabs availability
+        // Update content state and tab availability
         if (topic) setTopic(topic);
         if (guide && guide.length > 0) {
           setGuide(guide);
@@ -113,10 +173,10 @@ const Home = () => {
         }
         if (pairmatch && pairmatch.length > 0) {
           if (checkPairs(pairmatch)) {
-            // Shuffle pairs parts order
+            // Shuffle pairs order
             const leftColumnIndecies = shuffleIndices(pairmatch.length);
             const rightColumnIndecies = shuffleIndices(pairmatch.length);
-            // Add shuffled pairs and additional store variables
+            // Add shuffled pairs and additional state variables
             const shuffledPairs = pairmatch.map((_, i) => ({
               question: {
                 value: pairmatch[leftColumnIndecies[i]].question,
@@ -136,7 +196,7 @@ const Home = () => {
         }
         if (quiz && quiz.length > 0) {
           if (checkQuiz(quiz)) {
-            // Shuffle answer options order, 'cause AI tends to place correct option as #1
+            // Shuffle answer order, as AI tends to place the correct answer first
             const shuffledOptions = shuffleIndices(4);
 
             setQuiz(
@@ -152,13 +212,17 @@ const Home = () => {
         }
         if (subtopics) setSubtopics(subtopics);
 
-        // Flags an error and log error type
+        // Error handling
         if (error) {
-          if (error.isError) addError(error.message);
-          else clearErrors();
-        } // Clear error log both in 'isError = false' and 'no error object' scenarios
-        else clearErrors();
-        // Catch internal errors (pairmatch & quiz check fails)
+          if (error.isError) {
+            addError(error.message);
+            // Increase load time on error
+            estimatedLoadTime.current +=
+              errorLog.length > 1
+                ? estimatedLoadTime.current / 2
+                : estimatedLoadTime.current;
+          } else clearErrors();
+        } else clearErrors();
       } catch (error) {
         const internalError = {
           isError: true,
@@ -166,34 +230,34 @@ const Home = () => {
         };
 
         addError(internalError.message);
+        // Increase load time on error
+        estimatedLoadTime.current +=
+          errorLog.length > 1
+            ? estimatedLoadTime.current / 2
+            : estimatedLoadTime.current;
       }
-      // Try again until success or up to 3 consecutive fails
+      // Repeat request on error, but no more than 3 times in a row
     } while (isError && errorLog.length < 3);
 
     if (isError) {
       onErrorOpen();
+      // Fatal error - 3 consecutive errors, request aborted, log errors
       // eslint-disable-next-line no-console
       console.log("Unable to fulfill request. See error log:", errorLog);
     }
 
-    // Enable requests again
+    // Enable new requests again
     setIsBusy(false);
+    // Close loading indicator
+    onProgressClose();
+    // Clear error log
     clearErrors();
-
-    const endTime = performance.now();
-
-    // eslint-disable-next-line no-console
-    console.log(
-      `Request time — ${Math.ceil((endTime - startTime) / 1000)} seconds`,
-    );
   };
 
-  // If none of the training material options are selected or if the request is empty.
+  // If none of the study material options are selected or the request is empty.
   const isEmptyRequest =
     Object.values(checkboxes).find(({ isChecked }) => isChecked) ===
-      undefined || request.trim() === ""
-      ? true
-      : false;
+      undefined || request.trim() === "";
 
   return (
     <section className={styles.homePage}>
@@ -249,6 +313,7 @@ const Home = () => {
 
       {/* Error modal window */}
       <Modal
+        classNames={{ header: styles.modalHeader }}
         isDismissable={false}
         isOpen={isErrorOpen}
         size="xl"
@@ -257,9 +322,7 @@ const Home = () => {
         <ModalContent>
           {(onErrorClose) => (
             <>
-              <ModalHeader className={styles.modalHeader}>
-                Unable to fulfill the request
-              </ModalHeader>
+              <ModalHeader>Unable to fulfill the request</ModalHeader>
               <ModalBody>
                 <p>
                   Failed to generate learning materials for your request after
@@ -274,6 +337,32 @@ const Home = () => {
                   Dismiss
                 </Button>
               </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+
+      {/* Loading progress modal */}
+      <Modal
+        hideCloseButton
+        classNames={{ header: styles.modalHeader }}
+        isDismissable={false}
+        isOpen={isProgressOpen}
+        size="md"
+        onOpenChange={onProgressOpenChange}
+      >
+        <ModalContent>
+          {() => (
+            <>
+              <ModalHeader>Generating content...</ModalHeader>
+              <Progress
+                aria-label="Content generating progress..."
+                classNames={{ base: styles.progressBarContainer }}
+                color="success"
+                showValueLabel={true}
+                size="md"
+                value={(progress * 100) / estimatedLoadTime.current}
+              />
             </>
           )}
         </ModalContent>

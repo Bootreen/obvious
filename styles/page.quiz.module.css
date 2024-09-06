@@ -1,17 +1,29 @@
+.quizPageContainer {
+  @apply w-[28rem] flex flex-col prose-p:my-0;
+}
+
 .quizContainer {
-  @apply flex flex-col prose-p:my-0;
+  @apply flex flex-col gap-y-10;
 }
 
-.tableRow {
-  @apply h-full border-none;
+.quizQuestionContainer {
+  @apply text-xl text-center;
 }
 
-.tableCell {
-  @apply text-2xl;
+.quizOptionsContainer {
+  @apply flex flex-col gap-y-4;
 }
 
-.tableCellCentered {
-  @apply text-2xl text-center;
+.quizOptionContainer {
+  @apply px-6 py-4 leading-snug;
+}
+
+.progressBar {
+  @apply max-w-lg;
+}
+
+.progressLabel {
+  @apply m-auto text-base font-semibold;
 }
 
 .option {
