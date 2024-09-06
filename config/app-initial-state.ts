@@ -84,7 +84,6 @@ export const initialState = {
 
   isBusy: false, // temporarily blocks input, when App is waiting for API response
   progress: 0,
-  estimatedLoadTime: 0,
 
   userId: null as null | string,
 };
@@ -93,7 +92,6 @@ export type State = typeof initialState & {
   actions: {
     setIsBusy: (value: boolean) => void;
     setProgress: (value: number) => void;
-    setEstimatedLoadTime: (value: number) => void;
 
     setTabState: (
       tab: keyof typeof initialState.tabs,

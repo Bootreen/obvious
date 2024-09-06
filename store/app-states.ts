@@ -16,10 +16,6 @@ export const useAppStates = create<State>()(
         set((state) => {
           state.progress = value;
         }),
-      setEstimatedLoadTime: (value) =>
-        set((state) => {
-          state.estimatedLoadTime = value;
-        }),
       setTabState: (tab, isLoaded) =>
         set((state) => {
           state.tabs[tab].isLoaded = isLoaded;
@@ -244,7 +240,6 @@ export const useAppStates = create<State>()(
 
       resetContent: () => {
         get().actions.setProgress(0);
-        get().actions.setEstimatedLoadTime(0);
         get().actions.setTopic("");
         get().actions.setGuide([]);
         get().actions.setSummary("");
