@@ -1,17 +1,17 @@
-.quizContainer {
+.quizPageContainer {
   @apply w-[28rem] flex flex-col prose-p:my-0;
 }
 
-.tableRow {
-  @apply h-full border-none;
+.quizContainer {
+  @apply flex flex-col gap-y-10;
 }
 
-.tableCell {
-  @apply text-2xl;
+.quizQuestionContainer {
+  @apply text-xl text-center;
 }
 
-.tableCellCentered {
-  @apply text-2xl text-center;
+.quizOptionsContainer {
+  @apply flex flex-col gap-y-4;
 }
 
 .progressBar {
