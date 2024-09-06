@@ -9,6 +9,7 @@
     "lint": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix"
   },
   "dependencies": {
+    "@clerk/nextjs": "^5.4.1",
     "@google/generative-ai": "^0.17.1",
     "@nextui-org/button": "2.0.37",
     "@nextui-org/card": "^2.0.33",

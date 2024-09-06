@@ -1,4 +1,4 @@
-const promptParams = {
+export const promptParams = {
   flashcards: 10,
   flashcardLength: 200,
   pairs: 5,

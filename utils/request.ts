@@ -10,7 +10,10 @@ export type Response = Partial<{
   summary: string;
   flashcards: { question: string; answer: string }[];
   pairmatch: { question: string; answer: string }[];
-  quiz: { question: string; options: { text: string; isCorrect: boolean }[] }[];
+  quiz: {
+    question: string;
+    options: { option: string; isCorrect: boolean }[];
+  }[];
   subtopics: string[];
   error: { isError: boolean; message: string };
 }>;

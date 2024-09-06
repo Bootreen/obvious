@@ -1,5 +1,7 @@
 "use client";
 
+import { useUser } from "@clerk/clerk-react";
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Navbar as DefaultNavbar, NavbarContent } from "@nextui-org/navbar";
 import { Tabs, Tab } from "@nextui-org/tabs";
 import { Button } from "@nextui-org/button";
@@ -11,14 +13,17 @@ import {
   ModalBody,
   ModalFooter,
 } from "@nextui-org/modal";
-import { useDisclosure } from "@nextui-org/react";
+import { Card, CardBody, useDisclosure } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 import NextLink from "next/link";
 import clsx from "clsx";
 
+import { LoginIcon, HelpIcon } from "./icons";
+
 import styles from "@/styles/navbar.module.css";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { useAppStates } from "@/store/app-states";
+import { useAppActions, useAppStates } from "@/store/app-states";
 
 export const Navbar = () => {
   const {
@@ -26,25 +31,42 @@ export const Navbar = () => {
     onOpen: onHelpOpen,
     onOpenChange: onHelpOpenChange,
   } = useDisclosure();
+  const { isSignedIn, user } = useUser();
   const currentPath = usePathname();
   const tabs = useAppStates(({ tabs }) => tabs);
+  const userId = useAppStates(({ userId }) => userId);
+  const { setUserId } = useAppActions();
   const disabledTabs = Object.entries(tabs)
     .filter(([, { isLoaded }]) => !isLoaded)
     .map(([key]) => key);
+
+  useEffect(() => {
+    setUserId(isSignedIn ? user.id : null);
+  }, [isSignedIn]);
+
+  // eslint-disable-next-line no-console
+  console.log(userId);
 
   return (
     <>
       <DefaultNavbar maxWidth="xl" position="sticky">
         <NavbarContent>
-          <Button
-            className={styles.helpButton}
-            color="success"
-            radius="full"
-            size="md"
-            onPress={onHelpOpen}
-          >
-            ?
-          </Button>
+          <SignedOut>
+            <SignInButton>
+              <LoginIcon />
+            </SignInButton>
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+          <Card isPressable shadow="none" onPress={onHelpOpen}>
+            <CardBody className={styles.helpButton}>
+              <HelpIcon height={12} width={12} />
+            </CardBody>
+          </Card>
+          {/* <Button className={styles.helpButton} size="md" onPress={onHelpOpen}>
+            <HelpIcon />
+          </Button> */}
         </NavbarContent>
 
         <NavbarContent className={styles.navbarMiddle} justify="center">
@@ -136,7 +158,7 @@ export const Navbar = () => {
                 <p>
                   After submitting your request, Sarge Obvious will process it.
                   Depending on the complexity and amount of material you’ve
-                  requested, this might take between 5 to 20 seconds.
+                  requested, this might take between 3 to 20 seconds.
                 </p>
 
                 <h3>4. Review and Learn:</h3>

@@ -1,15 +1,22 @@
-# Sarge Obvious App
+# Sarge Obvious
 
-Placeholder
+AI-powered Learning Assistant
 
-[NextUI Sandbox](https://githubbox.com/nextui-org/next-app-template)
+## Features
+
+- Capable of assisting with virtually any topic — from Quantum Physics and Programming to Cat Breeds and the Star Wars Universe
+- Accepts queries in natural language, allowing users to ask questions in the usual way
+- Provides summaries and step-by-step guides on any given topic
+- Generates flashcards to help with memorization
+- Offers pair matching activities for memorization and self-assessment
+- Generates final quizzes to test knowledge
 
 ## Technologies Used
 
-- [Next.js 14](https://nextjs.org/docs/getting-started)
-- [NextUI v2](https://nextui.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Tailwind Variants](https://tailwind-variants.org)
 - [TypeScript](https://www.typescriptlang.org/)
+- [Next.js 14](https://nextjs.org/docs/getting-started)
+- [Zustand](https://zustand.docs.pmnd.rs/getting-started/introduction)
+- [Immer](https://immerjs.github.io/immer/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [NextUI v2](https://nextui.org/)
 - [Framer Motion](https://www.framer.com/motion/)
-- [next-themes](https://github.com/pacocoursey/next-themes)
