@@ -345,6 +345,7 @@ const Home = () => {
       {/* Loading progress modal */}
       <Modal
         hideCloseButton
+        isKeyboardDismissDisabled
         classNames={{ header: styles.modalHeader }}
         isDismissable={false}
         isOpen={isProgressOpen}

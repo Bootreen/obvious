@@ -1,5 +1,5 @@
 .quizPageContainer {
-  @apply w-[28rem] flex flex-col prose-p:my-0;
+  @apply w-[28rem] flex flex-col prose-p:!my-0;
 }
 
 .quizContainer {
