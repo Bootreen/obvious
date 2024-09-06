@@ -201,7 +201,7 @@ export const QuizIcon = ({
 );
 
 export const LoginIcon = ({
-  size = 38,
+  size = 42,
   width,
   height,
   ...props
@@ -220,7 +220,7 @@ export const LoginIcon = ({
 );
 
 export const HelpIcon = ({
-  size = 38,
+  size = 42,
   width,
   height,
   ...props

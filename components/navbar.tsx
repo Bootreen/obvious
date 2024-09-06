@@ -51,7 +51,7 @@ export const Navbar = () => {
     <>
       <DefaultNavbar maxWidth="xl" position="sticky">
         <NavbarContent>
-          <span className={styles.userLogin}>
+          <div className={styles.userLogin}>
             <SignedOut>
               <SignInButton>
                 <LoginIcon />
@@ -60,7 +60,7 @@ export const Navbar = () => {
             <SignedIn>
               <UserButton />
             </SignedIn>
-          </span>
+          </div>
           <Card isPressable shadow="none" onPress={onHelpOpen}>
             <CardBody className={styles.helpButton}>
               <HelpIcon />
