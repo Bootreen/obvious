@@ -23,5 +23,9 @@
 }
 
 .modalHeader {
-  @apply flex flex-col gap-1;
+  @apply text-center;
+}
+
+.progressBarContainer {
+  @apply p-8;
 }

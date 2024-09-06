@@ -85,7 +85,7 @@ const QuizPage = () => {
                       isDisabled={questions[currentQuestionNumber].isAnswered}
                       onPress={() => onAnswerOptionClick(index)}
                     >
-                      <CardBody>
+                      <CardBody className={styles.quizOptionContainer}>
                         <MarkdownRenderer content={option} />
                       </CardBody>
                     </Card>

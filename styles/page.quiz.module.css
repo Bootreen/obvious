@@ -14,6 +14,10 @@
   @apply flex flex-col gap-y-4;
 }
 
+.quizOptionContainer {
+  @apply px-6 py-4 leading-snug;
+}
+
 .progressBar {
   @apply max-w-lg;
 }
