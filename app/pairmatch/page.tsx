@@ -14,7 +14,7 @@ import {
 } from "@nextui-org/table";
 
 import { useAppStates, useAppActions } from "@/store/app-states";
-import MarkdownRenderer from "@/utils/md-renderer";
+import MarkdownRenderer from "@/components/md-renderer";
 import common from "@/styles/page.default.module.css";
 import styles from "@/styles/page.pairmatch.module.css";
 

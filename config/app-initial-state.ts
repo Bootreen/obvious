@@ -120,7 +120,6 @@ export type State = typeof initialState & {
     setPairs: (value: typeof initialState.pairMatcher.pairs) => void;
     setPairPartSelected: (type: "question" | "answer", index: number) => void;
     matchPair: (questionIndex: number, answerIndex: number) => void;
-    checkPairs: (pairmatch: { question: string; answer: string }[]) => boolean;
 
     setQuiz: (quiz: typeof initialState.quiz.questions) => void;
     incCurrentQuestionNumber: () => void;
@@ -130,12 +129,6 @@ export type State = typeof initialState & {
       questionIndex: number,
       optionIndex: number,
     ) => void;
-    checkQuiz: (
-      quiz: {
-        question: string;
-        options: { option: string; isCorrect: boolean }[];
-      }[],
-    ) => boolean;
 
     setSubtopics: (subtopics: string[]) => void;
     resetContent: () => void;

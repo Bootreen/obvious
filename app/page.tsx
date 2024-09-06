@@ -1,8 +1,10 @@
 "use client";
 
+import { ChangeEvent } from "react";
 import { Textarea } from "@nextui-org/input";
 import { CheckboxGroup, Checkbox } from "@nextui-org/checkbox";
 import { Button } from "@nextui-org/button";
+import { useDisclosure } from "@nextui-org/react";
 import {
   Modal,
   ModalContent,
@@ -10,17 +12,16 @@ import {
   ModalBody,
   ModalFooter,
 } from "@nextui-org/modal";
-import { useDisclosure } from "@nextui-org/react";
-import { ChangeEvent } from "react";
 
 import { Parts, geminiApiRequest } from "@/utils/request";
 import { useAppStates, useAppActions } from "@/store/app-states";
+import { checkPairs, checkQuiz } from "@/utils/content-check";
 import { shuffleIndices } from "@/utils/shuffle";
-import styles from "@/styles/page.home.module.css";
 import { initialState } from "@/config/app-initial-state";
+import styles from "@/styles/page.home.module.css";
 
 const Home = () => {
-  // Store variables...
+  // State store variables...
   const { checkboxes, request, isBusy } = useAppStates((state) => state);
   // ...and setters
   const {
@@ -33,9 +34,7 @@ const Home = () => {
     setSummary,
     setFlashcards,
     setPairs,
-    checkPairs,
     setQuiz,
-    checkQuiz,
     setSubtopics,
     resetContent,
     setIsBusy,

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@nextui-org/button";
 
 import { useAppStates, useAppActions } from "@/store/app-states";
-import MarkdownRenderer from "@/utils/md-renderer";
+import MarkdownRenderer from "@/components/md-renderer";
 import common from "@/styles/page.default.module.css";
 import styles from "@/styles/page.flashcards.module.css";
 
