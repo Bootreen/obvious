@@ -19,6 +19,8 @@ import { useEffect } from "react";
 import NextLink from "next/link";
 import clsx from "clsx";
 
+import { LoginIcon } from "./icons";
+
 import styles from "@/styles/navbar.module.css";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { useAppActions, useAppStates } from "@/store/app-states";
@@ -51,11 +53,7 @@ export const Navbar = () => {
         <NavbarContent>
           <SignedOut>
             <SignInButton>
-              <Button className={styles.signInButton} radius="full">
-                Sign
-                <br />
-                in
-              </Button>
+              <LoginIcon />
             </SignInButton>
           </SignedOut>
           <SignedIn>
@@ -161,7 +159,7 @@ export const Navbar = () => {
                 <p>
                   After submitting your request, Sarge Obvious will process it.
                   Depending on the complexity and amount of material you’ve
-                  requested, this might take between 5 to 20 seconds.
+                  requested, this might take between 3 to 20 seconds.
                 </p>
 
                 <h3>4. Review and Learn:</h3>

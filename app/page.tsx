@@ -75,6 +75,8 @@ const Home = () => {
     // Disable content tabs until response is received
     turnOffTabs();
 
+    const startTime = performance.now();
+
     // Make at least one request
     do {
       try {
@@ -177,6 +179,13 @@ const Home = () => {
     // Enable requests again
     setIsBusy(false);
     clearErrors();
+
+    const endTime = performance.now();
+
+    // eslint-disable-next-line no-console
+    console.log(
+      `Request time — ${Math.ceil((endTime - startTime) / 1000)} seconds`,
+    );
   };
 
   // If none of the training material options are selected or if the request is empty.

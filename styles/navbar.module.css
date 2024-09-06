@@ -1,7 +1,3 @@
-.signInButton {
-  @apply min-w-9 min-h-9 w-9 h-9 m-auto text-xs font-semibold leading-none bg-foreground text-background;
-}
-
 .helpButton {
   @apply min-w-9 min-h-9 w-9 h-9 m-auto text-xl font-medium;
 }
