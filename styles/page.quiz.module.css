@@ -1,5 +1,5 @@
 .quizContainer {
-  @apply flex flex-col prose-p:my-0;
+  @apply w-[28rem] flex flex-col prose-p:my-0;
 }
 
 .tableRow {
@@ -12,6 +12,14 @@
 
 .tableCellCentered {
   @apply text-2xl text-center;
+}
+
+.progressBar {
+  @apply max-w-lg;
+}
+
+.progressLabel {
+  @apply m-auto text-base font-semibold;
 }
 
 .option {

@@ -4,6 +4,7 @@
 import clsx from "clsx";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { Progress } from "@nextui-org/react";
 import { Button } from "@nextui-org/button";
 import { Card, CardBody } from "@nextui-org/card";
 import {
@@ -58,8 +59,20 @@ const QuizPage = () => {
             <TableBody>
               <TableRow className={styles.tableRow}>
                 <TableCell className={styles.tableCellCentered}>
-                  {currentQuestionNumber + 1} of {questions.length}, correct:{" "}
-                  {correctAnswersCounter}
+                  <Progress
+                    aria-label="Quiz progress..."
+                    classNames={{
+                      base: styles.progressBar,
+                      value: styles.progressLabel,
+                    }}
+                    color="primary"
+                    showValueLabel={true}
+                    size="md"
+                    value={
+                      ((currentQuestionNumber + 1) / questions.length) * 100
+                    }
+                    valueLabel={`${currentQuestionNumber + 1} of ${questions.length}, correct: ${correctAnswersCounter}`}
+                  />
                 </TableCell>
               </TableRow>
               <TableRow className={styles.tableRow}>
