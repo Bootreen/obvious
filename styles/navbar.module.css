@@ -1,5 +1,9 @@
+.userLogin {
+  @apply cursor-pointer;
+}
+
 .helpButton {
-  @apply w-fit h-fit p-0 m-0 bg-none border-none;
+  @apply w-fit h-fit !p-0 !m-0 bg-none border-none;
 }
 
 .navbarMiddle {
@@ -23,7 +27,7 @@
 }
 
 .linkActive {
-  @apply text-primary-foreground bg-primary;
+  @apply !text-primary-foreground bg-primary;
 }
 
 .linkDisabled {
