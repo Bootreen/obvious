@@ -85,7 +85,7 @@ export const initialState = {
   isBusy: false, // temporarily blocks input, when App is waiting for API response
   progress: 0,
 
-  userId: null as null | string,
+  user: null as null | { id: string; fullName: string; email: string },
 };
 
 export type State = typeof initialState & {
@@ -135,6 +135,8 @@ export type State = typeof initialState & {
     setSubtopics: (subtopics: string[]) => void;
     resetContent: () => void;
 
-    setUserId: (userId: string | null) => void;
+    setUser: (
+      user: null | { id: string; fullName: string; email: string },
+    ) => void;
   };
 };

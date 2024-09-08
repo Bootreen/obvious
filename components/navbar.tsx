@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 "use client";
 
 import { useUser } from "@clerk/clerk-react";
@@ -31,21 +32,27 @@ export const Navbar = () => {
     onOpen: onHelpOpen,
     onOpenChange: onHelpOpenChange,
   } = useDisclosure();
-  const { isSignedIn, user } = useUser();
+  const { isSignedIn, user: fullUserData } = useUser();
   const currentPath = usePathname();
-  const tabs = useAppStates(({ tabs }) => tabs);
-  const userId = useAppStates(({ userId }) => userId);
-  const { setUserId } = useAppActions();
+  const { tabs, user } = useAppStates((state) => state);
+  const { setUser } = useAppActions();
   const disabledTabs = Object.entries(tabs)
     .filter(([, { isLoaded }]) => !isLoaded)
     .map(([key]) => key);
 
   useEffect(() => {
-    setUserId(isSignedIn ? user.id : null);
+    setUser(
+      isSignedIn
+        ? {
+            id: fullUserData.id,
+            fullName: fullUserData.fullName as string,
+            email: fullUserData.emailAddresses[0].emailAddress,
+          }
+        : null,
+    );
   }, [isSignedIn]);
 
-  // eslint-disable-next-line no-console
-  console.log(userId);
+  // console.log(user);
 
   return (
     <>

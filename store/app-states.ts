@@ -249,9 +249,9 @@ export const useAppStates = create<State>()(
         get().actions.setSubtopics([]);
       },
 
-      setUserId: (userId) =>
+      setUser: (user) =>
         set((state) => {
-          state.userId = userId;
+          state.user = user;
         }),
     },
   })),

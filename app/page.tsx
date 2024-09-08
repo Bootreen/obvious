@@ -1,5 +1,7 @@
+/* eslint-disable no-console */
 "use client";
 
+import axios from "axios";
 import { ChangeEvent, useEffect, useRef } from "react";
 import { Textarea } from "@nextui-org/input";
 import { CheckboxGroup, Checkbox } from "@nextui-org/checkbox";
@@ -254,6 +256,20 @@ const Home = () => {
     clearErrors();
   };
 
+  const handleCreateTables = async () => {
+    try {
+      const response = await axios.post("/api/tables");
+
+      console.log(response.data.message);
+    } catch (error) {
+      console.error("Error creating tables:", error);
+    }
+  };
+
+  const onCreateTablesButtonClick = () => handleCreateTables();
+  const onSaveUserButtonClick = () => {};
+  const onDeleteUserButtonClick = () => {};
+
   // If none of the study material options are selected or the request is empty.
   const isEmptyRequest =
     Object.values(checkboxes).find(({ isChecked }) => isChecked) ===
@@ -305,10 +321,39 @@ const Home = () => {
           isDisabled={isEmptyRequest || isBusy}
           radius="sm"
           size="lg"
-          onPress={() => onGenerateButtonClick()}
+          onPress={onGenerateButtonClick}
         >
           Generate
         </Button>
+        <div className="flex flex-row gap-x-2 justify-center">
+          <Button
+            className={styles.submitButton}
+            color="primary"
+            radius="sm"
+            size="lg"
+            onPress={onCreateTablesButtonClick}
+          >
+            Create tables
+          </Button>
+          <Button
+            className={styles.submitButton}
+            color="primary"
+            radius="sm"
+            size="lg"
+            onPress={onSaveUserButtonClick}
+          >
+            Save user
+          </Button>
+          <Button
+            className={styles.submitButton}
+            color="primary"
+            radius="sm"
+            size="lg"
+            onPress={onDeleteUserButtonClick}
+          >
+            Delete user
+          </Button>
+        </div>
       </div>
 
       {/* Error modal window */}
