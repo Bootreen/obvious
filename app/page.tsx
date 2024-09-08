@@ -13,7 +13,7 @@ import {
   ModalFooter,
 } from "@nextui-org/modal";
 
-import { Parts, geminiApiRequest } from "@/utils/request";
+import { Parts, geminiApiRequest } from "@/utils/ai-api-request";
 import { useAppStates, useAppActions } from "@/store/app-states";
 import { checkPairs, checkQuiz } from "@/utils/content-check";
 import { shuffleIndices } from "@/utils/shuffle";
