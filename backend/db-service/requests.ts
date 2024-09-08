@@ -1,9 +1,9 @@
 import { sql } from "@vercel/postgres";
 
-import createRequestQuery from "@/sql/request-create.sql";
-import getRequestQuery from "@/sql/request-get.sql";
-import updateRequestQuery from "@/sql/request-update.sql";
-import deleteRequestQuery from "@/sql/request-delete.sql";
+import createRequestQuery from "@/backend/sql-queries/request-create.sql";
+import getRequestQuery from "@/backend/sql-queries/request-get.sql";
+import updateRequestQuery from "@/backend/sql-queries/request-update.sql";
+import deleteRequestQuery from "@/backend/sql-queries/request-delete.sql";
 
 export const createRequest = async (requestData: string) => {
   const result = await sql.query(createRequestQuery, [requestData]);

@@ -1,8 +1,8 @@
 import { sql } from "@vercel/postgres";
 
-import createSessionQuery from "@/sql/session-create.sql";
-import getSessionQuery from "@/sql/session-get.sql";
-import deleteSessionQuery from "@/sql/session-delete.sql";
+import createSessionQuery from "@/backend/sql-queries/session-create.sql";
+import getSessionQuery from "@/backend/sql-queries/session-get.sql";
+import deleteSessionQuery from "@/backend/sql-queries/session-delete.sql";
 
 export const createSession = async () => {
   const result = await sql.query(createSessionQuery);

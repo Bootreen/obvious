@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { sql } from "@vercel/postgres";
 
-import createTablesQuery from "@/sql/tables-init.sql";
+import createTablesQuery from "@/backend/sql-queries/tables-init.sql";
 
 console.log(createTablesQuery);
 

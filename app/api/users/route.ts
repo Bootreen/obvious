@@ -6,7 +6,7 @@ import {
   getUser,
   updateUser,
   deleteUser,
-} from "@/utils/db-user-service";
+} from "@/backend/db-service/users";
 
 export const POST = async (req: Request) => {
   const { id, username, email } = await req.json();

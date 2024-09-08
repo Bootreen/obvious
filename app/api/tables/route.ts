@@ -1,9 +1,8 @@
 /* eslint-disable no-console */
 import { NextResponse } from "next/server";
 
-import { createTables } from "@/utils/db-setup-tables";
+import { createTables } from "@/backend/db-service/tables-setup";
 
-// API Route Handler
 export const POST = async () => {
   try {
     await createTables();
@@ -13,7 +12,7 @@ export const POST = async () => {
     console.error("Error in API route:", error);
 
     return NextResponse.json(
-      { error: "Failed to create tables" },
+      { error: "Internal server error: failed to create tables" },
       { status: 500 },
     );
   }

@@ -1,9 +1,9 @@
 import { sql } from "@vercel/postgres";
 
-import createUserQuery from "@/sql/user-create.sql";
-import getUserQuery from "@/sql/user-get.sql";
-import updateUserQuery from "@/sql/user-update.sql";
-import deleteUserQuery from "@/sql/user-delete.sql";
+import createUserQuery from "@/backend/sql-queries/user-create.sql";
+import getUserQuery from "@/backend/sql-queries/user-get.sql";
+import updateUserQuery from "@/backend/sql-queries/user-update.sql";
+import deleteUserQuery from "@/backend/sql-queries/user-delete.sql";
 
 export const createUser = async (
   id: string,

@@ -1,0 +1,3 @@
+.modalHeader {
+  @apply flex flex-col gap-1;
+}

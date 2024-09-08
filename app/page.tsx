@@ -15,9 +15,10 @@ import {
   ModalFooter,
 } from "@nextui-org/modal";
 
-import { Parts, geminiApiRequest } from "@/utils/ai-api-request";
+import { Parts, geminiApiRequest } from "@/backend/controllers/ai-api-request";
 import { useAppStates, useAppActions } from "@/store/app-states";
 import { checkPairs, checkQuiz } from "@/utils/content-check";
+import { estimateLoadTime } from "@/utils/estimate-load-time";
 import { shuffleIndices } from "@/utils/shuffle";
 import { initialState } from "@/config/app-initial-state";
 import styles from "@/styles/page.home.module.css";
@@ -48,33 +49,9 @@ const Home = () => {
   // Local variable to store estimated load time
   const estimatedLoadTime = useRef<number>(0);
 
-  const estimateLoadTime = (): number => {
-    // Average time to generate tabs (determined experimentally)
-    // And made more conservative than averages
-    const tabsEstimate = {
-      summary: 1900,
-      guide: 2200,
-      flashcards: 2500,
-      pairmatch: 2500,
-      quiz: 4500,
-    };
-
-    // Check which checkboxes are selected and sum up the estimated time
-    return Object.entries(checkboxes)
-      .map(([key, { isChecked }]) =>
-        isChecked ? tabsEstimate[key as keyof typeof tabsEstimate] : 0,
-      )
-      .reduce((acc, cur) => acc + cur, 0);
-  };
-
-  // Set initial load time on first render
-  useEffect(() => {
-    estimatedLoadTime.current = estimateLoadTime();
-  }, []);
-
   // Update load time when checkbox configuration changes
   useEffect(() => {
-    estimatedLoadTime.current = estimateLoadTime();
+    estimatedLoadTime.current = estimateLoadTime(checkboxes);
   }, [checkboxes]);
 
   // Update progress indicator every 0.1s
