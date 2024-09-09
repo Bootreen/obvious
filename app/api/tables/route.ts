@@ -1,19 +1,19 @@
-/* eslint-disable no-console */
 import { NextResponse } from "next/server";
 
-import { createTables } from "@/backend/db-service/tables-setup";
+import { createTablesInDb } from "@/backend/db-service/tables-setup";
 
 export const POST = async () => {
   try {
-    await createTables();
+    await createTablesInDb();
 
-    return NextResponse.json({ message: "Tables created successfully" });
+    return NextResponse.json({
+      data: { message: "Tables created successfully (or already existed)" },
+      status: 201,
+    });
   } catch (error) {
-    console.error("Error in API route:", error);
-
-    return NextResponse.json(
-      { error: "Internal server error: failed to create tables" },
-      { status: 500 },
-    );
+    return NextResponse.json({
+      data: { error: "Failed to create tables: internal server error" },
+      status: 500,
+    });
   }
 };

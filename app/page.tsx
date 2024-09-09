@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 "use client";
 
-import axios from "axios";
 import { ChangeEvent, useEffect, useRef } from "react";
 import { Textarea } from "@nextui-org/input";
 import { CheckboxGroup, Checkbox } from "@nextui-org/checkbox";
@@ -16,7 +15,13 @@ import { checkPairs, checkQuiz } from "@/utils/content-check";
 import { estimateLoadTime } from "@/utils/estimate-load-time";
 import { shuffleIndices } from "@/utils/shuffle";
 import { initialState } from "@/config/app-initial-state";
-import { createUser, deleteUser } from "@/backend/controllers/user-controller";
+import { createTables } from "@/backend/controllers/tables-init-controller";
+import {
+  createUser,
+  deleteUser,
+  getUser,
+  updateUser,
+} from "@/backend/controllers/user-controller";
 import styles from "@/styles/page.home.module.css";
 
 const Home = () => {
@@ -229,22 +234,41 @@ const Home = () => {
     clearErrors();
   };
 
-  const handleCreateTables = async () => {
-    try {
-      const response = await axios.post("/api/tables");
+  const handleCreateTables = () => createTables();
 
-      console.log(response.data.message);
-    } catch (error) {
-      console.error("Error creating tables:", error);
+  const onCreateTablesButtonClick = async () => {
+    const response = await handleCreateTables();
+
+    console.log(response);
+  };
+
+  const onSaveUserButtonClick = async () => {
+    if (user) {
+      const response = await createUser(user);
+
+      console.log(response);
     }
   };
+  const onDeleteUserButtonClick = async () => {
+    if (user) {
+      const response = await deleteUser(user.id);
 
-  const onCreateTablesButtonClick = () => handleCreateTables();
-  const onSaveUserButtonClick = () => {
-    if (user) createUser(user);
+      console.log(response);
+    }
   };
-  const onDeleteUserButtonClick = () => {
-    if (user) deleteUser(user.id);
+  const onModifyUserButtonClick = async () => {
+    if (user) {
+      const response = await updateUser({ ...user, username: "Alex Boot" });
+
+      console.log(response);
+    }
+  };
+  const onGetUserButtonClick = async () => {
+    if (user) {
+      const response = await getUser(user.id);
+
+      console.log(response);
+    }
   };
 
   // If none of the study material options are selected or the request is empty.
@@ -330,6 +354,24 @@ const Home = () => {
             onPress={onDeleteUserButtonClick}
           >
             Delete user
+          </Button>
+          <Button
+            className={styles.submitButton}
+            color="primary"
+            radius="sm"
+            size="lg"
+            onPress={onModifyUserButtonClick}
+          >
+            Modify user
+          </Button>
+          <Button
+            className={styles.submitButton}
+            color="primary"
+            radius="sm"
+            size="lg"
+            onPress={onGetUserButtonClick}
+          >
+            Get user
           </Button>
         </div>
       </div>

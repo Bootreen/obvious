@@ -1,48 +1,60 @@
-/* eslint-disable no-console */
 import { NextResponse } from "next/server";
 
+import { dbError } from "@/types";
 import {
-  createUser,
-  getUser,
-  updateUser,
-  deleteUser,
+  createUserInDb,
+  getUserFromDb,
+  updateUserInDb,
+  deleteUserFromDb,
 } from "@/backend/db-service/users";
 
 export const POST = async (req: Request) => {
+  // Get params from request body
   const { id, username, email } = await req.json();
 
   try {
-    await createUser(id, username, email);
+    await createUserInDb(id, username, email);
 
-    return NextResponse.json({ message: "User created successfully" });
+    return NextResponse.json({
+      data: { message: "User created successfully" },
+      status: 201,
+      isError: false,
+    });
   } catch (error) {
-    console.error(error);
-
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
+    return NextResponse.json({
+      data: {
+        error:
+          (error as dbError).message ||
+          "Failed to create user: internal server error",
+      },
+      status: (error as dbError).status || 500,
+      isError: true,
+    });
   }
 };
 
 export const GET = async (req: Request) => {
-  const { id } = await req.json();
+  // Get params from URL search params
+  const id = new URL(req.url).searchParams.get("id");
 
   try {
-    const user = await getUser(id as string);
-
-    if (user) {
-      return NextResponse.json(user);
-    } else {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    if (!id) {
+      throw { status: 400, message: "User ID is required" };
     }
-  } catch (error) {
-    console.error(error);
 
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
+    const user = await getUserFromDb(id);
+
+    return NextResponse.json({ data: user, status: 200, isError: false });
+  } catch (error) {
+    return NextResponse.json({
+      data: {
+        error:
+          (error as dbError).message ||
+          "Failed to fetch user: internal server error",
+      },
+      status: (error as dbError).status || 500,
+      isError: true,
+    });
   }
 };
 
@@ -50,16 +62,23 @@ export const PATCH = async (req: Request) => {
   const { id, username, email } = await req.json();
 
   try {
-    await updateUser(id, username, email);
+    await updateUserInDb(id, username, email);
 
-    return NextResponse.json({ message: "User updated successfully" });
+    return NextResponse.json({
+      data: { message: "User updated successfully" },
+      status: 200,
+      isError: false,
+    });
   } catch (error) {
-    console.error(error);
-
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
+    return NextResponse.json({
+      data: {
+        error:
+          (error as dbError).message ||
+          "Failed to update user: internal server error",
+      },
+      status: (error as dbError).status || 500,
+      isError: true,
+    });
   }
 };
 
@@ -67,15 +86,22 @@ export const DELETE = async (req: Request) => {
   const { id } = await req.json();
 
   try {
-    await deleteUser(id);
+    await deleteUserFromDb(id);
 
-    return NextResponse.json({ message: "User deleted successfully" });
+    return NextResponse.json({
+      data: { message: "User deleted successfully" },
+      status: 200,
+      isError: false,
+    });
   } catch (error) {
-    console.error(error);
-
-    return NextResponse.json(
-      { error: "Internal server errord" },
-      { status: 500 },
-    );
+    return NextResponse.json({
+      data: {
+        error:
+          (error as dbError).message ||
+          "Failed to delete user: internal server error",
+      },
+      status: (error as dbError).status || 500,
+      isError: true,
+    });
   }
 };

@@ -5,28 +5,49 @@ import getUserQuery from "@/backend/sql-queries/user-get.sql";
 import updateUserQuery from "@/backend/sql-queries/user-update.sql";
 import deleteUserQuery from "@/backend/sql-queries/user-delete.sql";
 
-export const createUser = async (
-  id: string,
-  username: string,
-  email: string,
-) => {
-  await sql.query(createUserQuery, [id, username, email]);
-};
-
-export const getUser = async (id: string) => {
+export const getUserFromDb = async (id: string) => {
   const result = await sql.query(getUserQuery, [id]);
+
+  if (result.rows.length === 0) {
+    throw { message: "User not found", status: 404 };
+  }
 
   return result.rows[0];
 };
 
-export const updateUser = async (
+export const createUserInDb = async (
   id: string,
   username: string,
   email: string,
 ) => {
+  // Check if the user already exists without throwing 404 error if not found
+  const existingUser = await getUserFromDb(id).catch(() => null);
+
+  if (existingUser) {
+    // User already exists, throwing error
+    throw { message: "User with this ID already exists", status: 400 };
+  }
+
+  // Create a new user
+  await sql.query(createUserQuery, [id, username, email]);
+};
+
+export const updateUserInDb = async (
+  id: string,
+  username: string,
+  email: string,
+) => {
+  // Check if the user exists
+  await getUserFromDb(id);
+
+  // Proceed with the update
   await sql.query(updateUserQuery, [username, email, id]);
 };
 
-export const deleteUser = async (id: string) => {
+export const deleteUserFromDb = async (id: string) => {
+  // Check if the user exists
+  await getUserFromDb(id);
+
+  // Proceed with the delete
   await sql.query(deleteUserQuery, [id]);
 };
