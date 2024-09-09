@@ -16,7 +16,7 @@ events.EventEmitter.defaultMaxListeners = 20;
 
 let genAI: GoogleGenerativeAI | null = null;
 
-export async function POST(req: Request): Promise<NextResponse> {
+export const POST = async (req: Request): Promise<NextResponse> => {
   try {
     if (!genAI) {
       genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string);
@@ -36,4 +36,4 @@ export async function POST(req: Request): Promise<NextResponse> {
 
     return NextResponse.json({ error: "An error occurred" }, { status: 500 });
   }
-}
+};

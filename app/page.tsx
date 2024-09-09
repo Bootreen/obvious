@@ -1,28 +1,32 @@
+/* eslint-disable no-console */
 "use client";
 
 import { ChangeEvent, useEffect, useRef } from "react";
 import { Textarea } from "@nextui-org/input";
 import { CheckboxGroup, Checkbox } from "@nextui-org/checkbox";
 import { Button } from "@nextui-org/button";
-import { Progress, useDisclosure } from "@nextui-org/react";
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-} from "@nextui-org/modal";
+import { useDisclosure } from "@nextui-org/react";
 
-import { Parts, geminiApiRequest } from "@/utils/request";
+import { ModalError } from "@/components/modal-error";
+import { ModalProgress } from "@/components/modal-progress";
+import { Parts, geminiApiRequest } from "@/backend/controllers/ai-api-request";
 import { useAppStates, useAppActions } from "@/store/app-states";
 import { checkPairs, checkQuiz } from "@/utils/content-check";
+import { estimateLoadTime } from "@/utils/estimate-load-time";
 import { shuffleIndices } from "@/utils/shuffle";
 import { initialState } from "@/config/app-initial-state";
+import { createTables } from "@/backend/controllers/tables-init-controller";
+import {
+  createUser,
+  deleteUser,
+  getUser,
+  updateUser,
+} from "@/backend/controllers/user-controller";
 import styles from "@/styles/page.home.module.css";
 
 const Home = () => {
   // State store variables...
-  const { checkboxes, request, isBusy, progress } = useAppStates(
+  const { checkboxes, request, isBusy, progress, user } = useAppStates(
     (state) => state,
   );
   // ...and setters
@@ -46,33 +50,9 @@ const Home = () => {
   // Local variable to store estimated load time
   const estimatedLoadTime = useRef<number>(0);
 
-  const estimateLoadTime = (): number => {
-    // Average time to generate tabs (determined experimentally)
-    // And made more conservative than averages
-    const tabsEstimate = {
-      summary: 1900,
-      guide: 2200,
-      flashcards: 2500,
-      pairmatch: 2500,
-      quiz: 4500,
-    };
-
-    // Check which checkboxes are selected and sum up the estimated time
-    return Object.entries(checkboxes)
-      .map(([key, { isChecked }]) =>
-        isChecked ? tabsEstimate[key as keyof typeof tabsEstimate] : 0,
-      )
-      .reduce((acc, cur) => acc + cur, 0);
-  };
-
-  // Set initial load time on first render
-  useEffect(() => {
-    estimatedLoadTime.current = estimateLoadTime();
-  }, []);
-
   // Update load time when checkbox configuration changes
   useEffect(() => {
-    estimatedLoadTime.current = estimateLoadTime();
+    estimatedLoadTime.current = estimateLoadTime(checkboxes);
   }, [checkboxes]);
 
   // Update progress indicator every 0.1s
@@ -254,6 +234,43 @@ const Home = () => {
     clearErrors();
   };
 
+  const handleCreateTables = () => createTables();
+
+  const onCreateTablesButtonClick = async () => {
+    const response = await handleCreateTables();
+
+    console.log(response);
+  };
+
+  const onSaveUserButtonClick = async () => {
+    if (user) {
+      const response = await createUser(user);
+
+      console.log(response);
+    }
+  };
+  const onDeleteUserButtonClick = async () => {
+    if (user) {
+      const response = await deleteUser(user.id);
+
+      console.log(response);
+    }
+  };
+  const onModifyUserButtonClick = async () => {
+    if (user) {
+      const response = await updateUser({ ...user, username: "Alex Boot" });
+
+      console.log(response);
+    }
+  };
+  const onGetUserButtonClick = async () => {
+    if (user) {
+      const response = await getUser(user.id);
+
+      console.log(response);
+    }
+  };
+
   // If none of the study material options are selected or the request is empty.
   const isEmptyRequest =
     Object.values(checkboxes).find(({ isChecked }) => isChecked) ===
@@ -305,69 +322,72 @@ const Home = () => {
           isDisabled={isEmptyRequest || isBusy}
           radius="sm"
           size="lg"
-          onPress={() => onGenerateButtonClick()}
+          onPress={onGenerateButtonClick}
         >
           Generate
         </Button>
+        {/* Temp for the testing purpose */}
+        <div className="flex flex-row gap-x-2 justify-center">
+          <Button
+            className={styles.submitButton}
+            color="primary"
+            radius="sm"
+            size="lg"
+            onPress={onCreateTablesButtonClick}
+          >
+            Create tables
+          </Button>
+          <Button
+            className={styles.submitButton}
+            color="primary"
+            radius="sm"
+            size="lg"
+            onPress={onSaveUserButtonClick}
+          >
+            Save user
+          </Button>
+          <Button
+            className={styles.submitButton}
+            color="primary"
+            radius="sm"
+            size="lg"
+            onPress={onDeleteUserButtonClick}
+          >
+            Delete user
+          </Button>
+          <Button
+            className={styles.submitButton}
+            color="primary"
+            radius="sm"
+            size="lg"
+            onPress={onModifyUserButtonClick}
+          >
+            Modify user
+          </Button>
+          <Button
+            className={styles.submitButton}
+            color="primary"
+            radius="sm"
+            size="lg"
+            onPress={onGetUserButtonClick}
+          >
+            Get user
+          </Button>
+        </div>
       </div>
 
       {/* Error modal window */}
-      <Modal
-        classNames={{ header: styles.modalHeader }}
-        isDismissable={false}
+      <ModalError
         isOpen={isErrorOpen}
-        size="xl"
-        onOpenChange={onErrorOpenChange}
-      >
-        <ModalContent>
-          {(onErrorClose) => (
-            <>
-              <ModalHeader>Unable to fulfill the request</ModalHeader>
-              <ModalBody>
-                <p>
-                  Failed to generate learning materials for your request after
-                  three attempts. This usually happens when the query is not
-                  formulated well, or you are trying to request materials that
-                  violate the ethical principles of using AI. Try rephrasing
-                  your question or change the subject.
-                </p>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="primary" onPress={onErrorClose}>
-                  Dismiss
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+        onOpenChangeHandler={onErrorOpenChange}
+      />
 
       {/* Loading progress modal */}
-      <Modal
-        hideCloseButton
-        isKeyboardDismissDisabled
-        classNames={{ header: styles.modalHeader }}
-        isDismissable={false}
+      <ModalProgress
         isOpen={isProgressOpen}
-        size="md"
-        onOpenChange={onProgressOpenChange}
-      >
-        <ModalContent>
-          {() => (
-            <>
-              <ModalHeader>Generating content...</ModalHeader>
-              <Progress
-                aria-label="Content generating progress..."
-                classNames={{ base: styles.progressBarContainer }}
-                color="success"
-                showValueLabel={true}
-                size="md"
-                value={(progress * 100) / estimatedLoadTime.current}
-              />
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+        value={(progress * 100) / estimatedLoadTime.current}
+        onOpenChangeHandler={onProgressOpenChange}
+      />
     </section>
   );
 };

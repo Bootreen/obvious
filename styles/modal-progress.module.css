@@ -1,0 +1,7 @@
+.modalHeader {
+  @apply text-center;
+}
+
+.progressBarContainer {
+  @apply p-8;
+}

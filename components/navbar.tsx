@@ -1,24 +1,17 @@
 "use client";
 
+import clsx from "clsx";
+import NextLink from "next/link";
+import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { useUser } from "@clerk/clerk-react";
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Navbar as DefaultNavbar, NavbarContent } from "@nextui-org/navbar";
 import { Tabs, Tab } from "@nextui-org/tabs";
-import { Button } from "@nextui-org/button";
 import { link as linkStyles } from "@nextui-org/theme";
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-} from "@nextui-org/modal";
 import { Card, CardBody, useDisclosure } from "@nextui-org/react";
-import { usePathname } from "next/navigation";
-import { useEffect } from "react";
-import NextLink from "next/link";
-import clsx from "clsx";
 
+import { ModalHelpMain } from "./modal-help-main";
 import { LoginIcon, HelpIcon } from "./icons";
 
 import styles from "@/styles/navbar.module.css";
@@ -31,21 +24,25 @@ export const Navbar = () => {
     onOpen: onHelpOpen,
     onOpenChange: onHelpOpenChange,
   } = useDisclosure();
-  const { isSignedIn, user } = useUser();
+  const { isSignedIn, user: fullUserData } = useUser();
   const currentPath = usePathname();
-  const tabs = useAppStates(({ tabs }) => tabs);
-  const userId = useAppStates(({ userId }) => userId);
-  const { setUserId } = useAppActions();
+  const { tabs } = useAppStates((state) => state);
+  const { setUser } = useAppActions();
   const disabledTabs = Object.entries(tabs)
     .filter(([, { isLoaded }]) => !isLoaded)
     .map(([key]) => key);
 
   useEffect(() => {
-    setUserId(isSignedIn ? user.id : null);
+    setUser(
+      isSignedIn
+        ? {
+            id: fullUserData.id,
+            username: fullUserData.fullName as string,
+            email: fullUserData.emailAddresses[0].emailAddress,
+          }
+        : null,
+    );
   }, [isSignedIn]);
-
-  // eslint-disable-next-line no-console
-  console.log(userId);
 
   return (
     <>
@@ -113,71 +110,10 @@ export const Navbar = () => {
         </NavbarContent>
       </DefaultNavbar>
 
-      {/* Help modal window */}
-      <Modal isOpen={isHelpOpen} size="xl" onOpenChange={onHelpOpenChange}>
-        <ModalContent>
-          {(onHelpClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">
-                Sarge Obvious: Help
-              </ModalHeader>
-              <ModalBody>
-                <h3>1. Choose Your Topic:</h3>
-                <p>
-                  Enter any topic you’d like to learn about. The more specific,
-                  the better! For example, &quot;Quantum entanglement in quantum
-                  computing&quot; will yield more focused results than just
-                  &quot;quantum physics.&quot; Remember, the app doesn’t support
-                  content related to violence, terrorism, drugs, sexual content,
-                  and other unethical subjects.
-                </p>
-                <h3>2. Select Your Material Type:</h3>
-                <p>You can generate the following types of study materials:</p>
-                <ul>
-                  <li>
-                    Step-by-Step Guides: Detailed instructions on the most
-                    critical aspects of your topic.
-                  </li>
-                  <li>
-                    Summaries: Concise overviews that cover the essentials.
-                  </li>
-                  <li>
-                    Flashcards: Great for quick memorization of key points.
-                  </li>
-                  <li>
-                    Matching Pairs: Test your knowledge by pairing related
-                    concepts.
-                  </li>
-                  <li>
-                    Final Quiz: A test to check how well you’ve learned the
-                    material.
-                  </li>
-                </ul>
-                <h3>3. Wait for the Magic:</h3>
-                <p>
-                  After submitting your request, Sarge Obvious will process it.
-                  Depending on the complexity and amount of material you’ve
-                  requested, this might take between 3 to 20 seconds.
-                </p>
-
-                <h3>4. Review and Learn:</h3>
-                <p>
-                  Once your materials are ready, dive in and start learning.
-                  Whether you’re brushing up on your coding skills or mastering
-                  a complex formula, Sarge Obvious has got you covered. Now, get
-                  ready to drill down into your topic and become a
-                  subject-matter expert!
-                </p>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="primary" onPress={onHelpClose}>
-                  OK
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+      <ModalHelpMain
+        isOpen={isHelpOpen}
+        onOpenChangeHandler={onHelpOpenChange}
+      />
     </>
   );
 };
