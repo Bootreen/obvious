@@ -2,6 +2,8 @@ import axios from "axios";
 
 import { requestInstructions, responseSchemas } from "@/config/prompt";
 
+const API_URL = "/api/generate";
+
 export type Parts = "guide" | "summary" | "flashcards" | "pairmatch" | "quiz";
 
 export type Response = Partial<{
@@ -52,7 +54,7 @@ export const geminiApiRequest = async (
   try {
     // Make API request
     const { status, data } = await axios.post(
-      "/api/generate",
+      API_URL,
       {
         body: request + instructions + schemas,
       },

@@ -4,7 +4,13 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
   size?: number;
 };
 
-export interface ModalWindowProps {
+export type ModalWindowProps = {
   isOpen: boolean;
   onOpenChangeHandler: () => void;
-}
+};
+
+export type User = {
+  id: string;
+  username: string;
+  email: string;
+} | null;

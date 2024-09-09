@@ -10,17 +10,18 @@ import { useDisclosure } from "@nextui-org/react";
 
 import { ModalError } from "@/components/modal-error";
 import { ModalProgress } from "@/components/modal-progress";
-import { Parts, geminiApiRequest } from "@/backend/controllers/ai-api-request";
+import { Parts, geminiApiRequest } from "@/backend/controllers/ai-controller";
 import { useAppStates, useAppActions } from "@/store/app-states";
 import { checkPairs, checkQuiz } from "@/utils/content-check";
 import { estimateLoadTime } from "@/utils/estimate-load-time";
 import { shuffleIndices } from "@/utils/shuffle";
 import { initialState } from "@/config/app-initial-state";
+import { createUser, deleteUser } from "@/backend/controllers/user-controller";
 import styles from "@/styles/page.home.module.css";
 
 const Home = () => {
   // State store variables...
-  const { checkboxes, request, isBusy, progress } = useAppStates(
+  const { checkboxes, request, isBusy, progress, user } = useAppStates(
     (state) => state,
   );
   // ...and setters
@@ -239,8 +240,12 @@ const Home = () => {
   };
 
   const onCreateTablesButtonClick = () => handleCreateTables();
-  const onSaveUserButtonClick = () => {};
-  const onDeleteUserButtonClick = () => {};
+  const onSaveUserButtonClick = () => {
+    if (user) createUser(user);
+  };
+  const onDeleteUserButtonClick = () => {
+    if (user) deleteUser(user.id);
+  };
 
   // If none of the study material options are selected or the request is empty.
   const isEmptyRequest =

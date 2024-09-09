@@ -1,3 +1,4 @@
+import { User } from "@/types/index";
 import {
   FlashcardsIcon,
   GuideIcon,
@@ -85,7 +86,7 @@ export const initialState = {
   isBusy: false, // temporarily blocks input, when App is waiting for API response
   progress: 0,
 
-  user: null as null | { id: string; fullName: string; email: string },
+  user: null as User,
 };
 
 export type State = typeof initialState & {
@@ -135,8 +136,6 @@ export type State = typeof initialState & {
     setSubtopics: (subtopics: string[]) => void;
     resetContent: () => void;
 
-    setUser: (
-      user: null | { id: string; fullName: string; email: string },
-    ) => void;
+    setUser: (user: User) => void;
   };
 };

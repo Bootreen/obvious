@@ -37,7 +37,7 @@ export const Navbar = () => {
       isSignedIn
         ? {
             id: fullUserData.id,
-            fullName: fullUserData.fullName as string,
+            username: fullUserData.fullName as string,
             email: fullUserData.emailAddresses[0].emailAddress,
           }
         : null,
