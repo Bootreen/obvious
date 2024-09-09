@@ -6,15 +6,10 @@ import { ChangeEvent, useEffect, useRef } from "react";
 import { Textarea } from "@nextui-org/input";
 import { CheckboxGroup, Checkbox } from "@nextui-org/checkbox";
 import { Button } from "@nextui-org/button";
-import { Progress, useDisclosure } from "@nextui-org/react";
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-} from "@nextui-org/modal";
+import { useDisclosure } from "@nextui-org/react";
 
+import { ModalError } from "@/components/modal-error";
+import { ModalProgress } from "@/components/modal-progress";
 import { Parts, geminiApiRequest } from "@/backend/controllers/ai-api-request";
 import { useAppStates, useAppActions } from "@/store/app-states";
 import { checkPairs, checkQuiz } from "@/utils/content-check";
@@ -302,6 +297,7 @@ const Home = () => {
         >
           Generate
         </Button>
+        {/* Temp for the testing purpose */}
         <div className="flex flex-row gap-x-2 justify-center">
           <Button
             className={styles.submitButton}
@@ -334,62 +330,17 @@ const Home = () => {
       </div>
 
       {/* Error modal window */}
-      <Modal
-        classNames={{ header: styles.modalHeader }}
-        isDismissable={false}
+      <ModalError
         isOpen={isErrorOpen}
-        size="xl"
-        onOpenChange={onErrorOpenChange}
-      >
-        <ModalContent>
-          {(onErrorClose) => (
-            <>
-              <ModalHeader>Unable to fulfill the request</ModalHeader>
-              <ModalBody>
-                <p>
-                  Failed to generate learning materials for your request after
-                  three attempts. This usually happens when the query is not
-                  formulated well, or you are trying to request materials that
-                  violate the ethical principles of using AI. Try rephrasing
-                  your question or change the subject.
-                </p>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="primary" onPress={onErrorClose}>
-                  Dismiss
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+        onOpenChangeHandler={onErrorOpenChange}
+      />
 
       {/* Loading progress modal */}
-      <Modal
-        hideCloseButton
-        isKeyboardDismissDisabled
-        classNames={{ header: styles.modalHeader }}
-        isDismissable={false}
+      <ModalProgress
         isOpen={isProgressOpen}
-        size="md"
-        onOpenChange={onProgressOpenChange}
-      >
-        <ModalContent>
-          {() => (
-            <>
-              <ModalHeader>Generating content...</ModalHeader>
-              <Progress
-                aria-label="Content generating progress..."
-                classNames={{ base: styles.progressBarContainer }}
-                color="success"
-                showValueLabel={true}
-                size="md"
-                value={(progress * 100) / estimatedLoadTime.current}
-              />
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+        value={(progress * 100) / estimatedLoadTime.current}
+        onOpenChangeHandler={onProgressOpenChange}
+      />
     </section>
   );
 };

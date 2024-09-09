@@ -7,14 +7,10 @@ import {
   ModalFooter,
 } from "@nextui-org/modal";
 
+import { ModalWindowProps } from "@/types";
 import styles from "@/styles/modal-help-main.module.css";
 
-interface ModalHelpMainProps {
-  isOpen: boolean;
-  onOpenChangeHandler: () => void;
-}
-
-export const ModalHelpMain: React.FC<ModalHelpMainProps> = ({
+export const ModalHelpMain: React.FC<ModalWindowProps> = ({
   isOpen,
   onOpenChangeHandler,
 }) => (

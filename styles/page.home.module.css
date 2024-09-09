@@ -21,11 +21,3 @@
 .submitButton {
   @apply w-fit m-auto;
 }
-
-.modalHeader {
-  @apply text-center;
-}
-
-.progressBarContainer {
-  @apply p-8;
-}
