@@ -1,1 +1,3 @@
-INSERT INTO so_requests (request_data) VALUES ($1) RETURNING id;
+INSERT INTO so_requests (session_id, request_data)
+VALUES ($1, $2)
+RETURNING id;

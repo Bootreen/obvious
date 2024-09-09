@@ -1,1 +1,2 @@
-DELETE FROM so_users WHERE id = $1;
+DELETE FROM so_users
+WHERE id = $1;

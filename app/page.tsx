@@ -9,7 +9,7 @@ import { useDisclosure } from "@nextui-org/react";
 
 import { ModalError } from "@/components/modal-error";
 import { ModalProgress } from "@/components/modal-progress";
-import { Parts, geminiApiRequest } from "@/backend/controllers/ai-controller";
+import { Parts, geminiApiRequest } from "@/backend/controllers/ai-api-request";
 import { useAppStates, useAppActions } from "@/store/app-states";
 import { checkPairs, checkQuiz } from "@/utils/content-check";
 import { estimateLoadTime } from "@/utils/estimate-load-time";

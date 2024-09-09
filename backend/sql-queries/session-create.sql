@@ -1,1 +1,3 @@
-INSERT INTO so_sessions (login_time) VALUES (CURRENT_TIMESTAMP) RETURNING id;
+INSERT INTO so_sessions (user_id)
+VALUES ($1)
+RETURNING id;

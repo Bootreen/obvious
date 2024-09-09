@@ -1,1 +1,2 @@
-INSERT INTO so_users (id, username, email) VALUES ($1, $2, $3);
+INSERT INTO so_users (id, username, email)
+VALUES ($1, $2, $3);

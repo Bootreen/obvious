@@ -1,65 +1,82 @@
-/* eslint-disable no-console */
 import { NextResponse } from "next/server";
 
+import { dbError } from "@/types";
 import {
-  createRequest,
-  getRequest,
-  updateRequest,
-  deleteRequest,
+  createRequestInDb,
+  getRequestFromDb,
+  updateRequestInDb,
+  deleteRequestFromDb,
 } from "@/backend/db-service/requests";
 
 export const POST = async (req: Request) => {
-  const { request } = await req.json();
+  const { sessionId, requestData } = await req.json();
 
   try {
-    await createRequest(request);
+    const requestId = await createRequestInDb(sessionId, requestData);
 
-    return NextResponse.json({ message: "Request created successfully" });
+    return NextResponse.json({
+      data: requestId,
+      status: 201,
+      isError: false,
+    });
   } catch (error) {
-    console.error(error);
-
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
+    return NextResponse.json({
+      data: {
+        error:
+          (error as dbError).message ||
+          "Failed to create request: internal server error",
+      },
+      status: (error as dbError).status || 500,
+      isError: true,
+    });
   }
 };
 
 export const GET = async (req: Request) => {
-  const { id } = await req.json();
+  const id = new URL(req.url).searchParams.get("id");
 
   try {
-    const request = await getRequest(id);
-
-    if (request) {
-      return NextResponse.json(request);
-    } else {
-      return NextResponse.json({ error: "Request not found" }, { status: 404 });
+    if (!id) {
+      throw { status: 400, message: "Request ID is required" };
     }
-  } catch (error) {
-    console.error(error);
 
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
+    const request = await getRequestFromDb(Number(id));
+
+    return NextResponse.json({ data: request, status: 200, isError: false });
+  } catch (error) {
+    return NextResponse.json({
+      data: {
+        error:
+          (error as dbError).message ||
+          "Failed to fetch request: internal server error",
+      },
+      status: (error as dbError).status || 500,
+      isError: true,
+    });
   }
 };
 
 export const PATCH = async (req: Request) => {
-  const { id, request } = await req.json();
+  const { id, requestData } = await req.json();
 
   try {
-    await updateRequest(id, request);
+    await updateRequestInDb(id, requestData);
 
-    return NextResponse.json({ message: "Request updated successfully" });
+    return NextResponse.json({
+      data: { message: "Request updated successfully" },
+      status: 200,
+      isError: false,
+    });
   } catch (error) {
-    console.error(error);
-
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
+    return NextResponse.json({
+      data: {
+        error:
+          (error as dbError).message ||
+          "Failed to update request: internal server error",
+      },
+      status: (error as dbError).status || 500,
+      isError: true,
+    });
   }
 };
 
@@ -67,15 +84,22 @@ export const DELETE = async (req: Request) => {
   const { id } = await req.json();
 
   try {
-    await deleteRequest(id);
+    await deleteRequestFromDb(Number(id));
 
-    return NextResponse.json({ message: "Request deleted successfully" });
+    return NextResponse.json({
+      data: { message: "Request deleted successfully" },
+      status: 200,
+      isError: false,
+    });
   } catch (error) {
-    console.error(error);
-
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
+    return NextResponse.json({
+      data: {
+        error:
+          (error as dbError).message ||
+          "Failed to delete request: internal server error",
+      },
+      status: (error as dbError).status || 500,
+      isError: true,
+    });
   }
 };

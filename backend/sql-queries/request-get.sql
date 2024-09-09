@@ -1,1 +1,3 @@
-SELECT * FROM so_requests WHERE id = $1;
+SELECT *
+FROM so_requests
+WHERE id = $1;
