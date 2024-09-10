@@ -20,3 +20,11 @@ export const estimateLoadTime = (
     )
     .reduce((acc, cur) => acc + cur, 0);
 };
+
+export const isSessionExpired = (createdAt: string): boolean => {
+  const sessionTime = new Date(createdAt).getTime();
+  const currentTime = Date.now();
+  const twoHours = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
+
+  return currentTime - sessionTime > twoHours;
+};

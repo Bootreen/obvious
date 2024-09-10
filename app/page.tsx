@@ -12,7 +12,7 @@ import { ModalProgress } from "@/components/modal-progress";
 import { Parts, geminiApiRequest } from "@/backend/controllers/ai-api-request";
 import { useAppStates, useAppActions } from "@/store/app-states";
 import { checkPairs, checkQuiz } from "@/utils/content-check";
-import { estimateLoadTime } from "@/utils/estimate-load-time";
+import { estimateLoadTime, isSessionExpired } from "@/utils/date-time-utils";
 import { shuffleIndices } from "@/utils/shuffle";
 import { initialState } from "@/config/app-initial-state";
 import { createTables } from "@/backend/controllers/tables-init-controller";
@@ -30,13 +30,25 @@ import {
   getRequestsBySessionId,
 } from "@/backend/controllers/request-controller";
 import styles from "@/styles/page.home.module.css";
-import { ResultResponse, SessionDetail } from "@/types";
 
 const Home = () => {
   // State store variables...
-  const { checkboxes, request, isBusy, progress, user, session } = useAppStates(
-    (state) => state,
-  );
+  const {
+    tabs,
+    checkboxes,
+    request,
+    topic,
+    guide,
+    summary,
+    deck,
+    pairMatcher,
+    quiz,
+    subtopics,
+    isBusy,
+    progress,
+    user,
+    session,
+  } = useAppStates((state) => state);
   // ...and setters
   const {
     setTabState,
@@ -62,7 +74,6 @@ const Home = () => {
     createTables();
   }, []);
 
-  // On user login or switch
   useEffect(() => {
     const userId: string | null = user ? user.id : null;
 
@@ -70,10 +81,24 @@ const Home = () => {
     (async () => {
       // If there is a valid user ID...
       if (userId) {
-        const { status } = await getUser(userId);
+        const { status: userFetchStatus } = await getUser(userId);
 
         // Check if the user exists in the DB, if not — create one
-        if (status !== 200) await createUser(user);
+        if (userFetchStatus !== 200) {
+          await createUser(user);
+        }
+
+        // Fetch sessions for the current user
+        const { data, status: sessionsFetchStatus } =
+          await getSessionsByUserId(userId);
+
+        if (sessionsFetchStatus === 200 && data.sessions.length > 0) {
+          // Get the latest session
+          const lastSession = data.sessions[data.sessions.length - 1];
+
+          // Set the latest session as current
+          setSession(lastSession);
+        }
       }
     })();
   }, [user]);
@@ -265,65 +290,65 @@ const Home = () => {
     clearErrors();
   };
 
-  const onSaveSessionButtonClick = async () => {
-    if (user) {
-      const response = await createSession(user.id);
-
-      console.log(response);
-    }
-  };
-  const onDeleteSessionButtonClick = async () => {
-    if (user) {
-      const response = await deleteSession(1);
-
-      console.log(response);
-    }
-  };
-  const onGetSessionButtonClick = async () => {
-    if (user) {
-      const response = await getSession(1);
-
-      const timestamp = (response.data as SessionDetail).created_at;
-      const dateTime = new Date(timestamp as string);
-
-      console.log(
-        `${dateTime.getMonth()} ${dateTime.getDate()}, ${dateTime.getFullYear()} ${dateTime.getHours()}:${dateTime.getMinutes()}:${dateTime.getSeconds()}`,
-      );
-    }
-  };
-  const onGetAllSessionsButtonClick = async () => {
-    if (user) {
-      const response = await getSessionsByUserId(user.id);
-
-      console.log(response);
-    }
-  };
   const onSaveRequestButtonClick = async () => {
-    if (user) {
-      const response = await createRequest(1, {});
+    const userId = user?.id;
+    const currentSession = session;
 
-      console.log(response);
-    }
-  };
-  const onDeleteRequestButtonClick = async () => {
-    if (user) {
-      const response = await deleteRequest(1);
+    let sessionId = currentSession.id;
 
-      console.log(response);
-    }
-  };
-  const onGetRequestButtonClick = async () => {
-    if (user) {
-      const response = await getRequest(1);
+    if (!sessionId) {
+      // If no current session, check if user has sessions
+      const response = await getSessionsByUserId(userId as string);
 
-      console.log(response);
+      const sessions = response.data.sessions;
+
+      if (sessions.length === 0) {
+        // No sessions found, create a new session
+        const createSessionResponse = await createSession(userId as string);
+
+        sessionId = createSessionResponse.data.id;
+      } else {
+        // Sessions exist, check if last session is expired
+        const lastSession = sessions[sessions.length - 1];
+
+        if (isSessionExpired(lastSession.created_at)) {
+          // Last session is too old, create a new one
+          const createSessionResponse = await createSession(userId as string);
+
+          sessionId = createSessionResponse.data.id;
+        } else {
+          // Last session is still valid
+          sessionId = lastSession.id;
+        }
+      }
+
+      // Update current session in Zustand store
+      setSession({ id: sessionId });
     }
+
+    // Save the request with the current session ID
+    const requestData = {
+      request: request?.trim() || "",
+      topic: topic?.trim() || "",
+      guide: guide.length > 0 ? guide : undefined,
+      summary: summary?.trim() || "",
+      deck: deck.flashcards.length > 0 ? deck : undefined,
+      pairMatcher: pairMatcher.pairs.length > 0 ? pairMatcher : undefined,
+      quiz: quiz.questions.length > 0 ? quiz : undefined,
+      subtopics: subtopics.length > 0 ? subtopics : undefined,
+    };
+    const saveRequestResponse = await createRequest(sessionId, requestData);
+    const fullResponseData = await getRequest(saveRequestResponse.data.id);
+
+    console.log("Request saved successfully:", fullResponseData);
   };
   const onGetAllRequestsButtonClick = async () => {
-    if (user) {
-      const response = await getRequestsBySessionId(1);
+    if (session) {
+      const { data, status } = await getRequestsBySessionId(session.id);
 
-      console.log(response);
+      if (status === 200)
+        console.log("Requests fetched successfully:", data.requests);
+      else console.error("Failed to fetch requests");
     }
   };
 
@@ -331,6 +356,11 @@ const Home = () => {
   const isEmptyRequest =
     Object.values(checkboxes).find(({ isChecked }) => isChecked) ===
       undefined || request.trim() === "";
+
+  const isEmptyContent =
+    Object.values(tabs).find(
+      ({ label, isLoaded }) => label !== "Main" && isLoaded,
+    ) === undefined;
 
   return (
     <section className={styles.homePage}>
@@ -387,44 +417,7 @@ const Home = () => {
           <Button
             className={styles.submitButton}
             color="primary"
-            radius="sm"
-            size="lg"
-            onPress={onSaveSessionButtonClick}
-          >
-            Save session
-          </Button>
-          <Button
-            className={styles.submitButton}
-            color="primary"
-            radius="sm"
-            size="lg"
-            onPress={onDeleteSessionButtonClick}
-          >
-            Delete session
-          </Button>
-          <Button
-            className={styles.submitButton}
-            color="primary"
-            radius="sm"
-            size="lg"
-            onPress={onGetSessionButtonClick}
-          >
-            Get session
-          </Button>
-          <Button
-            className={styles.submitButton}
-            color="primary"
-            radius="sm"
-            size="lg"
-            onPress={onGetAllSessionsButtonClick}
-          >
-            Get all user sessions
-          </Button>
-        </div>
-        <div className="flex flex-row gap-x-2 justify-center">
-          <Button
-            className={styles.submitButton}
-            color="primary"
+            isDisabled={!user || isEmptyContent || isBusy}
             radius="sm"
             size="lg"
             onPress={onSaveRequestButtonClick}
@@ -434,24 +427,7 @@ const Home = () => {
           <Button
             className={styles.submitButton}
             color="primary"
-            radius="sm"
-            size="lg"
-            onPress={onDeleteRequestButtonClick}
-          >
-            Delete request
-          </Button>
-          <Button
-            className={styles.submitButton}
-            color="primary"
-            radius="sm"
-            size="lg"
-            onPress={onGetRequestButtonClick}
-          >
-            Get request
-          </Button>
-          <Button
-            className={styles.submitButton}
-            color="primary"
+            isDisabled={!user || isBusy}
             radius="sm"
             size="lg"
             onPress={onGetAllRequestsButtonClick}
