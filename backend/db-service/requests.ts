@@ -33,15 +33,6 @@ export const createRequestInDb = async (
   sessionId: number,
   requestData: string,
 ): Promise<number> => {
-  // Check if the request already exists without throwing 404 error if not found
-  const existingRequest = await sql
-    .query(getRequestQuery, [sessionId])
-    .catch(() => null);
-
-  if (existingRequest) {
-    throw { message: "Request with this data already exists", status: 400 };
-  }
-
   const result = await sql.query(createRequestQuery, [sessionId, requestData]);
 
   return result.rows[0].id;

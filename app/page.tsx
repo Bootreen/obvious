@@ -22,6 +22,18 @@ import {
   getUser,
   updateUser,
 } from "@/backend/controllers/user-controller";
+import {
+  createSession,
+  deleteSession,
+  getSession,
+  getSessionsByUserId,
+} from "@/backend/controllers/session-controller";
+import {
+  createRequest,
+  deleteRequest,
+  getRequest,
+  getRequestsBySessionId,
+} from "@/backend/controllers/request-controller";
 import styles from "@/styles/page.home.module.css";
 
 const Home = () => {
@@ -270,6 +282,62 @@ const Home = () => {
       console.log(response);
     }
   };
+  const onSaveSessionButtonClick = async () => {
+    if (user) {
+      const response = await createSession(user.id);
+
+      console.log(response);
+    }
+  };
+  const onDeleteSessionButtonClick = async () => {
+    if (user) {
+      const response = await deleteSession(1);
+
+      console.log(response);
+    }
+  };
+  const onGetSessionButtonClick = async () => {
+    if (user) {
+      const response = await getSession(1);
+
+      console.log(response);
+    }
+  };
+  const onGetAllSessionsButtonClick = async () => {
+    if (user) {
+      const response = await getSessionsByUserId(user.id);
+
+      console.log(response);
+    }
+  };
+  const onSaveRequestButtonClick = async () => {
+    if (user) {
+      const response = await createRequest(1, {});
+
+      console.log(response);
+    }
+  };
+  const onDeleteRequestButtonClick = async () => {
+    if (user) {
+      const response = await deleteRequest(1);
+
+      console.log(response);
+    }
+  };
+  const onGetRequestButtonClick = async () => {
+    if (user) {
+      const response = await getRequest(1);
+
+      console.log(response);
+    }
+  };
+  const onGetAllRequestsButtonClick = async () => {
+    if (user) {
+      const response = await getRequestsBySessionId(1);
+
+      console.log(response);
+    }
+  };
 
   // If none of the study material options are selected or the request is empty.
   const isEmptyRequest =
@@ -327,16 +395,16 @@ const Home = () => {
           Generate
         </Button>
         {/* Temp for the testing purpose */}
+        <Button
+          className={styles.submitButton}
+          color="primary"
+          radius="sm"
+          size="lg"
+          onPress={onCreateTablesButtonClick}
+        >
+          Create tables
+        </Button>
         <div className="flex flex-row gap-x-2 justify-center">
-          <Button
-            className={styles.submitButton}
-            color="primary"
-            radius="sm"
-            size="lg"
-            onPress={onCreateTablesButtonClick}
-          >
-            Create tables
-          </Button>
           <Button
             className={styles.submitButton}
             color="primary"
@@ -372,6 +440,82 @@ const Home = () => {
             onPress={onGetUserButtonClick}
           >
             Get user
+          </Button>
+        </div>
+        <div className="flex flex-row gap-x-2 justify-center">
+          <Button
+            className={styles.submitButton}
+            color="primary"
+            radius="sm"
+            size="lg"
+            onPress={onSaveSessionButtonClick}
+          >
+            Save session
+          </Button>
+          <Button
+            className={styles.submitButton}
+            color="primary"
+            radius="sm"
+            size="lg"
+            onPress={onDeleteSessionButtonClick}
+          >
+            Delete session
+          </Button>
+          <Button
+            className={styles.submitButton}
+            color="primary"
+            radius="sm"
+            size="lg"
+            onPress={onGetSessionButtonClick}
+          >
+            Get session
+          </Button>
+          <Button
+            className={styles.submitButton}
+            color="primary"
+            radius="sm"
+            size="lg"
+            onPress={onGetAllSessionsButtonClick}
+          >
+            Get all user sessions
+          </Button>
+        </div>
+        <div className="flex flex-row gap-x-2 justify-center">
+          <Button
+            className={styles.submitButton}
+            color="primary"
+            radius="sm"
+            size="lg"
+            onPress={onSaveRequestButtonClick}
+          >
+            Save request
+          </Button>
+          <Button
+            className={styles.submitButton}
+            color="primary"
+            radius="sm"
+            size="lg"
+            onPress={onDeleteRequestButtonClick}
+          >
+            Delete request
+          </Button>
+          <Button
+            className={styles.submitButton}
+            color="primary"
+            radius="sm"
+            size="lg"
+            onPress={onGetRequestButtonClick}
+          >
+            Get request
+          </Button>
+          <Button
+            className={styles.submitButton}
+            color="primary"
+            radius="sm"
+            size="lg"
+            onPress={onGetAllRequestsButtonClick}
+          >
+            Get all session requests
           </Button>
         </div>
       </div>
