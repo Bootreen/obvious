@@ -39,6 +39,20 @@ export const getRequest = async (
   }
 };
 
+export const getRequestsBySessionId = async (
+  sessionId: number,
+): Promise<ResultResponse<RequestDetail[] | ErrorDetail>> => {
+  try {
+    const response = await axios.get<ResultResponse<RequestDetail[]>>(API_URL, {
+      params: { sessionId },
+    });
+
+    return response.data;
+  } catch (error) {
+    return handleError("Failed to fetch requests by session ID");
+  }
+};
+
 export const updateRequest = async (
   id: number,
   requestData: Record<string, any>,

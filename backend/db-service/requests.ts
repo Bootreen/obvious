@@ -5,8 +5,8 @@ import createRequestQuery from "@/backend/sql-queries/request-create.sql";
 import getRequestQuery from "@/backend/sql-queries/request-get.sql";
 import updateRequestQuery from "@/backend/sql-queries/request-update.sql";
 import deleteRequestQuery from "@/backend/sql-queries/request-delete.sql";
+import getRequestBySessionIdQuery from "@/backend/sql-queries/request-get-by-session.sql";
 
-// Retrieve a request by its ID
 export const getRequestFromDb = async (id: number): Promise<RequestDetail> => {
   const result = await sql.query(getRequestQuery, [id]);
 
@@ -17,7 +17,18 @@ export const getRequestFromDb = async (id: number): Promise<RequestDetail> => {
   return result.rows[0];
 };
 
-// Create a new request with a session_id
+export const getRequestsBySessionIdFromDb = async (
+  sessionId: number,
+): Promise<RequestDetail[]> => {
+  const result = await sql.query(getRequestBySessionIdQuery, [sessionId]);
+
+  if (result.rows.length === 0) {
+    throw { message: "No requests found for this session", status: 404 };
+  }
+
+  return result.rows;
+};
+
 export const createRequestInDb = async (
   sessionId: number,
   requestData: string,

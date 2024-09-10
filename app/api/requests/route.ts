@@ -6,6 +6,7 @@ import {
   getRequestFromDb,
   updateRequestInDb,
   deleteRequestFromDb,
+  getRequestsBySessionIdFromDb,
 } from "@/backend/db-service/requests";
 
 export const POST = async (req: Request) => {
@@ -33,22 +34,34 @@ export const POST = async (req: Request) => {
 };
 
 export const GET = async (req: Request) => {
-  const id = new URL(req.url).searchParams.get("id");
+  const url = new URL(req.url);
+  const id = url.searchParams.get("id");
+  const sessionId = url.searchParams.get("sessionId");
 
   try {
-    if (!id) {
-      throw { status: 400, message: "Request ID is required" };
+    if (id) {
+      // Fetch a single request by request ID
+      const request = await getRequestFromDb(Number(id));
+
+      return NextResponse.json({ data: request, status: 200, isError: false });
+    } else if (sessionId) {
+      // Fetch all requests by session ID
+      const requests = await getRequestsBySessionIdFromDb(Number(sessionId));
+
+      return NextResponse.json({
+        data: requests,
+        status: 200,
+        isError: false,
+      });
+    } else {
+      throw { status: 400, message: "Request ID or Session ID is required" };
     }
-
-    const request = await getRequestFromDb(Number(id));
-
-    return NextResponse.json({ data: request, status: 200, isError: false });
   } catch (error) {
     return NextResponse.json({
       data: {
         error:
           (error as dbError).message ||
-          "Failed to fetch request: internal server error",
+          "Failed to fetch request(s): internal server error",
       },
       status: (error as dbError).status || 500,
       isError: true,

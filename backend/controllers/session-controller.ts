@@ -37,6 +37,20 @@ export const getSession = async (
   }
 };
 
+export const getSessionsByUserId = async (
+  userId: string,
+): Promise<ResultResponse<SessionDetail[] | ErrorDetail>> => {
+  try {
+    const response = await axios.get<ResultResponse<SessionDetail[]>>(API_URL, {
+      params: { userId },
+    });
+
+    return response.data;
+  } catch (error) {
+    return handleError("Failed to fetch sessions by user ID");
+  }
+};
+
 export const deleteSession = async (
   id: number,
 ): Promise<ResultResponse<StatusDetail | ErrorDetail>> => {
