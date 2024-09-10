@@ -19,13 +19,10 @@ import { createTables } from "@/backend/controllers/tables-init-controller";
 import { createUser, getUser } from "@/backend/controllers/user-controller";
 import {
   createSession,
-  deleteSession,
-  getSession,
   getSessionsByUserId,
 } from "@/backend/controllers/session-controller";
 import {
   createRequest,
-  deleteRequest,
   getRequest,
   getRequestsBySessionId,
 } from "@/backend/controllers/request-controller";
