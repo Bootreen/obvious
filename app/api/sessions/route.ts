@@ -15,7 +15,7 @@ export const POST = async (req: Request) => {
     const session = await createSessionInDb(userId);
 
     return NextResponse.json({
-      data: session.id,
+      data: { id: session.id },
       status: 201,
       isError: false,
     });
@@ -49,7 +49,7 @@ export const GET = async (req: Request) => {
       const sessions = await getSessionsByUserIdFromDb(userId);
 
       return NextResponse.json({
-        data: sessions,
+        data: { sessions },
         status: 200,
         isError: false,
       });

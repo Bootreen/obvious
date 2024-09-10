@@ -16,7 +16,7 @@ export const POST = async (req: Request) => {
     const requestId = await createRequestInDb(sessionId, requestData);
 
     return NextResponse.json({
-      data: requestId,
+      data: { id: requestId },
       status: 201,
       isError: false,
     });
@@ -49,7 +49,7 @@ export const GET = async (req: Request) => {
       const requests = await getRequestsBySessionIdFromDb(Number(sessionId));
 
       return NextResponse.json({
-        data: requests,
+        data: { requests },
         status: 200,
         isError: false,
       });

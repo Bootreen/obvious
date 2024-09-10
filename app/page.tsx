@@ -16,12 +16,7 @@ import { estimateLoadTime } from "@/utils/estimate-load-time";
 import { shuffleIndices } from "@/utils/shuffle";
 import { initialState } from "@/config/app-initial-state";
 import { createTables } from "@/backend/controllers/tables-init-controller";
-import {
-  createUser,
-  deleteUser,
-  getUser,
-  updateUser,
-} from "@/backend/controllers/user-controller";
+import { createUser, getUser } from "@/backend/controllers/user-controller";
 import {
   createSession,
   deleteSession,
@@ -35,10 +30,11 @@ import {
   getRequestsBySessionId,
 } from "@/backend/controllers/request-controller";
 import styles from "@/styles/page.home.module.css";
+import { ResultResponse, SessionDetail } from "@/types";
 
 const Home = () => {
   // State store variables...
-  const { checkboxes, request, isBusy, progress, user } = useAppStates(
+  const { checkboxes, request, isBusy, progress, user, session } = useAppStates(
     (state) => state,
   );
   // ...and setters
@@ -57,7 +53,30 @@ const Home = () => {
     resetContent,
     setIsBusy,
     setProgress,
+    setSession,
   } = useAppActions();
+
+  // On app start
+  useEffect(() => {
+    // Create DB-tables if they don't exist
+    createTables();
+  }, []);
+
+  // On user login or switch
+  useEffect(() => {
+    const userId: string | null = user ? user.id : null;
+
+    // Self-invoking async function to check or create user
+    (async () => {
+      // If there is a valid user ID...
+      if (userId) {
+        const { status } = await getUser(userId);
+
+        // Check if the user exists in the DB, if not — create one
+        if (status !== 200) await createUser(user);
+      }
+    })();
+  }, [user]);
 
   // Local variable to store estimated load time
   const estimatedLoadTime = useRef<number>(0);
@@ -246,42 +265,6 @@ const Home = () => {
     clearErrors();
   };
 
-  const handleCreateTables = () => createTables();
-
-  const onCreateTablesButtonClick = async () => {
-    const response = await handleCreateTables();
-
-    console.log(response);
-  };
-
-  const onSaveUserButtonClick = async () => {
-    if (user) {
-      const response = await createUser(user);
-
-      console.log(response);
-    }
-  };
-  const onDeleteUserButtonClick = async () => {
-    if (user) {
-      const response = await deleteUser(user.id);
-
-      console.log(response);
-    }
-  };
-  const onModifyUserButtonClick = async () => {
-    if (user) {
-      const response = await updateUser({ ...user, username: "Alex Boot" });
-
-      console.log(response);
-    }
-  };
-  const onGetUserButtonClick = async () => {
-    if (user) {
-      const response = await getUser(user.id);
-
-      console.log(response);
-    }
-  };
   const onSaveSessionButtonClick = async () => {
     if (user) {
       const response = await createSession(user.id);
@@ -300,7 +283,12 @@ const Home = () => {
     if (user) {
       const response = await getSession(1);
 
-      console.log(response);
+      const timestamp = (response.data as SessionDetail).created_at;
+      const dateTime = new Date(timestamp as string);
+
+      console.log(
+        `${dateTime.getMonth()} ${dateTime.getDate()}, ${dateTime.getFullYear()} ${dateTime.getHours()}:${dateTime.getMinutes()}:${dateTime.getSeconds()}`,
+      );
     }
   };
   const onGetAllSessionsButtonClick = async () => {
@@ -395,53 +383,6 @@ const Home = () => {
           Generate
         </Button>
         {/* Temp for the testing purpose */}
-        <Button
-          className={styles.submitButton}
-          color="primary"
-          radius="sm"
-          size="lg"
-          onPress={onCreateTablesButtonClick}
-        >
-          Create tables
-        </Button>
-        <div className="flex flex-row gap-x-2 justify-center">
-          <Button
-            className={styles.submitButton}
-            color="primary"
-            radius="sm"
-            size="lg"
-            onPress={onSaveUserButtonClick}
-          >
-            Save user
-          </Button>
-          <Button
-            className={styles.submitButton}
-            color="primary"
-            radius="sm"
-            size="lg"
-            onPress={onDeleteUserButtonClick}
-          >
-            Delete user
-          </Button>
-          <Button
-            className={styles.submitButton}
-            color="primary"
-            radius="sm"
-            size="lg"
-            onPress={onModifyUserButtonClick}
-          >
-            Modify user
-          </Button>
-          <Button
-            className={styles.submitButton}
-            color="primary"
-            radius="sm"
-            size="lg"
-            onPress={onGetUserButtonClick}
-          >
-            Get user
-          </Button>
-        </div>
         <div className="flex flex-row gap-x-2 justify-center">
           <Button
             className={styles.submitButton}

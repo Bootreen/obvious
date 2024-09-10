@@ -1,20 +1,15 @@
 import axios from "axios";
 
-import {
-  RequestDetail,
-  StatusDetail,
-  ErrorDetail,
-  ResultResponse,
-} from "@/types/index";
+import { ResultResponse } from "@/types/index";
 
 const API_URL = "/api/requests";
 
 export const createRequest = async (
   sessionId: number,
   requestData: Record<string, any>,
-): Promise<ResultResponse<number | ErrorDetail>> => {
+): Promise<ResultResponse> => {
   try {
-    const response = await axios.post<ResultResponse<number>>(API_URL, {
+    const response = await axios.post<ResultResponse>(API_URL, {
       sessionId,
       requestData,
     });
@@ -25,11 +20,9 @@ export const createRequest = async (
   }
 };
 
-export const getRequest = async (
-  id: number,
-): Promise<ResultResponse<RequestDetail | ErrorDetail>> => {
+export const getRequest = async (id: number): Promise<ResultResponse> => {
   try {
-    const response = await axios.get<ResultResponse<RequestDetail>>(API_URL, {
+    const response = await axios.get<ResultResponse>(API_URL, {
       params: { id },
     });
 
@@ -41,9 +34,9 @@ export const getRequest = async (
 
 export const getRequestsBySessionId = async (
   sessionId: number,
-): Promise<ResultResponse<RequestDetail[] | ErrorDetail>> => {
+): Promise<ResultResponse> => {
   try {
-    const response = await axios.get<ResultResponse<RequestDetail[]>>(API_URL, {
+    const response = await axios.get<ResultResponse>(API_URL, {
       params: { sessionId },
     });
 
@@ -56,9 +49,9 @@ export const getRequestsBySessionId = async (
 export const updateRequest = async (
   id: number,
   requestData: Record<string, any>,
-): Promise<ResultResponse<StatusDetail | ErrorDetail>> => {
+): Promise<ResultResponse> => {
   try {
-    const response = await axios.patch<ResultResponse<StatusDetail>>(API_URL, {
+    const response = await axios.patch<ResultResponse>(API_URL, {
       id,
       requestData,
     });
@@ -69,11 +62,9 @@ export const updateRequest = async (
   }
 };
 
-export const deleteRequest = async (
-  id: number,
-): Promise<ResultResponse<StatusDetail | ErrorDetail>> => {
+export const deleteRequest = async (id: number): Promise<ResultResponse> => {
   try {
-    const response = await axios.delete<ResultResponse<StatusDetail>>(API_URL, {
+    const response = await axios.delete<ResultResponse>(API_URL, {
       data: { id },
     });
 
@@ -84,7 +75,7 @@ export const deleteRequest = async (
 };
 
 // Common error handler for axios errors
-const handleError = (defaultMessage: string): ResultResponse<ErrorDetail> => ({
+const handleError = (defaultMessage: string): ResultResponse => ({
   data: { error: "Axios error: " + defaultMessage },
   status: 500,
   isError: true,

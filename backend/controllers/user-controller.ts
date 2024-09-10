@@ -1,17 +1,12 @@
 import axios from "axios";
 
-import { User, StatusDetail, ErrorDetail, ResultResponse } from "@/types/index";
+import { User, ResultResponse } from "@/types/index";
 
 const API_URL = "/api/users";
 
-export const createUser = async (
-  user: User,
-): Promise<ResultResponse<StatusDetail | ErrorDetail>> => {
+export const createUser = async (user: User): Promise<ResultResponse> => {
   try {
-    const response = await axios.post<ResultResponse<StatusDetail>>(
-      API_URL,
-      user,
-    );
+    const response = await axios.post<ResultResponse>(API_URL, user);
 
     return response.data;
   } catch (error) {
@@ -19,11 +14,9 @@ export const createUser = async (
   }
 };
 
-export const getUser = async (
-  id: string,
-): Promise<ResultResponse<User | ErrorDetail>> => {
+export const getUser = async (id: string): Promise<ResultResponse> => {
   try {
-    const response = await axios.get<ResultResponse<User>>(API_URL, {
+    const response = await axios.get<ResultResponse>(API_URL, {
       params: { id },
     });
 
@@ -33,14 +26,9 @@ export const getUser = async (
   }
 };
 
-export const updateUser = async (
-  user: User,
-): Promise<ResultResponse<StatusDetail | ErrorDetail>> => {
+export const updateUser = async (user: User): Promise<ResultResponse> => {
   try {
-    const response = await axios.patch<ResultResponse<StatusDetail>>(
-      API_URL,
-      user,
-    );
+    const response = await axios.patch<ResultResponse>(API_URL, user);
 
     return response.data;
   } catch (error) {
@@ -48,11 +36,9 @@ export const updateUser = async (
   }
 };
 
-export const deleteUser = async (
-  id: string,
-): Promise<ResultResponse<StatusDetail | ErrorDetail>> => {
+export const deleteUser = async (id: string): Promise<ResultResponse> => {
   try {
-    const response = await axios.delete<ResultResponse<StatusDetail>>(API_URL, {
+    const response = await axios.delete<ResultResponse>(API_URL, {
       data: { id },
     });
 
@@ -63,7 +49,7 @@ export const deleteUser = async (
 };
 
 // Common error handler for unknown errors (axios level)
-const handleError = (defaultMessage: string): ResultResponse<ErrorDetail> => ({
+const handleError = (defaultMessage: string): ResultResponse => ({
   data: { error: "Axios error: " + defaultMessage },
   status: 500,
   isError: true,

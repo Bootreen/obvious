@@ -253,6 +253,10 @@ export const useAppStates = create<State>()(
         set((state) => {
           state.user = user;
         }),
+      setSession: (session) =>
+        set((state) => {
+          state.session = session;
+        }),
     },
   })),
 );
