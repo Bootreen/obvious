@@ -1,19 +1,14 @@
 import axios from "axios";
 
-import {
-  StatusDetail,
-  ErrorDetail,
-  SessionDetail,
-  ResultResponse,
-} from "@/types/index";
+import { ResultResponse } from "@/types/index";
 
 const API_URL = "/api/sessions";
 
 export const createSession = async (
   userId: string,
-): Promise<ResultResponse<SessionDetail | ErrorDetail>> => {
+): Promise<ResultResponse> => {
   try {
-    const response = await axios.post<ResultResponse<SessionDetail>>(API_URL, {
+    const response = await axios.post<ResultResponse>(API_URL, {
       userId,
     });
 
@@ -23,11 +18,9 @@ export const createSession = async (
   }
 };
 
-export const getSession = async (
-  id: number,
-): Promise<ResultResponse<SessionDetail | ErrorDetail>> => {
+export const getSession = async (id: number): Promise<ResultResponse> => {
   try {
-    const response = await axios.get<ResultResponse<SessionDetail>>(API_URL, {
+    const response = await axios.get<ResultResponse>(API_URL, {
       params: { id },
     });
 
@@ -37,11 +30,23 @@ export const getSession = async (
   }
 };
 
-export const deleteSession = async (
-  id: number,
-): Promise<ResultResponse<StatusDetail | ErrorDetail>> => {
+export const getSessionsByUserId = async (
+  userId: string,
+): Promise<ResultResponse> => {
   try {
-    const response = await axios.delete<ResultResponse<StatusDetail>>(API_URL, {
+    const response = await axios.get<ResultResponse>(API_URL, {
+      params: { userId },
+    });
+
+    return response.data;
+  } catch (error) {
+    return handleError("Failed to fetch sessions by user ID");
+  }
+};
+
+export const deleteSession = async (id: number): Promise<ResultResponse> => {
+  try {
+    const response = await axios.delete<ResultResponse>(API_URL, {
       data: { id },
     });
 
@@ -52,7 +57,7 @@ export const deleteSession = async (
 };
 
 // Common error handler for axios errors
-const handleError = (defaultMessage: string): ResultResponse<ErrorDetail> => ({
+const handleError = (defaultMessage: string): ResultResponse => ({
   data: { error: "Axios error: " + defaultMessage },
   status: 500,
   isError: true,

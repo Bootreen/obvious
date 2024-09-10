@@ -12,23 +12,40 @@ import { ModalProgress } from "@/components/modal-progress";
 import { Parts, geminiApiRequest } from "@/backend/controllers/ai-api-request";
 import { useAppStates, useAppActions } from "@/store/app-states";
 import { checkPairs, checkQuiz } from "@/utils/content-check";
-import { estimateLoadTime } from "@/utils/estimate-load-time";
+import { estimateLoadTime, isSessionExpired } from "@/utils/date-time-utils";
 import { shuffleIndices } from "@/utils/shuffle";
 import { initialState } from "@/config/app-initial-state";
 import { createTables } from "@/backend/controllers/tables-init-controller";
+import { createUser, getUser } from "@/backend/controllers/user-controller";
 import {
-  createUser,
-  deleteUser,
-  getUser,
-  updateUser,
-} from "@/backend/controllers/user-controller";
+  createSession,
+  getSessionsByUserId,
+} from "@/backend/controllers/session-controller";
+import {
+  createRequest,
+  getRequest,
+  getRequestsBySessionId,
+} from "@/backend/controllers/request-controller";
 import styles from "@/styles/page.home.module.css";
 
 const Home = () => {
   // State store variables...
-  const { checkboxes, request, isBusy, progress, user } = useAppStates(
-    (state) => state,
-  );
+  const {
+    tabs,
+    checkboxes,
+    request,
+    topic,
+    guide,
+    summary,
+    deck,
+    pairMatcher,
+    quiz,
+    subtopics,
+    isBusy,
+    progress,
+    user,
+    session,
+  } = useAppStates((state) => state);
   // ...and setters
   const {
     setTabState,
@@ -45,7 +62,43 @@ const Home = () => {
     resetContent,
     setIsBusy,
     setProgress,
+    setSession,
   } = useAppActions();
+
+  // On app start
+  useEffect(() => {
+    // Create DB-tables if they don't exist
+    createTables();
+  }, []);
+
+  useEffect(() => {
+    const userId: string | null = user ? user.id : null;
+
+    // Self-invoking async function to check or create user
+    (async () => {
+      // If there is a valid user ID...
+      if (userId) {
+        const { status: userFetchStatus } = await getUser(userId);
+
+        // Check if the user exists in the DB, if not — create one
+        if (userFetchStatus !== 200) {
+          await createUser(user);
+        }
+
+        // Fetch sessions for the current user
+        const { data, status: sessionsFetchStatus } =
+          await getSessionsByUserId(userId);
+
+        if (sessionsFetchStatus === 200 && data.sessions.length > 0) {
+          // Get the latest session
+          const lastSession = data.sessions[data.sessions.length - 1];
+
+          // Set the latest session as current
+          setSession(lastSession);
+        }
+      }
+    })();
+  }, [user]);
 
   // Local variable to store estimated load time
   const estimatedLoadTime = useRef<number>(0);
@@ -234,40 +287,65 @@ const Home = () => {
     clearErrors();
   };
 
-  const handleCreateTables = () => createTables();
+  const onSaveRequestButtonClick = async () => {
+    const userId = user?.id;
+    const currentSession = session;
 
-  const onCreateTablesButtonClick = async () => {
-    const response = await handleCreateTables();
+    let sessionId = currentSession.id;
 
-    console.log(response);
-  };
+    if (!sessionId) {
+      // If no current session, check if user has sessions
+      const response = await getSessionsByUserId(userId as string);
 
-  const onSaveUserButtonClick = async () => {
-    if (user) {
-      const response = await createUser(user);
+      const sessions = response.data.sessions;
 
-      console.log(response);
+      if (sessions.length === 0) {
+        // No sessions found, create a new session
+        const createSessionResponse = await createSession(userId as string);
+
+        sessionId = createSessionResponse.data.id;
+      } else {
+        // Sessions exist, check if last session is expired
+        const lastSession = sessions[sessions.length - 1];
+
+        if (isSessionExpired(lastSession.created_at)) {
+          // Last session is too old, create a new one
+          const createSessionResponse = await createSession(userId as string);
+
+          sessionId = createSessionResponse.data.id;
+        } else {
+          // Last session is still valid
+          sessionId = lastSession.id;
+        }
+      }
+
+      // Update current session in Zustand store
+      setSession({ id: sessionId });
     }
-  };
-  const onDeleteUserButtonClick = async () => {
-    if (user) {
-      const response = await deleteUser(user.id);
 
-      console.log(response);
-    }
-  };
-  const onModifyUserButtonClick = async () => {
-    if (user) {
-      const response = await updateUser({ ...user, username: "Alex Boot" });
+    // Save the request with the current session ID
+    const requestData = {
+      request: request?.trim() || "",
+      topic: topic?.trim() || "",
+      guide: guide.length > 0 ? guide : undefined,
+      summary: summary?.trim() || "",
+      deck: deck.flashcards.length > 0 ? deck : undefined,
+      pairMatcher: pairMatcher.pairs.length > 0 ? pairMatcher : undefined,
+      quiz: quiz.questions.length > 0 ? quiz : undefined,
+      subtopics: subtopics.length > 0 ? subtopics : undefined,
+    };
+    const saveRequestResponse = await createRequest(sessionId, requestData);
+    const fullResponseData = await getRequest(saveRequestResponse.data.id);
 
-      console.log(response);
-    }
+    console.log("Request saved successfully:", fullResponseData);
   };
-  const onGetUserButtonClick = async () => {
-    if (user) {
-      const response = await getUser(user.id);
+  const onGetAllRequestsButtonClick = async () => {
+    if (session) {
+      const { data, status } = await getRequestsBySessionId(session.id);
 
-      console.log(response);
+      if (status === 200)
+        console.log("Requests fetched successfully:", data.requests);
+      else console.error("Failed to fetch requests");
     }
   };
 
@@ -275,6 +353,11 @@ const Home = () => {
   const isEmptyRequest =
     Object.values(checkboxes).find(({ isChecked }) => isChecked) ===
       undefined || request.trim() === "";
+
+  const isEmptyContent =
+    Object.values(tabs).find(
+      ({ label, isLoaded }) => label !== "Main" && isLoaded,
+    ) === undefined;
 
   return (
     <section className={styles.homePage}>
@@ -331,47 +414,22 @@ const Home = () => {
           <Button
             className={styles.submitButton}
             color="primary"
+            isDisabled={!user || isEmptyContent || isBusy}
             radius="sm"
             size="lg"
-            onPress={onCreateTablesButtonClick}
+            onPress={onSaveRequestButtonClick}
           >
-            Create tables
+            Save request
           </Button>
           <Button
             className={styles.submitButton}
             color="primary"
+            isDisabled={!user || isBusy}
             radius="sm"
             size="lg"
-            onPress={onSaveUserButtonClick}
+            onPress={onGetAllRequestsButtonClick}
           >
-            Save user
-          </Button>
-          <Button
-            className={styles.submitButton}
-            color="primary"
-            radius="sm"
-            size="lg"
-            onPress={onDeleteUserButtonClick}
-          >
-            Delete user
-          </Button>
-          <Button
-            className={styles.submitButton}
-            color="primary"
-            radius="sm"
-            size="lg"
-            onPress={onModifyUserButtonClick}
-          >
-            Modify user
-          </Button>
-          <Button
-            className={styles.submitButton}
-            color="primary"
-            radius="sm"
-            size="lg"
-            onPress={onGetUserButtonClick}
-          >
-            Get user
+            Get all session requests
           </Button>
         </div>
       </div>

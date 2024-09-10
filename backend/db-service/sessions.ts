@@ -4,6 +4,7 @@ import { SessionDetail } from "@/types";
 import createSessionQuery from "@/backend/sql-queries/session-create.sql";
 import getSessionQuery from "@/backend/sql-queries/session-get.sql";
 import deleteSessionQuery from "@/backend/sql-queries/session-delete.sql";
+import getSessionByUserIdQuery from "@/backend/sql-queries/session-get-by-user.sql";
 
 export const getSessionFromDb = async (id: number): Promise<SessionDetail> => {
   const result = await sql.query(getSessionQuery, [id]);
@@ -13,6 +14,18 @@ export const getSessionFromDb = async (id: number): Promise<SessionDetail> => {
   }
 
   return result.rows[0];
+};
+
+export const getSessionsByUserIdFromDb = async (
+  userId: string,
+): Promise<SessionDetail[]> => {
+  const result = await sql.query(getSessionByUserIdQuery, [userId]);
+
+  if (result.rows.length === 0) {
+    throw { message: "No sessions found for this user", status: 404 };
+  }
+
+  return result.rows;
 };
 
 export const createSessionInDb = async (
