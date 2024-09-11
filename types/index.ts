@@ -7,6 +7,7 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
 export type ModalWindowProps = {
   isOpen: boolean;
   onOpenChangeHandler: () => void;
+  onCloseHandler?: () => void;
 };
 
 export type User = {
@@ -14,10 +15,6 @@ export type User = {
   username: string;
   email: string;
 } | null;
-
-// export type ErrorDetail = { error: string };
-
-// export type StatusDetail = { message: string };
 
 export type SessionDetail = {
   id: number;
@@ -40,3 +37,10 @@ export type ResultResponse = {
 };
 
 export type dbError = { message: string; status: number };
+
+export type HistorySession = {
+  session: SessionDetail;
+  requests: RequestDetail[];
+};
+
+export type UserHistory = HistorySession[];

@@ -28,3 +28,37 @@ export const isSessionExpired = (createdAt: string): boolean => {
 
   return currentTime - sessionTime > twoHours;
 };
+
+export const parseTimeStampToDateTime = (
+  createdAt: string,
+  mode: string,
+): string => {
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const date = new Date(createdAt);
+
+  switch (mode) {
+    case "date":
+      return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+    case "timeShort":
+      return `${date.getHours()}:${date.getMinutes() > 9 ? date.getMinutes() : "0" + date.getMinutes()}`;
+    case "timeLong":
+      return `${date.getHours()}:${date.getMinutes() > 9 ? date.getMinutes() : "0" + date.getMinutes()}:${date.getSeconds() > 9 ? date.getSeconds() : "0" + date.getSeconds()}`;
+    case "full":
+      return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}, ${date.getHours()}:${date.getMinutes() > 9 ? date.getMinutes() : "0" + date.getMinutes()}`;
+    default:
+      return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}, ${date.getHours()}:${date.getMinutes() > 9 ? date.getMinutes() : "0" + date.getMinutes()}`;
+  }
+};

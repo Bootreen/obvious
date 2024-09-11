@@ -12,6 +12,10 @@ export const useAppStates = create<State>()(
         set((state) => {
           state.isBusy = value;
         }),
+      setIsSaved: (value) =>
+        set((state) => {
+          state.isSaved = value;
+        }),
       setProgress: (value) =>
         set((state) => {
           state.progress = value;
@@ -256,6 +260,10 @@ export const useAppStates = create<State>()(
       setSession: (session) =>
         set((state) => {
           state.session = session;
+        }),
+      setHistory: (history) =>
+        set((state) => {
+          state.userHistory = history;
         }),
     },
   })),

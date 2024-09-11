@@ -1,8 +1,12 @@
+.navbarEdgeBlock {
+  @apply gap-x-2;
+}
+
 .userLogin {
   @apply flex place-content-center cursor-pointer text-default-600 hover:opacity-80;
 }
 
-.helpButton {
+.navbarButton {
   @apply w-fit h-fit !p-0 !m-0 bg-none border-none text-default-600 hover:opacity-80;
 }
 

@@ -8,13 +8,14 @@ import MarkdownRenderer from "@/components/md-renderer";
 import common from "@/styles/page.default.module.css";
 
 const GuidePage = () => {
-  const { topic, guide } = useAppStates((state) => state);
   const router = useRouter();
 
   // Redirect to main if no content
   useEffect(() => {
     if (!guide || guide.length === 0) router.push("/");
   }, []);
+
+  const { topic, guide } = useAppStates((state) => state);
 
   return (
     <article className={common.container}>

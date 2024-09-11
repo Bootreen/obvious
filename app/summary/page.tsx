@@ -8,13 +8,14 @@ import MarkdownRenderer from "@/components/md-renderer";
 import common from "@/styles/page.default.module.css";
 
 const SummaryPage = () => {
-  const { topic, summary } = useAppStates((state) => state);
   const router = useRouter();
 
   // Redirect to main if no content
   useEffect(() => {
     if (!summary || summary === "") router.push("/");
   }, []);
+
+  const { topic, summary } = useAppStates((state) => state);
 
   return (
     <article className={common.container}>
