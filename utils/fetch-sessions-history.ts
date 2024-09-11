@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import { getRequestsBySessionId } from "@/backend/controllers/request-controller";
+import { deleteSession } from "@/backend/controllers/session-controller";
 import { UserHistory } from "@/types";
 
 export const fetchHistory = async (
@@ -17,12 +18,12 @@ export const fetchHistory = async (
         session: session,
         requests: requestsData.requests || [],
       });
+    } else if (requestsStatus === 404) {
+      // delete empty session
+      deleteSession(session.id);
     } else {
+      // unknown error, ignoring this session in history
       console.error(`Failed to fetch requests for session ${session.id}`);
-      history.push({
-        session: session,
-        requests: [],
-      });
     }
   }
 
