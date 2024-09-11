@@ -14,7 +14,12 @@ import { useAppActions, useAppStates } from "@/store/app-states";
 import { parseTimeStampToDateTime } from "@/utils/date-time-utils";
 import styles from "@/styles/modal-help-main.module.css";
 import { parseRequestContent } from "@/utils/request-content-parser";
-import { getRequest } from "@/backend/controllers/request-controller";
+import {
+  deleteRequest,
+  getRequest,
+} from "@/backend/controllers/request-controller";
+import { fetchHistory } from "@/utils/fetch-sessions-history";
+import { getSessionsByUserId } from "@/backend/controllers/session-controller";
 
 export const ModalHistory: React.FC<ModalWindowProps> = ({
   isOpen,
@@ -35,6 +40,7 @@ export const ModalHistory: React.FC<ModalWindowProps> = ({
     setQuiz,
     setSubtopics,
     setIsSaved,
+    setHistory,
   } = useAppActions();
 
   const onRequestLoadButtonClick = async (id: number) => {
@@ -81,7 +87,20 @@ export const ModalHistory: React.FC<ModalWindowProps> = ({
   };
 
   const onRequestDeleteButtonClick = async (id: number) => {
-    console.log("Delete:", id);
+    if (user?.id) {
+      await deleteRequest(id);
+      const { data: sessionsData, status: sessionsStatus } =
+        await getSessionsByUserId(user?.id);
+
+      if (sessionsStatus !== 200) {
+        console.error("Failed to fetch sessions");
+
+        return;
+      }
+      const history = await fetchHistory(sessionsData);
+
+      setHistory(history);
+    }
   };
 
   return (

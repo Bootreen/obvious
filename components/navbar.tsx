@@ -22,15 +22,12 @@ import {
   createSession,
   getSessionsByUserId,
 } from "@/backend/controllers/session-controller";
-import {
-  createRequest,
-  getRequestsBySessionId,
-} from "@/backend/controllers/request-controller";
+import { createRequest } from "@/backend/controllers/request-controller";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { useAppActions, useAppStates } from "@/store/app-states";
 import { isSessionExpired } from "@/utils/date-time-utils";
-import { UserHistory } from "@/types";
 import styles from "@/styles/navbar.module.css";
+import { fetchHistory } from "@/utils/fetch-sessions-history";
 
 export const Navbar = () => {
   const {
@@ -86,39 +83,13 @@ export const Navbar = () => {
     createTables();
   }, []);
 
-  const fetchHistory = async (sessionsData: Record<string, any>) => {
-    const history: UserHistory = [];
-
-    // Iterate over each session and fetch their requests
-    for (const session of sessionsData.sessions) {
-      const { data: requestsData, status: requestsStatus } =
-        await getRequestsBySessionId(session.id);
-
-      if (requestsStatus === 200) {
-        history.push({
-          session: session,
-          requests: requestsData.requests || [],
-        });
-      } else {
-        console.error(`Failed to fetch requests for session ${session.id}`);
-        history.push({
-          session: session,
-          requests: [],
-        });
-      }
-    }
-    setHistory(history);
-  };
-
   useEffect(() => {
-    const userId: string | null = user?.id ? user.id : null;
-
     // Self-invoking async function to check or create user
     // and check and fetch user sessions and requests
     (async () => {
       // If there is a valid user ID...
-      if (userId) {
-        const { status: userFetchStatus } = await getUser(userId);
+      if (user?.id) {
+        const { status: userFetchStatus } = await getUser(user?.id);
 
         // Check if the user exists in the DB, if not — create one
         if (userFetchStatus !== 200) {
@@ -126,8 +97,9 @@ export const Navbar = () => {
         }
 
         // Fetch sessions for the current user
-        const { data, status: sessionsFetchStatus } =
-          await getSessionsByUserId(userId);
+        const { data, status: sessionsFetchStatus } = await getSessionsByUserId(
+          user?.id,
+        );
 
         if (sessionsFetchStatus === 200 && data.sessions.length > 0) {
           // Get the latest session
@@ -136,14 +108,16 @@ export const Navbar = () => {
           // Set the latest session as current
           setSession(lastSession);
           const { data: sessionsData, status: sessionsStatus } =
-            await getSessionsByUserId(userId);
+            await getSessionsByUserId(user?.id);
 
           if (sessionsStatus !== 200) {
             console.error("Failed to fetch sessions");
 
             return;
           }
-          fetchHistory(sessionsData);
+          const history = await fetchHistory(sessionsData);
+
+          setHistory(history);
         }
       }
     })();
