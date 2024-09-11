@@ -1,4 +1,4 @@
-import { SessionDetail, User } from "@/types/index";
+import { SessionDetail, User, UserHistory } from "@/types/index";
 import {
   FlashcardsIcon,
   GuideIcon,
@@ -85,6 +85,7 @@ export const initialState = {
 
   user: null as User,
   session: { id: 0 } as SessionDetail,
+  userHistory: [] as UserHistory,
 
   isBusy: false, // Temporarily blocks input, when App is waiting for API response
   progress: 0, // Variable for 'Loading' progress bar
@@ -139,5 +140,6 @@ export type State = typeof initialState & {
 
     setUser: (user: User) => void;
     setSession: (session: SessionDetail) => void;
+    setHistory: (history: UserHistory) => void;
   };
 };

@@ -15,10 +15,6 @@ export type User = {
   email: string;
 } | null;
 
-// export type ErrorDetail = { error: string };
-
-// export type StatusDetail = { message: string };
-
 export type SessionDetail = {
   id: number;
   user_id?: string;
@@ -40,3 +36,10 @@ export type ResultResponse = {
 };
 
 export type dbError = { message: string; status: number };
+
+export type HistorySession = {
+  session: SessionDetail;
+  requests: RequestDetail[];
+};
+
+export type UserHistory = HistorySession[];

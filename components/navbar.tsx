@@ -13,6 +13,7 @@ import { link as linkStyles } from "@nextui-org/theme";
 import { Card, CardBody, useDisclosure } from "@nextui-org/react";
 
 import { ModalHelpMain } from "./modal-help-main";
+import { ModalHistory } from "./modal-history";
 import { LoginIcon, HelpIcon, HistoryIcon, SaveIcon } from "./icons";
 
 import { createTables } from "@/backend/controllers/tables-init-controller";
@@ -29,6 +30,7 @@ import {
 import { ThemeSwitch } from "@/components/theme-switch";
 import { useAppActions, useAppStates } from "@/store/app-states";
 import { isSessionExpired } from "@/utils/date-time-utils";
+import { SessionDetail, UserHistory } from "@/types";
 import styles from "@/styles/navbar.module.css";
 
 export const Navbar = () => {
@@ -37,6 +39,13 @@ export const Navbar = () => {
     onOpen: onHelpOpen,
     onOpenChange: onHelpOpenChange,
   } = useDisclosure();
+
+  const {
+    isOpen: isHistoryOpen,
+    onOpen: onHistoryOpen,
+    onOpenChange: onHistoryOpenChange,
+  } = useDisclosure();
+
   const { isSignedIn, user: fullUserData } = useUser();
   const currentPath = usePathname();
   const {
@@ -53,7 +62,7 @@ export const Navbar = () => {
     session,
     isBusy,
   } = useAppStates((state) => state);
-  const { setUser, setSession } = useAppActions();
+  const { setUser, setSession, setHistory } = useAppActions();
   const disabledTabs = Object.entries(tabs)
     .filter(([, { isLoaded }]) => !isLoaded)
     .map(([key]) => key);
@@ -76,10 +85,35 @@ export const Navbar = () => {
     createTables();
   }, []);
 
+  const fetchHistory = async (sessionsData: Record<string, any>) => {
+    const history: UserHistory = [];
+
+    // Iterate over each session and fetch their requests
+    for (const session of sessionsData.sessions) {
+      const { data: requestsData, status: requestsStatus } =
+        await getRequestsBySessionId(session.id);
+
+      if (requestsStatus === 200) {
+        history.push({
+          session: session,
+          requests: requestsData.requests || [],
+        });
+      } else {
+        console.error(`Failed to fetch requests for session ${session.id}`);
+        history.push({
+          session: session,
+          requests: [],
+        });
+      }
+    }
+    setHistory(history);
+  };
+
   useEffect(() => {
     const userId: string | null = user ? user.id : null;
 
     // Self-invoking async function to check or create user
+    // and check and fetch user sessions and requests
     (async () => {
       // If there is a valid user ID...
       if (userId) {
@@ -100,6 +134,15 @@ export const Navbar = () => {
 
           // Set the latest session as current
           setSession(lastSession);
+          const { data: sessionsData, status: sessionsStatus } =
+            await getSessionsByUserId(userId);
+
+          if (sessionsStatus !== 200) {
+            console.error("Failed to fetch sessions");
+
+            return;
+          }
+          fetchHistory(sessionsData);
         }
       }
     })();
@@ -107,9 +150,8 @@ export const Navbar = () => {
 
   const onSaveRequestIconClick = async () => {
     const userId = user?.id;
-    const currentSession = session;
 
-    let sessionId = currentSession.id;
+    let sessionId = session.id;
 
     if (!sessionId) {
       // If no current session, check if user has sessions
@@ -117,7 +159,7 @@ export const Navbar = () => {
 
       const sessions = response.data.sessions;
 
-      if (sessions.length === 0) {
+      if (!sessions) {
         // No sessions found, create a new session
         const createSessionResponse = await createSession(userId as string);
 
@@ -136,10 +178,16 @@ export const Navbar = () => {
           sessionId = lastSession.id;
         }
       }
+    } else {
+      if (isSessionExpired(session.created_at as string)) {
+        const createSessionResponse = await createSession(userId as string);
 
-      // Update current session in Zustand store
-      setSession({ id: sessionId });
+        sessionId = createSessionResponse.data.id;
+      }
     }
+
+    // Update current session in store
+    setSession({ id: sessionId });
 
     // Save the request with the current session ID
     const requestData = {
@@ -156,15 +204,19 @@ export const Navbar = () => {
     const fullResponseData = await getRequest(saveRequestResponse.data.id);
 
     console.log("Request saved successfully:", fullResponseData);
-  };
-  const onGetAllRequestsIconClick = async () => {
-    if (session) {
-      const { data, status } = await getRequestsBySessionId(session.id);
+    const { data: sessionsData, status: sessionsStatus } =
+      await getSessionsByUserId(user?.id as string);
 
-      if (status === 200)
-        console.log("Requests fetched successfully:", data.requests);
-      else console.error("Failed to fetch requests");
+    if (sessionsStatus !== 200) {
+      console.error("Failed to fetch sessions");
+
+      return;
     }
+    fetchHistory(sessionsData);
+  };
+
+  const onOpenHistoryIconClick = async () => {
+    onHistoryOpen();
   };
 
   const isEmptyContent =
@@ -239,7 +291,7 @@ export const Navbar = () => {
             isDisabled={user ? false : true}
             isPressable={user ? true : false}
             shadow="none"
-            onPress={onGetAllRequestsIconClick}
+            onPress={onOpenHistoryIconClick}
           >
             <CardBody className={styles.navbarButton}>
               <HistoryIcon size={28} />
@@ -258,9 +310,16 @@ export const Navbar = () => {
         </NavbarContent>
       </DefaultNavbar>
 
+      {/* Modal help window */}
       <ModalHelpMain
         isOpen={isHelpOpen}
         onOpenChangeHandler={onHelpOpenChange}
+      />
+
+      {/* Modal history windows */}
+      <ModalHistory
+        isOpen={isHistoryOpen}
+        onOpenChangeHandler={onHistoryOpenChange}
       />
     </>
   );
