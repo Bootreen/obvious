@@ -13,7 +13,6 @@ import { useAppStates, useAppActions } from "@/store/app-states";
 import { checkPairs, checkQuiz } from "@/utils/content-check";
 import { estimateLoadTime } from "@/utils/date-time-utils";
 import { shuffleIndices } from "@/utils/shuffle";
-import { initialState } from "@/config/app-initial-state";
 import styles from "@/styles/page.home.module.css";
 
 const Home = () => {
@@ -173,12 +172,12 @@ const Home = () => {
             const shuffledOptions = shuffleIndices(4);
 
             setQuiz(
-              quiz.map((question) => ({
+              quiz.map((question: any) => ({
                 ...question,
                 options: shuffledOptions.map((i) => question.options[i]),
                 isAnswered: false,
                 isAnswerCorrect: false,
-              })) as unknown as typeof initialState.quiz.questions,
+              })),
             );
             setTabState("quiz", true);
           } else throw new Error("Invalid quiz");

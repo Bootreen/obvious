@@ -1,0 +1,19 @@
+.modalHeader {
+  @apply flex flex-row justify-center;
+}
+
+.historyList {
+  @apply flex flex-col gap-y-2;
+}
+
+.session {
+  @apply font-bold mb-2;
+}
+
+.request {
+  @apply flex flex-row gap-x-2 items-center justify-between mb-1;
+}
+
+.buttonBlock {
+  @apply flex flex-row gap-x-1;
+}

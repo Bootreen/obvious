@@ -12,7 +12,6 @@ import {
 import { ModalWindowProps } from "@/types";
 import { useAppActions, useAppStates } from "@/store/app-states";
 import { parseTimeStampToDateTime } from "@/utils/date-time-utils";
-import styles from "@/styles/modal-help-main.module.css";
 import { parseRequestContent } from "@/utils/request-content-parser";
 import {
   deleteRequest,
@@ -20,6 +19,7 @@ import {
 } from "@/backend/controllers/request-controller";
 import { fetchHistory } from "@/utils/fetch-sessions-history";
 import { getSessionsByUserId } from "@/backend/controllers/session-controller";
+import styles from "@/styles/modal-history.module.css";
 
 export const ModalHistory: React.FC<ModalWindowProps> = ({
   isOpen,
@@ -78,7 +78,13 @@ export const ModalHistory: React.FC<ModalWindowProps> = ({
       setTabState("pairmatch", true);
     }
     if (quiz) {
-      setQuiz(quiz.questions);
+      setQuiz(
+        quiz.questions.map((question: any) => ({
+          ...question,
+          isAnswered: false,
+          isAnswerCorrect: false,
+        })),
+      );
       setTabState("quiz", true);
     }
     if (subtopics) setSubtopics(subtopics);
@@ -104,7 +110,7 @@ export const ModalHistory: React.FC<ModalWindowProps> = ({
   };
 
   return (
-    <Modal isOpen={isOpen} size="xl" onOpenChange={onOpenChangeHandler}>
+    <Modal isOpen={isOpen} size="4xl" onOpenChange={onOpenChangeHandler}>
       <ModalContent>
         {(onHistoryClose) => (
           <>
@@ -112,20 +118,17 @@ export const ModalHistory: React.FC<ModalWindowProps> = ({
               {user?.username}: Sessions History
             </ModalHeader>
             <ModalBody>
-              <div className="flex flex-col gap-y-2">
+              <div className={styles.historyList}>
                 {userHistory.map(({ session, requests }, i) => (
                   <div key={i}>
-                    <div className="font-bold mb-2">
+                    <div className={styles.session}>
                       {parseTimeStampToDateTime(
                         session.created_at as string,
                         "full",
                       )}
                     </div>
                     {requests.map((request, j) => (
-                      <div
-                        key={j}
-                        className="flex flex-row gap-x-2 items-center justify-between mb-1"
-                      >
+                      <div key={j} className={styles.request}>
                         <div>
                           {parseTimeStampToDateTime(
                             request.created_at as string,
@@ -134,7 +137,7 @@ export const ModalHistory: React.FC<ModalWindowProps> = ({
                           {" - "}
                           {parseRequestContent(request.request_data)}
                         </div>
-                        <div className="flex flex-row gap-x-2">
+                        <div className={styles.buttonBlock}>
                           <Button
                             color="success"
                             size="sm"

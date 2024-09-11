@@ -1,5 +1,5 @@
 .modalHeader {
-  @apply text-center;
+  @apply flex flex-row justify-center;
 }
 
 .progressBarContainer {

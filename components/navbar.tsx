@@ -193,7 +193,9 @@ export const Navbar = () => {
 
       return;
     }
-    fetchHistory(sessionsData);
+    const history = await fetchHistory(sessionsData);
+
+    setHistory(history);
   };
 
   const onOpenHistoryIconClick = async () => {
