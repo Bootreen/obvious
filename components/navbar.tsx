@@ -24,7 +24,6 @@ import {
 } from "@/backend/controllers/session-controller";
 import {
   createRequest,
-  getRequest,
   getRequestsBySessionId,
 } from "@/backend/controllers/request-controller";
 import { ThemeSwitch } from "@/components/theme-switch";
@@ -62,8 +61,9 @@ export const Navbar = () => {
     user,
     session,
     isBusy,
+    isSaved,
   } = useAppStates((state) => state);
-  const { setUser, setSession, setHistory } = useAppActions();
+  const { setUser, setSession, setHistory, setIsSaved } = useAppActions();
   const disabledTabs = Object.entries(tabs)
     .filter(([, { isLoaded }]) => !isLoaded)
     .map(([key]) => key);
@@ -111,7 +111,7 @@ export const Navbar = () => {
   };
 
   useEffect(() => {
-    const userId: string | null = user ? user.id : null;
+    const userId: string | null = user?.id ? user.id : null;
 
     // Self-invoking async function to check or create user
     // and check and fetch user sessions and requests
@@ -201,10 +201,16 @@ export const Navbar = () => {
       quiz: quiz.questions.length > 0 ? quiz : undefined,
       subtopics: subtopics.length > 0 ? subtopics : undefined,
     };
-    const saveRequestResponse = await createRequest(sessionId, requestData);
-    const fullResponseData = await getRequest(saveRequestResponse.data.id);
 
-    console.log("Request saved successfully:", fullResponseData);
+    const { status } = await createRequest(sessionId, requestData);
+
+    if (status === 201) setIsSaved(true);
+    else {
+      console.error("Failed to save request");
+
+      return;
+    }
+
     const { data: sessionsData, status: sessionsStatus } =
       await getSessionsByUserId(user?.id as string);
 
@@ -279,8 +285,8 @@ export const Navbar = () => {
 
         <NavbarContent className={styles.navbarEdgeBlock}>
           <Card
-            isDisabled={!user || isEmptyContent || isBusy}
-            isPressable={!(!user || isEmptyContent || isBusy)}
+            isDisabled={!user || isEmptyContent || isBusy || isSaved}
+            isPressable={!(!user || isEmptyContent || isBusy || isSaved)}
             shadow="none"
             onPress={onSaveRequestIconClick}
           >

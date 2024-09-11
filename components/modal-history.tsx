@@ -34,20 +34,25 @@ export const ModalHistory: React.FC<ModalWindowProps> = ({
     setPairMatcher,
     setQuiz,
     setSubtopics,
+    setIsSaved,
   } = useAppActions();
 
   const onRequestLoadButtonClick = async (id: number) => {
-    resetContent();
-    turnOffTabs();
-    router.push("/");
+    // Set initial state and switch to main tab
+    await router.push("/");
     const { data, status } = await getRequest(id);
 
-    if (status !== 200) return;
+    if (status !== 200) {
+      console.error("Failed to fetch request");
+
+      return; // early return if fetch failed
+    }
+
+    resetContent();
+    turnOffTabs();
 
     const { topic, guide, summary, deck, pairMatcher, quiz, subtopics } =
       data.request_data;
-
-    // console.log(data.request_data);
 
     if (topic) setTopic(topic);
     if (guide && guide.length > 0) {
@@ -71,7 +76,8 @@ export const ModalHistory: React.FC<ModalWindowProps> = ({
       setTabState("quiz", true);
     }
     if (subtopics) setSubtopics(subtopics);
-    if (onCloseHandler) onCloseHandler();
+    setIsSaved(true);
+    if (onCloseHandler) onCloseHandler(); // close 'History' modal
   };
 
   const onRequestDeleteButtonClick = async (id: number) => {

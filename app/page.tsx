@@ -37,6 +37,7 @@ const Home = () => {
     resetContent,
     setIsBusy,
     setProgress,
+    setIsSaved,
   } = useAppActions();
 
   // Local variable to store estimated load time
@@ -218,6 +219,7 @@ const Home = () => {
       console.log("Unable to fulfill request. See error log:", errorLog);
     }
 
+    setIsSaved(false);
     // Enable new requests again
     setIsBusy(false);
     // Close loading indicator
