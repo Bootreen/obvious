@@ -20,6 +20,7 @@ import {
 import { fetchHistory } from "@/utils/fetch-sessions-history";
 import { getSessionsByUserId } from "@/backend/controllers/session-controller";
 import styles from "@/styles/modal-history.module.css";
+import { shuffleIndices } from "@/utils/shuffle";
 
 export const ModalHistory: React.FC<ModalWindowProps> = ({
   isOpen,
@@ -74,7 +75,17 @@ export const ModalHistory: React.FC<ModalWindowProps> = ({
       setTabState("flashcards", true);
     }
     if (pairMatcher) {
-      setPairMatcher(pairMatcher.pairs);
+      // Shuffle pairs order
+      const leftColumnIndecies = shuffleIndices(pairMatcher.pairs.length);
+      const rightColumnIndecies = shuffleIndices(pairMatcher.pairs.length);
+      const shuffledPairs = pairMatcher.pairs.map((_: number, i: number) => ({
+        question: pairMatcher.pairs[leftColumnIndecies[i]].question,
+        answer: pairMatcher.pairs[rightColumnIndecies[i]].answer,
+      }));
+
+      console.log(shuffledPairs);
+
+      setPairMatcher(shuffledPairs);
       setTabState("pairmatch", true);
     }
     if (quiz) {

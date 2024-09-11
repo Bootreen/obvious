@@ -14,6 +14,13 @@ import common from "@/styles/page.default.module.css";
 import styles from "@/styles/page.quiz.module.css";
 
 const QuizPage = () => {
+  const router = useRouter();
+
+  // Redirect to main if no content
+  useEffect(() => {
+    if (!isReady) router.push("/");
+  }, []);
+
   const {
     topic,
     quiz: { isReady, currentQuestionNumber, correctAnswersCounter, questions },
@@ -24,12 +31,6 @@ const QuizPage = () => {
     setIsAnswered,
     setSelectedIncorrectOptionIndex,
   } = useAppActions();
-  const router = useRouter();
-
-  // Redirect to main if no content
-  useEffect(() => {
-    if (!isReady) router.push("/");
-  }, []);
 
   const onAnswerOptionClick = (index: number) => {
     setIsAnswered(currentQuestionNumber);

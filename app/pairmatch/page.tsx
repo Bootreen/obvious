@@ -19,6 +19,13 @@ import common from "@/styles/page.default.module.css";
 import styles from "@/styles/page.pairmatch.module.css";
 
 const PairsPage = () => {
+  const router = useRouter();
+
+  // Redirect to main if no content
+  useEffect(() => {
+    if (!isReady) router.push("/");
+  }, []);
+
   const {
     topic,
     pairMatcher: { isReady, matchedPairsCounter, pairs, mistakesCounter },
@@ -27,13 +34,6 @@ const PairsPage = () => {
 
   const onPairPartClick = (type: "question" | "answer", index: number) =>
     setPairPartSelected(type, index);
-
-  const router = useRouter();
-
-  // Redirect to main if no content
-  useEffect(() => {
-    if (!isReady) router.push("/");
-  }, []);
 
   return (
     <article className={common.container}>

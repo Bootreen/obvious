@@ -11,6 +11,13 @@ import common from "@/styles/page.default.module.css";
 import styles from "@/styles/page.flashcards.module.css";
 
 const GuidePage = () => {
+  const router = useRouter();
+
+  // Redirect to main if no content
+  useEffect(() => {
+    if (!isReady) router.push("/");
+  }, []);
+
   const {
     topic,
     deck: {
@@ -30,13 +37,6 @@ const GuidePage = () => {
     setHint,
     incHintsCounter,
   } = useAppActions();
-
-  const router = useRouter();
-
-  // Redirect to main if no content
-  useEffect(() => {
-    if (!isReady) router.push("/");
-  }, []);
 
   // Prevent access to the flashcard properties if flashcards is not loaded yet
   const currentQuestion =
