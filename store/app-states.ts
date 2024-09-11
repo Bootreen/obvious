@@ -12,6 +12,10 @@ export const useAppStates = create<State>()(
         set((state) => {
           state.isBusy = value;
         }),
+      setIsSaved: (value) =>
+        set((state) => {
+          state.isSaved = value;
+        }),
       setProgress: (value) =>
         set((state) => {
           state.progress = value;

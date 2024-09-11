@@ -30,7 +30,7 @@ import {
 import { ThemeSwitch } from "@/components/theme-switch";
 import { useAppActions, useAppStates } from "@/store/app-states";
 import { isSessionExpired } from "@/utils/date-time-utils";
-import { SessionDetail, UserHistory } from "@/types";
+import { UserHistory } from "@/types";
 import styles from "@/styles/navbar.module.css";
 
 export const Navbar = () => {
@@ -44,6 +44,7 @@ export const Navbar = () => {
     isOpen: isHistoryOpen,
     onOpen: onHistoryOpen,
     onOpenChange: onHistoryOpenChange,
+    onClose: onHistoryClose,
   } = useDisclosure();
 
   const { isSignedIn, user: fullUserData } = useUser();
@@ -319,6 +320,7 @@ export const Navbar = () => {
       {/* Modal history windows */}
       <ModalHistory
         isOpen={isHistoryOpen}
+        onCloseHandler={onHistoryClose}
         onOpenChangeHandler={onHistoryOpenChange}
       />
     </>

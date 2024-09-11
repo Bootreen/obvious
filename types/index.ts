@@ -7,6 +7,7 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
 export type ModalWindowProps = {
   isOpen: boolean;
   onOpenChangeHandler: () => void;
+  onCloseHandler?: () => void;
 };
 
 export type User = {
