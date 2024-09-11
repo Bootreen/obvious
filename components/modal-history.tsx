@@ -83,8 +83,6 @@ export const ModalHistory: React.FC<ModalWindowProps> = ({
         answer: pairMatcher.pairs[rightColumnIndecies[i]].answer,
       }));
 
-      console.log(shuffledPairs);
-
       setPairMatcher(shuffledPairs);
       setTabState("pairmatch", true);
     }
