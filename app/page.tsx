@@ -218,6 +218,9 @@ const Home = () => {
       console.log("Unable to fulfill request. See error log:", errorLog);
     }
 
+    // Drop estimated load time to default value
+    estimatedLoadTime.current = estimateLoadTime(checkboxes);
+
     setIsSaved(false);
     // Enable new requests again
     setIsBusy(false);
