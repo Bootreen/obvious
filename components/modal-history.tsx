@@ -75,7 +75,7 @@ export const ModalHistory: React.FC<ModalWindowProps> = ({
       setTabState("flashcards", true);
     }
     if (pairMatcher) {
-      // Shuffle pairs order
+      // Reshuffle pairs order on each load
       const leftColumnIndecies = shuffleIndices(pairMatcher.pairs.length);
       const rightColumnIndecies = shuffleIndices(pairMatcher.pairs.length);
       const shuffledPairs = pairMatcher.pairs.map((_: number, i: number) => ({
@@ -90,8 +90,10 @@ export const ModalHistory: React.FC<ModalWindowProps> = ({
       setQuiz(
         quiz.questions.map((question: any) => ({
           ...question,
+          // Reshuffle quiz options order on each load
+          options: shuffleIndices(4).map((i) => question.options[i]),
           isAnswered: false,
-          isAnswerCorrect: false,
+          selectedIncorrectOptionIndex: null,
         })),
       );
       setTabState("quiz", true);

@@ -3,11 +3,15 @@
 }
 
 .userLogin {
-  @apply flex place-content-center cursor-pointer text-default-600 hover:opacity-80;
+  @apply flex place-content-center cursor-pointer text-default-600 hover:text-primary-600;
 }
 
 .navbarButton {
-  @apply w-fit h-fit !p-0 !m-0 bg-none border-none text-default-600 hover:opacity-80;
+  @apply w-fit h-fit !p-0 !m-0 bg-none border-none text-default-600 hover:text-primary-600;
+}
+
+.navbarButtonDisabled {
+  @apply w-fit h-fit !p-0 !m-0 bg-none border-none text-default-600;
 }
 
 .navbarMiddle {
@@ -15,6 +19,10 @@
 }
 
 .tab {
+  @apply !px-0 hover:opacity-100;
+}
+
+.tabDisabled {
   @apply !px-0;
 }
 
@@ -27,7 +35,7 @@
 }
 
 .navMenuLink {
-  @apply font-medium gap-x-2 text-sm lg:text-lg bg-transparent py-1 px-1 lg:px-2 rounded-lg;
+  @apply font-medium gap-x-2 text-sm lg:text-lg bg-transparent py-1 px-1 lg:px-2 rounded-lg text-default-600 hover:text-primary-600;
 }
 
 .linkActive {

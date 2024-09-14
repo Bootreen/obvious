@@ -168,15 +168,13 @@ const Home = () => {
         }
         if (quiz && quiz.length > 0) {
           if (checkQuiz(quiz)) {
-            // Shuffle answer order, as AI tends to place the correct answer first
-            const shuffledOptions = shuffleIndices(4);
-
             setQuiz(
               quiz.map((question: any) => ({
                 ...question,
-                options: shuffledOptions.map((i) => question.options[i]),
+                // Shuffle answer order, as AI tends to place the correct answer first
+                options: shuffleIndices(4).map((i) => question.options[i]),
                 isAnswered: false,
-                isAnswerCorrect: false,
+                selectedIncorrectOptionIndex: null,
               })),
             );
             setTabState("quiz", true);
@@ -252,7 +250,7 @@ const Home = () => {
             className={styles.textarea}
             label="Enter your request:"
             labelPlacement="inside"
-            placeholder="Describe here in natural language what topic you would like to practice today..."
+            placeholder="Describe here in natural language what topic you would like to practice today. You can write a query in any language and get results in that language too if you explicitly specify it, for example - 'I want output results in German'."
             onChange={(event) => onTextareaChange(event)}
           />
         </div>

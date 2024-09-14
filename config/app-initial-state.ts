@@ -78,7 +78,7 @@ export const initialState = {
       question: string;
       options: { option: string; isCorrect: boolean }[];
       isAnswered: boolean;
-      selectedIncorrectOptionIndex: number;
+      selectedIncorrectOptionIndex: number | null;
     }[],
   },
   subtopics: [] as string[],
