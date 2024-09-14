@@ -42,6 +42,8 @@ export const ModalHistory: React.FC<ModalWindowProps> = ({
     setSubtopics,
     setIsSaved,
     setHistory,
+    addContentRoute,
+    setIsBusy,
   } = useAppActions();
 
   const onRequestLoadButtonClick = async (id: number) => {
@@ -56,23 +58,28 @@ export const ModalHistory: React.FC<ModalWindowProps> = ({
     }
 
     resetContent();
+    setIsBusy(true);
     turnOffTabs();
+    addContentRoute("/");
 
     const { topic, guide, summary, deck, pairMatcher, quiz, subtopics } =
       data.request_data;
 
     if (topic) setTopic(topic);
-    if (guide && guide.length > 0) {
-      setGuide(guide);
-      setTabState("guide", true);
-    }
     if (summary && summary !== "") {
       setSummary(summary);
       setTabState("summary", true);
+      addContentRoute("/summary");
+    }
+    if (guide && guide.length > 0) {
+      setGuide(guide);
+      setTabState("guide", true);
+      addContentRoute("/guide");
     }
     if (deck) {
       setFlashcards(deck.flashcards);
       setTabState("flashcards", true);
+      addContentRoute("/flashcards");
     }
     if (pairMatcher) {
       // Reshuffle pairs order on each load
@@ -85,6 +92,7 @@ export const ModalHistory: React.FC<ModalWindowProps> = ({
 
       setPairMatcher(shuffledPairs);
       setTabState("pairmatch", true);
+      addContentRoute("/pairmatch");
     }
     if (quiz) {
       setQuiz(
@@ -97,6 +105,7 @@ export const ModalHistory: React.FC<ModalWindowProps> = ({
         })),
       );
       setTabState("quiz", true);
+      addContentRoute("/quiz");
     }
     if (subtopics) setSubtopics(subtopics);
     setIsSaved(true);
