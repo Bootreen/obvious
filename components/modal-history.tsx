@@ -9,6 +9,7 @@ import {
   ModalFooter,
 } from "@nextui-org/modal";
 
+import { shuffleIndices } from "@/utils/shuffle";
 import { ModalWindowProps } from "@/types";
 import { useAppActions, useAppStates } from "@/store/app-states";
 import { parseTimeStampToDateTime } from "@/utils/date-time-utils";
@@ -20,7 +21,6 @@ import {
 import { fetchHistory } from "@/utils/fetch-sessions-history";
 import { getSessionsByUserId } from "@/backend/controllers/session-controller";
 import styles from "@/styles/modal-history.module.css";
-import { shuffleIndices } from "@/utils/shuffle";
 
 export const ModalHistory: React.FC<ModalWindowProps> = ({
   isOpen,

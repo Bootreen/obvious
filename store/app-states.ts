@@ -236,13 +236,21 @@ export const useAppStates = create<State>()(
           quiz.questions[questionIndex].selectedIncorrectOptionIndex =
             optionIndex;
         }),
-
       setSubtopics: (subtopics) =>
         set((state) => {
           state.subtopics = subtopics;
         }),
+      resetContentRoutes: () =>
+        set((state) => {
+          state.contentRoutes = [];
+        }),
+      addContentRoute: (route) =>
+        set((state) => {
+          state.contentRoutes = [...state.contentRoutes, route];
+        }),
 
       resetContent: () => {
+        get().actions.resetContentRoutes();
         get().actions.setProgress(0);
         get().actions.setTopic("");
         get().actions.setGuide([]);

@@ -1,6 +1,7 @@
 "use client";
 
 import { ChangeEvent, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { Textarea } from "@nextui-org/input";
 import { CheckboxGroup, Checkbox } from "@nextui-org/checkbox";
 import { Button } from "@nextui-org/button";
@@ -16,10 +17,10 @@ import { shuffleIndices } from "@/utils/shuffle";
 import styles from "@/styles/page.home.module.css";
 
 const Home = () => {
+  const router = useRouter();
   // State store variables...
-  const { checkboxes, request, isBusy, progress } = useAppStates(
-    (state) => state,
-  );
+  const { contentRoutes, checkboxes, request, topic, isBusy, progress } =
+    useAppStates((state) => state);
   // ...and setters
   const {
     setTabState,
@@ -33,6 +34,7 @@ const Home = () => {
     setPairs,
     setQuiz,
     setSubtopics,
+    addContentRoute,
     resetContent,
     setIsBusy,
     setProgress,
@@ -62,6 +64,14 @@ const Home = () => {
     } else setProgress(estimatedLoadTime.current); // Loading is complete
   }, [isBusy, progress]);
 
+  // Redirect to the 1st tab of the created content
+  useEffect(() => {
+    if (contentRoutes.length > 1 && isBusy) {
+      router.push(contentRoutes[1]);
+      setIsBusy(false);
+    } else if (contentRoutes.length === 1 && isBusy) setIsBusy(false);
+  }, [contentRoutes]);
+
   // Error modal handlers
   const {
     isOpen: isErrorOpen,
@@ -84,6 +94,8 @@ const Home = () => {
   ) => {
     setCheckboxState(checkbox, event.target.checked);
   };
+
+  const onExploreButtonClick = () => router.push(contentRoutes[1]);
 
   const onTextareaChange = (event: ChangeEvent<HTMLInputElement>) =>
     setRequest(event.target.value);
@@ -129,19 +141,23 @@ const Home = () => {
             .map(([key]) => key) as Parts[],
         );
 
+        addContentRoute("/");
         // Update content state and tab availability
         if (topic) setTopic(topic);
-        if (guide && guide.length > 0) {
-          setGuide(guide);
-          setTabState("guide", true);
-        }
         if (summary && summary !== "") {
           setSummary(summary);
           setTabState("summary", true);
+          addContentRoute("/summary");
+        }
+        if (guide && guide.length > 0) {
+          setGuide(guide);
+          setTabState("guide", true);
+          addContentRoute("/guide");
         }
         if (flashcards && flashcards.length > 0) {
           setFlashcards(flashcards);
           setTabState("flashcards", true);
+          addContentRoute("/flashcards");
         }
         if (pairmatch && pairmatch.length > 0) {
           if (checkPairs(pairmatch)) {
@@ -164,12 +180,13 @@ const Home = () => {
 
             setPairs(shuffledPairs);
             setTabState("pairmatch", true);
+            addContentRoute("/pairmatch");
           } else throw new Error("Invalid matching pairs");
         }
         if (quiz && quiz.length > 0) {
           if (checkQuiz(quiz)) {
             setQuiz(
-              quiz.map((question: any) => ({
+              quiz.map((question) => ({
                 ...question,
                 // Shuffle answer order, as AI tends to place the correct answer first
                 options: shuffleIndices(4).map((i) => question.options[i]),
@@ -178,6 +195,7 @@ const Home = () => {
               })),
             );
             setTabState("quiz", true);
+            addContentRoute("/quiz");
           } else throw new Error("Invalid quiz");
         }
         if (subtopics) setSubtopics(subtopics);
@@ -220,8 +238,9 @@ const Home = () => {
     estimatedLoadTime.current = estimateLoadTime(checkboxes);
 
     setIsSaved(false);
-    // Enable new requests again
-    setIsBusy(false);
+
+    // isBusy resets in contentRoutes useEffect
+
     // Close loading indicator
     onProgressClose();
     // Clear error log
@@ -236,26 +255,53 @@ const Home = () => {
   return (
     <section className={styles.homePage}>
       <div className={styles.contentContainer}>
-        <div>
-          <h1 className={styles.title}>Sarge Obvious</h1>
-          <p className={styles.paragraph}>
-            Ready to get in line and learn something?
-            <br />
-            <strong>Sarge Obvious</strong> is your new AI drill sergeant, here
-            to put you through your paces! Just give Sarge a command, and he’ll
-            generate custom study materials that’ll make you smarter in no time.
-          </p>
+        <div className={styles.descriptionContainer}>
+          {topic !== "" ? <h1>{topic}</h1> : <h1>Sarge Obvious</h1>}
+          <div className={styles.description}>
+            {topic !== "" ? (
+              <>
+                <Button
+                  className={styles.exploreButton}
+                  color="primary"
+                  radius="sm"
+                  size="lg"
+                  onPress={onExploreButtonClick}
+                >
+                  <p>Explore your requested topic</p>
+                </Button>
+                <div>
+                  <p>
+                    Or select the corresponding content tab in the navigation
+                    menu above. Or request a new topic in the input window
+                    below.
+                  </p>
+                </div>
+              </>
+            ) : (
+              <div>
+                <p>Ready to get in line and learn something?</p>
+                <p>
+                  <strong>Sarge Obvious</strong> is your new AI drill sergeant,
+                  here to put you through your paces! Just give Sarge a command,
+                  and he’ll generate custom study materials that’ll make you
+                  smarter in no time.
+                </p>
+              </div>
+            )}
+          </div>
           <Textarea
             isRequired
             className={styles.textarea}
             label="Enter your request:"
             labelPlacement="inside"
-            placeholder="Describe here in natural language what topic you would like to practice today. You can write a query in any language and get results in that language too if you explicitly specify it, for example - 'I want output results in German'."
+            placeholder="Describe here in natural language what topic you would like to study today. You can write a query in any language and get results in that language too if you explicitly specify it, for example like this — 'Provide output results in German'."
+            size="lg"
             onChange={(event) => onTextareaChange(event)}
           />
         </div>
 
         <CheckboxGroup
+          className="mx-auto"
           defaultValue={Object.entries(checkboxes)
             .filter(([, { isChecked }]) => isChecked)
             .map(([key]) => key)}

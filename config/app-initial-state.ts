@@ -83,6 +83,8 @@ export const initialState = {
   },
   subtopics: [] as string[],
 
+  contentRoutes: ["/"] as string[],
+
   user: null as User,
   session: { id: 0 } as SessionDetail,
   userHistory: [] as UserHistory,
@@ -139,6 +141,8 @@ export type State = typeof initialState & {
     ) => void;
 
     setSubtopics: (subtopics: string[]) => void;
+    resetContentRoutes: () => void;
+    addContentRoute: (route: string) => void;
     resetContent: () => void;
 
     setUser: (user: User) => void;

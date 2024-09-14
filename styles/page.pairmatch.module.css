@@ -1,5 +1,5 @@
 .pairTable {
-  @apply flex flex-row gap-x-4;
+  @apply flex flex-row gap-x-4 mb-6;
 }
 
 .pairColumn {

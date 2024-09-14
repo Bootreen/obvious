@@ -8,6 +8,7 @@ import { Progress } from "@nextui-org/react";
 import { Button } from "@nextui-org/button";
 import { Card, CardBody } from "@nextui-org/card";
 
+import { shuffleIndices } from "@/utils/shuffle";
 import { useAppStates, useAppActions } from "@/store/app-states";
 import MarkdownRenderer from "@/components/md-renderer";
 import common from "@/styles/page.default.module.css";
@@ -22,15 +23,19 @@ const QuizPage = () => {
   }, []);
 
   const {
+    contentRoutes,
     topic,
     quiz: { isReady, currentQuestionNumber, correctAnswersCounter, questions },
   } = useAppStates((state) => state);
   const {
+    setQuiz,
     incCurrentQuestionNumber,
     incCorrectAnswersCounter,
     setIsAnswered,
     setSelectedIncorrectOptionIndex,
   } = useAppActions();
+
+  const onNavigateButtonClick = () => router.push(contentRoutes[0]);
 
   const onAnswerOptionClick = (index: number) => {
     setIsAnswered(currentQuestionNumber);
@@ -40,10 +45,25 @@ const QuizPage = () => {
   };
   const onNextQuestionButtonClick = () => incCurrentQuestionNumber();
 
+  const onRestartQuizButtonClick = () => {
+    setQuiz(
+      shuffleIndices(10)
+        // Shuffle question order
+        .map((i) => questions[i])
+        .map((question) => ({
+          ...question,
+          // Shuffle answer order
+          options: shuffleIndices(4).map((i) => question.options[i]),
+          isAnswered: false,
+          selectedIncorrectOptionIndex: null,
+        })),
+    );
+  };
+
   return (
-    <article className={clsx(common.container, styles.quizPageContainer)}>
+    <article className={clsx(common.proseBlock, styles.quizPageContainer)}>
       {isReady && (
-        <>
+        <div className={common.container}>
           <h2>{topic}: Quiz</h2>
           <div className={styles.quizContainer}>
             <Progress
@@ -108,7 +128,28 @@ const QuizPage = () => {
               Next Question
             </Button>
           </div>
-        </>
+          <div className={common.buttonBlock}>
+            <Button
+              className={common.navButton}
+              color="danger"
+              radius="sm"
+              size="lg"
+              onPress={onRestartQuizButtonClick}
+            >
+              Restart quiz
+            </Button>
+            <Button
+              className={common.navButton}
+              color="primary"
+              isDisabled={currentQuestionNumber !== 9}
+              radius="sm"
+              size="lg"
+              onPress={onNavigateButtonClick}
+            >
+              Back to main
+            </Button>
+          </div>
+        </div>
       )}
     </article>
   );

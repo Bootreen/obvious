@@ -1,23 +1,27 @@
 .homePage {
-  @apply prose prose-lg text-foreground prose-headings:text-foreground prose-strong:text-foreground prose-ol:text-foreground prose-ul:text-foreground prose-li:text-foreground flex flex-col items-center justify-center pt-6;
+  @apply prose prose-lg text-foreground prose-headings:text-foreground prose-headings:text-center prose-headings:font-bold prose-strong:text-foreground prose-ol:text-foreground prose-ul:text-foreground prose-li:text-foreground flex flex-col items-center justify-center mt-6;
 }
 
 .contentContainer {
   @apply flex flex-col gap-y-8;
 }
 
-.title {
-  @apply text-center font-semibold;
+.descriptionContainer {
+  @apply flex flex-col justify-center;
 }
 
-.paragraph {
-  @apply text-lg;
+.exploreButton {
+  @apply flex mx-auto w-fit;
+}
+
+.description {
+  @apply text-lg mx-auto w-[400];
 }
 
 .textarea {
-  @apply max-w-md;
+  @apply mx-auto w-[424] min-h-36;
 }
 
 .submitButton {
-  @apply w-fit m-auto;
+  @apply mx-auto w-fit;
 }
