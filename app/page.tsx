@@ -256,7 +256,7 @@ const Home = () => {
     <section className={styles.homePage}>
       <div className={styles.contentContainer}>
         <div className={styles.descriptionContainer}>
-          {topic !== "" ? <h1>{topic}</h1> : <h1>Sarge Obvious</h1>}
+          {topic !== "" ? <h2>{topic}</h2> : <h1>Sarge Obvious</h1>}
           <div className={styles.description}>
             {topic !== "" ? (
               <>
