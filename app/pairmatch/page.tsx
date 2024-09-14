@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Card, CardBody } from "@nextui-org/card";
 import { Button } from "@nextui-org/button";
 
+import { shuffleIndices } from "@/utils/shuffle";
 import { useAppStates, useAppActions } from "@/store/app-states";
 import MarkdownRenderer from "@/components/md-renderer";
 import common from "@/styles/page.default.module.css";
@@ -41,7 +42,25 @@ const PairsPage = () => {
   const onPairPartClick = (type: "question" | "answer", index: number) =>
     setPairPartSelected(type, index);
 
-  const onRestartPairmatchButtonClick = () => setPairMatcher(pairs);
+  const onRestartPairmatchButtonClick = () => {
+    const leftColumnIndecies = shuffleIndices(pairs.length);
+    const rightColumnIndecies = shuffleIndices(pairs.length);
+    // Add shuffled pairs and additional state variables
+    const shuffledPairs = pairs.map((_, i) => ({
+      question: {
+        value: pairs[leftColumnIndecies[i]].question.value,
+        index: leftColumnIndecies[i],
+        isSelected: false,
+      },
+      answer: {
+        value: pairs[rightColumnIndecies[i]].answer.value,
+        index: rightColumnIndecies[i],
+        isSelected: false,
+      },
+    }));
+
+    setPairMatcher(shuffledPairs);
+  };
 
   return (
     <article className={common.proseBlock}>
