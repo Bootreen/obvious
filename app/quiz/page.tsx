@@ -22,6 +22,7 @@ const QuizPage = () => {
   }, []);
 
   const {
+    contentRoutes,
     topic,
     quiz: { isReady, currentQuestionNumber, correctAnswersCounter, questions },
   } = useAppStates((state) => state);
@@ -32,6 +33,8 @@ const QuizPage = () => {
     setSelectedIncorrectOptionIndex,
   } = useAppActions();
 
+  const onNavigateButtonClick = () => router.push(contentRoutes[0]);
+
   const onAnswerOptionClick = (index: number) => {
     setIsAnswered(currentQuestionNumber);
     if (questions[currentQuestionNumber].options[index].isCorrect)
@@ -41,9 +44,9 @@ const QuizPage = () => {
   const onNextQuestionButtonClick = () => incCurrentQuestionNumber();
 
   return (
-    <article className={clsx(common.container, styles.quizPageContainer)}>
+    <article className={clsx(common.proseBlock, styles.quizPageContainer)}>
       {isReady && (
-        <>
+        <div className={common.container}>
           <h2>{topic}: Quiz</h2>
           <div className={styles.quizContainer}>
             <Progress
@@ -108,7 +111,17 @@ const QuizPage = () => {
               Next Question
             </Button>
           </div>
-        </>
+          <Button
+            className={common.navButton}
+            color="primary"
+            isDisabled={false}
+            radius="sm"
+            size="lg"
+            onPress={onNavigateButtonClick}
+          >
+            Back to main
+          </Button>
+        </div>
       )}
     </article>
   );

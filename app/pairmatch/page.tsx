@@ -4,6 +4,7 @@ import clsx from "clsx";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardBody } from "@nextui-org/card";
+import { Button } from "@nextui-org/button";
 
 import { useAppStates, useAppActions } from "@/store/app-states";
 import MarkdownRenderer from "@/components/md-renderer";
@@ -19,18 +20,31 @@ const PairsPage = () => {
   }, []);
 
   const {
+    contentRoutes,
     topic,
     pairMatcher: { isReady, matchedPairsCounter, pairs, mistakesCounter },
   } = useAppStates((state) => state);
   const { setPairPartSelected } = useAppActions();
 
+  const nextIndex = contentRoutes.findIndex((e) => e === "/pairmatch") + 1;
+  const isMoreContent = nextIndex < contentRoutes.length;
+
+  const onNavigateButtonClick = () =>
+    router.push(
+      contentRoutes[
+        isMoreContent
+          ? nextIndex // Is more content? Going further
+          : 0 //         Back to main
+      ],
+    );
+
   const onPairPartClick = (type: "question" | "answer", index: number) =>
     setPairPartSelected(type, index);
 
   return (
-    <article className={common.container}>
+    <article className={common.proseBlock}>
       {isReady && (
-        <>
+        <div className={common.container}>
           <h2>{topic}: Pair match</h2>
           <div className={styles.pairTable}>
             <div className={styles.pairColumn}>
@@ -85,7 +99,17 @@ const PairsPage = () => {
           {mistakesCounter > 0 && (
             <h3 className={styles.mistakes}>Mistakes: {mistakesCounter}</h3>
           )}
-        </>
+          <Button
+            className={common.navButton}
+            color="primary"
+            isDisabled={false}
+            radius="sm"
+            size="lg"
+            onPress={onNavigateButtonClick}
+          >
+            {isMoreContent ? "Further" : "Back to main"}
+          </Button>
+        </div>
       )}
     </article>
   );

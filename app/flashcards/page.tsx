@@ -19,6 +19,7 @@ const GuidePage = () => {
   }, []);
 
   const {
+    contentRoutes,
     topic,
     deck: {
       isReady,
@@ -37,6 +38,18 @@ const GuidePage = () => {
     setHint,
     incHintsCounter,
   } = useAppActions();
+
+  const nextIndex = contentRoutes.findIndex((e) => e === "/flashcards") + 1;
+  const isMoreContent = nextIndex < contentRoutes.length;
+
+  const onNavigateButtonClick = () =>
+    router.push(
+      contentRoutes[
+        isMoreContent
+          ? nextIndex // Is more content? Going further
+          : 0 //         Back to main
+      ],
+    );
 
   // Prevent access to the flashcard properties if flashcards is not loaded yet
   const currentQuestion =
@@ -85,9 +98,9 @@ const GuidePage = () => {
   };
 
   return (
-    <article className={common.container}>
+    <article className={common.proseBlock}>
       {isReady && (
-        <>
+        <div className={common.container}>
           <h2>{topic}: Flashcards</h2>
           <ReactFlipCard
             backComponent={
@@ -162,7 +175,17 @@ const GuidePage = () => {
           {hintsCounter > 0 && (
             <h3 className={styles.hint}>Hints used: {hintsCounter}</h3>
           )}
-        </>
+          <Button
+            className={common.navButton}
+            color="primary"
+            isDisabled={false}
+            radius="sm"
+            size="lg"
+            onPress={onNavigateButtonClick}
+          >
+            {isMoreContent ? "Further" : "Back to main"}
+          </Button>
+        </div>
       )}
     </article>
   );

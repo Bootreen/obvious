@@ -15,7 +15,7 @@
 }
 
 .textarea {
-  @apply max-w-md;
+  @apply max-w-md min-h-48;
 }
 
 .submitButton {

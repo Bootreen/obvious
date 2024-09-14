@@ -3,7 +3,7 @@
 }
 
 .quizContainer {
-  @apply flex flex-col gap-y-10;
+  @apply flex flex-col gap-y-10 mb-6;
 }
 
 .quizQuestionContainer {

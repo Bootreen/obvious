@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { Button } from "@nextui-org/button";
 
 import { useAppStates } from "@/store/app-states";
 import MarkdownRenderer from "@/components/md-renderer";
@@ -15,17 +16,39 @@ const GuidePage = () => {
     if (!guide || guide.length === 0) router.push("/");
   }, []);
 
-  const { topic, guide } = useAppStates((state) => state);
+  const { contentRoutes, topic, guide } = useAppStates((state) => state);
+
+  const nextIndex = contentRoutes.findIndex((e) => e === "/guide") + 1;
+  const isMoreContent = nextIndex < contentRoutes.length;
+
+  const onNavigateButtonClick = () =>
+    router.push(
+      contentRoutes[
+        isMoreContent
+          ? nextIndex // Is more content? Going further
+          : 0 //         Back to main
+      ],
+    );
 
   return (
-    <article className={common.container}>
+    <article className={common.proseBlock}>
       {guide && guide.length > 0 && (
-        <>
+        <div className={common.container}>
           <h2>{topic}: Guide</h2>
           {guide.map((e, i) => (
             <MarkdownRenderer key={i} content={e} />
           ))}
-        </>
+          <Button
+            className={common.navButton}
+            color="primary"
+            isDisabled={false}
+            radius="sm"
+            size="lg"
+            onPress={onNavigateButtonClick}
+          >
+            {isMoreContent ? "Further" : "Back to main"}
+          </Button>
+        </div>
       )}
     </article>
   );

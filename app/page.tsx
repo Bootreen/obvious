@@ -19,7 +19,7 @@ import styles from "@/styles/page.home.module.css";
 const Home = () => {
   const router = useRouter();
   // State store variables...
-  const { checkboxes, request, isBusy, progress } = useAppStates(
+  const { contentRoutes, checkboxes, request, isBusy, progress } = useAppStates(
     (state) => state,
   );
   // ...and setters
@@ -35,6 +35,7 @@ const Home = () => {
     setPairs,
     setQuiz,
     setSubtopics,
+    addContentRoute,
     resetContent,
     setIsBusy,
     setProgress,
@@ -63,6 +64,14 @@ const Home = () => {
       return () => clearInterval(interval);
     } else setProgress(estimatedLoadTime.current); // Loading is complete
   }, [isBusy, progress]);
+
+  // Redirect to the 1st tab of the created content
+  useEffect(() => {
+    if (contentRoutes.length > 1 && isBusy) {
+      router.push(contentRoutes[1]);
+      setIsBusy(false);
+    } else if (contentRoutes.length === 1 && isBusy) setIsBusy(false);
+  }, [contentRoutes]);
 
   // Error modal handlers
   const {
@@ -111,8 +120,6 @@ const Home = () => {
     // Turn off content tabs until response is received
     turnOffTabs();
 
-    const redirectOnSuccess: string[] = [];
-
     // Make at least one request
     do {
       try {
@@ -133,22 +140,23 @@ const Home = () => {
             .map(([key]) => key) as Parts[],
         );
 
+        addContentRoute("/");
         // Update content state and tab availability
         if (topic) setTopic(topic);
         if (summary && summary !== "") {
           setSummary(summary);
           setTabState("summary", true);
-          redirectOnSuccess.push("/summary");
+          addContentRoute("/summary");
         }
         if (guide && guide.length > 0) {
           setGuide(guide);
           setTabState("guide", true);
-          redirectOnSuccess.push("/guide");
+          addContentRoute("/guide");
         }
         if (flashcards && flashcards.length > 0) {
           setFlashcards(flashcards);
           setTabState("flashcards", true);
-          redirectOnSuccess.push("/flashcards");
+          addContentRoute("/flashcards");
         }
         if (pairmatch && pairmatch.length > 0) {
           if (checkPairs(pairmatch)) {
@@ -171,7 +179,7 @@ const Home = () => {
 
             setPairs(shuffledPairs);
             setTabState("pairmatch", true);
-            redirectOnSuccess.push("/pairmatch");
+            addContentRoute("/pairmatch");
           } else throw new Error("Invalid matching pairs");
         }
         if (quiz && quiz.length > 0) {
@@ -186,7 +194,7 @@ const Home = () => {
               })),
             );
             setTabState("quiz", true);
-            redirectOnSuccess.push("/quiz");
+            addContentRoute("/quiz");
           } else throw new Error("Invalid quiz");
         }
         if (subtopics) setSubtopics(subtopics);
@@ -229,15 +237,15 @@ const Home = () => {
     estimatedLoadTime.current = estimateLoadTime(checkboxes);
 
     setIsSaved(false);
-    // Enable new requests again
-    setIsBusy(false);
+    // Enable new requests again even after the fatal error
+    // if (contentRoutes.length === 1) {
+    //   console.log("Reset isBusy");
+    //   setIsBusy(false);
+    // }
     // Close loading indicator
     onProgressClose();
     // Clear error log
     clearErrors();
-
-    // Redirect to the 1st tab of the created content
-    if (redirectOnSuccess.length > 0) router.push(redirectOnSuccess[0]);
   };
 
   // If none of the study material options are selected or the request is empty.
@@ -262,7 +270,8 @@ const Home = () => {
             className={styles.textarea}
             label="Enter your request:"
             labelPlacement="inside"
-            placeholder="Describe here in natural language what topic you would like to practice today. You can write a query in any language and get results in that language too if you explicitly specify it, for example - 'I want output results in German'."
+            placeholder="Describe here in natural language what topic you would like to study today. You can write a query in any language and get results in that language too if you explicitly specify it, for example like this — 'Provide output results in German'."
+            size="lg"
             onChange={(event) => onTextareaChange(event)}
           />
         </div>
