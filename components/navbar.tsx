@@ -26,8 +26,8 @@ import { createRequest } from "@/backend/controllers/request-controller";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { useAppActions, useAppStates } from "@/store/app-states";
 import { isSessionExpired } from "@/utils/date-time-utils";
-import styles from "@/styles/navbar.module.css";
 import { fetchHistory } from "@/utils/fetch-sessions-history";
+import styles from "@/styles/navbar.module.css";
 
 export const Navbar = () => {
   const {

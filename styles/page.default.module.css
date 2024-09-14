@@ -3,9 +3,13 @@
 }
 
 .container {
-  @apply flex flex-col justify-center;
+  @apply prose-p:my-0 prose-p:mb-4;
+}
+
+.buttonBlock {
+  @apply flex flex-row gap-x-4 justify-center mt-8;
 }
 
 .navButton {
-  @apply mx-auto;
+  @apply w-fit;
 }

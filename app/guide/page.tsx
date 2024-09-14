@@ -1,5 +1,6 @@
 "use client";
 
+import clsx from "clsx";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@nextui-org/button";
@@ -31,23 +32,24 @@ const GuidePage = () => {
     );
 
   return (
-    <article className={common.proseBlock}>
+    <article className={clsx(common.proseBlock)}>
       {guide && guide.length > 0 && (
         <div className={common.container}>
           <h2>{topic}: Guide</h2>
           {guide.map((e, i) => (
             <MarkdownRenderer key={i} content={e} />
           ))}
-          <Button
-            className={common.navButton}
-            color="primary"
-            isDisabled={false}
-            radius="sm"
-            size="lg"
-            onPress={onNavigateButtonClick}
-          >
-            {isMoreContent ? "Further" : "Back to main"}
-          </Button>
+          <div className={common.buttonBlock}>
+            <Button
+              className={common.navButton}
+              color="primary"
+              radius="sm"
+              size="lg"
+              onPress={onNavigateButtonClick}
+            >
+              {isMoreContent ? "Further" : "Back to main"}
+            </Button>
+          </div>
         </div>
       )}
     </article>

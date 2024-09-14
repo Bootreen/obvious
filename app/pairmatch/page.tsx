@@ -24,7 +24,7 @@ const PairsPage = () => {
     topic,
     pairMatcher: { isReady, matchedPairsCounter, pairs, mistakesCounter },
   } = useAppStates((state) => state);
-  const { setPairPartSelected } = useAppActions();
+  const { setPairMatcher, setPairPartSelected } = useAppActions();
 
   const nextIndex = contentRoutes.findIndex((e) => e === "/pairmatch") + 1;
   const isMoreContent = nextIndex < contentRoutes.length;
@@ -40,6 +40,8 @@ const PairsPage = () => {
 
   const onPairPartClick = (type: "question" | "answer", index: number) =>
     setPairPartSelected(type, index);
+
+  const onRestartPairmatchButtonClick = () => setPairMatcher(pairs);
 
   return (
     <article className={common.proseBlock}>
@@ -99,16 +101,27 @@ const PairsPage = () => {
           {mistakesCounter > 0 && (
             <h3 className={styles.mistakes}>Mistakes: {mistakesCounter}</h3>
           )}
-          <Button
-            className={common.navButton}
-            color="primary"
-            isDisabled={false}
-            radius="sm"
-            size="lg"
-            onPress={onNavigateButtonClick}
-          >
-            {isMoreContent ? "Further" : "Back to main"}
-          </Button>
+          <div className={common.buttonBlock}>
+            <Button
+              className={common.navButton}
+              color="danger"
+              radius="sm"
+              size="lg"
+              onPress={onRestartPairmatchButtonClick}
+            >
+              Restart pair matching
+            </Button>
+            <Button
+              className={common.navButton}
+              color="primary"
+              isDisabled={matchedPairsCounter !== 5}
+              radius="sm"
+              size="lg"
+              onPress={onNavigateButtonClick}
+            >
+              {isMoreContent ? "Further" : "Back to main"}
+            </Button>
+          </div>
         </div>
       )}
     </article>

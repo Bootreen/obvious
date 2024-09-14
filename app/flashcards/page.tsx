@@ -5,12 +5,13 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@nextui-org/button";
 
+import { shuffleIndices } from "@/utils/shuffle";
 import { useAppStates, useAppActions } from "@/store/app-states";
 import MarkdownRenderer from "@/components/md-renderer";
 import common from "@/styles/page.default.module.css";
 import styles from "@/styles/page.flashcards.module.css";
 
-const GuidePage = () => {
+const FlashcardsPage = () => {
   const router = useRouter();
 
   // Redirect to main if no content
@@ -32,6 +33,7 @@ const GuidePage = () => {
     },
   } = useAppStates((state) => state);
   const {
+    setFlashcards,
     setCurrentFlashcardNumber,
     setIsFlashcardFlipped,
     setIsFlipInProgress,
@@ -96,6 +98,10 @@ const GuidePage = () => {
       );
     }
   };
+
+  // Shuffle flashcards and restart
+  const onRestartFlashcardsButtonClick = () =>
+    setFlashcards(shuffleIndices(10).map((i) => flashcards[i]));
 
   return (
     <article className={common.proseBlock}>
@@ -175,20 +181,31 @@ const GuidePage = () => {
           {hintsCounter > 0 && (
             <h3 className={styles.hint}>Hints used: {hintsCounter}</h3>
           )}
-          <Button
-            className={common.navButton}
-            color="primary"
-            isDisabled={false}
-            radius="sm"
-            size="lg"
-            onPress={onNavigateButtonClick}
-          >
-            {isMoreContent ? "Further" : "Back to main"}
-          </Button>
+          <div className={common.buttonBlock}>
+            <Button
+              className={common.navButton}
+              color="danger"
+              radius="sm"
+              size="lg"
+              onPress={onRestartFlashcardsButtonClick}
+            >
+              Restart flashcards
+            </Button>
+            <Button
+              className={common.navButton}
+              color="primary"
+              isDisabled={currentFlashcardNumber !== 10}
+              radius="sm"
+              size="lg"
+              onPress={onNavigateButtonClick}
+            >
+              {isMoreContent ? "Further" : "Back to main"}
+            </Button>
+          </div>
         </div>
       )}
     </article>
   );
 };
 
-export default GuidePage;
+export default FlashcardsPage;

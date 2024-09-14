@@ -36,16 +36,17 @@ const SummaryPage = () => {
         <div className={common.container}>
           <h2>{topic}: Summary</h2>
           <MarkdownRenderer content={summary} />
-          <Button
-            className={common.navButton}
-            color="primary"
-            isDisabled={false}
-            radius="sm"
-            size="lg"
-            onPress={onNavigateButtonClick}
-          >
-            {isMoreContent ? "Further" : "Back to main"}
-          </Button>
+          <div className={common.buttonBlock}>
+            <Button
+              className={common.navButton}
+              color="primary"
+              radius="sm"
+              size="lg"
+              onPress={onNavigateButtonClick}
+            >
+              {isMoreContent ? "Further" : "Back to main"}
+            </Button>
+          </div>
         </div>
       )}
     </article>

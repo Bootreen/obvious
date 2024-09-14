@@ -27,6 +27,7 @@ const QuizPage = () => {
     quiz: { isReady, currentQuestionNumber, correctAnswersCounter, questions },
   } = useAppStates((state) => state);
   const {
+    setQuiz,
     incCurrentQuestionNumber,
     incCorrectAnswersCounter,
     setIsAnswered,
@@ -42,6 +43,8 @@ const QuizPage = () => {
     else setSelectedIncorrectOptionIndex(currentQuestionNumber, index);
   };
   const onNextQuestionButtonClick = () => incCurrentQuestionNumber();
+
+  const onRestartQuizButtonClick = () => setQuiz(questions);
 
   return (
     <article className={clsx(common.proseBlock, styles.quizPageContainer)}>
@@ -111,16 +114,27 @@ const QuizPage = () => {
               Next Question
             </Button>
           </div>
-          <Button
-            className={common.navButton}
-            color="primary"
-            isDisabled={false}
-            radius="sm"
-            size="lg"
-            onPress={onNavigateButtonClick}
-          >
-            Back to main
-          </Button>
+          <div className={common.buttonBlock}>
+            <Button
+              className={common.navButton}
+              color="danger"
+              radius="sm"
+              size="lg"
+              onPress={onRestartQuizButtonClick}
+            >
+              Restart quiz
+            </Button>
+            <Button
+              className={common.navButton}
+              color="primary"
+              isDisabled={currentQuestionNumber !== 9}
+              radius="sm"
+              size="lg"
+              onPress={onNavigateButtonClick}
+            >
+              Back to main
+            </Button>
+          </div>
         </div>
       )}
     </article>
