@@ -1,5 +1,5 @@
 .navbarEdgeBlock {
-  @apply gap-x-2;
+  @apply !gap-x-2;
 }
 
 .userLogin {

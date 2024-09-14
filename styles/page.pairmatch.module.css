@@ -7,7 +7,7 @@
 }
 
 .pairLabelContainer {
-  @apply flex !place-content-center h-24 text-lg leading-snug select-none;
+  @apply flex place-content-center h-24 text-lg leading-snug select-none;
 }
 
 .pairLabelMatched {
@@ -15,7 +15,7 @@
 }
 
 .pairPart {
-  @apply flex !place-content-center h-20 text-center bg-blue-200 text-black overflow-hidden px-6;
+  @apply flex place-content-center h-20 text-center bg-blue-200 text-black overflow-hidden px-6 prose-p:!m-0;
 }
 
 .pairPartSelected {
