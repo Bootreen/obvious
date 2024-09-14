@@ -1,6 +1,7 @@
 "use client";
 
 import { ChangeEvent, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { Textarea } from "@nextui-org/input";
 import { CheckboxGroup, Checkbox } from "@nextui-org/checkbox";
 import { Button } from "@nextui-org/button";
@@ -16,6 +17,7 @@ import { shuffleIndices } from "@/utils/shuffle";
 import styles from "@/styles/page.home.module.css";
 
 const Home = () => {
+  const router = useRouter();
   // State store variables...
   const { checkboxes, request, isBusy, progress } = useAppStates(
     (state) => state,
@@ -109,6 +111,8 @@ const Home = () => {
     // Turn off content tabs until response is received
     turnOffTabs();
 
+    const redirectOnSuccess: string[] = [];
+
     // Make at least one request
     do {
       try {
@@ -131,17 +135,20 @@ const Home = () => {
 
         // Update content state and tab availability
         if (topic) setTopic(topic);
-        if (guide && guide.length > 0) {
-          setGuide(guide);
-          setTabState("guide", true);
-        }
         if (summary && summary !== "") {
           setSummary(summary);
           setTabState("summary", true);
+          redirectOnSuccess.push("/summary");
+        }
+        if (guide && guide.length > 0) {
+          setGuide(guide);
+          setTabState("guide", true);
+          redirectOnSuccess.push("/guide");
         }
         if (flashcards && flashcards.length > 0) {
           setFlashcards(flashcards);
           setTabState("flashcards", true);
+          redirectOnSuccess.push("/flashcards");
         }
         if (pairmatch && pairmatch.length > 0) {
           if (checkPairs(pairmatch)) {
@@ -164,6 +171,7 @@ const Home = () => {
 
             setPairs(shuffledPairs);
             setTabState("pairmatch", true);
+            redirectOnSuccess.push("/pairmatch");
           } else throw new Error("Invalid matching pairs");
         }
         if (quiz && quiz.length > 0) {
@@ -178,6 +186,7 @@ const Home = () => {
               })),
             );
             setTabState("quiz", true);
+            redirectOnSuccess.push("/quiz");
           } else throw new Error("Invalid quiz");
         }
         if (subtopics) setSubtopics(subtopics);
@@ -226,6 +235,9 @@ const Home = () => {
     onProgressClose();
     // Clear error log
     clearErrors();
+
+    // Redirect to the 1st tab of the created content
+    if (redirectOnSuccess.length > 0) router.push(redirectOnSuccess[0]);
   };
 
   // If none of the study material options are selected or the request is empty.
