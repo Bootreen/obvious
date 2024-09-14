@@ -61,9 +61,9 @@ export const Navbar = () => {
     isSaved,
   } = useAppStates((state) => state);
   const { setUser, setSession, setHistory, setIsSaved } = useAppActions();
-  const disabledTabs = Object.entries(tabs)
-    .filter(([, { isLoaded }]) => !isLoaded)
-    .map(([key]) => key);
+  const disabledTabs = Object.values(tabs)
+    .filter(({ isLoaded }) => !isLoaded)
+    .map(({ href }) => href);
 
   useEffect(() => {
     setUser(
@@ -222,6 +222,7 @@ export const Navbar = () => {
         <NavbarContent className={styles.navbarMiddle} justify="center">
           <Tabs
             radius="md"
+            selectedKey={currentPath}
             size="lg"
             variant="solid"
             {...(disabledTabs.length > 0 && {
@@ -229,15 +230,15 @@ export const Navbar = () => {
               "aria-label": "Disabled Options",
             })}
           >
-            {Object.entries(tabs).map(([key, { label, href, icon }]) => {
+            {Object.values(tabs).map(({ label, href, icon }) => {
               const TabIcon = icon;
 
               return (
                 <Tab
-                  key={key}
+                  key={href}
                   className={clsx(
-                    !disabledTabs.includes(key) && styles.tab,
-                    disabledTabs.includes(key) && styles.tabDisabled,
+                    !disabledTabs.includes(href) && styles.tab,
+                    disabledTabs.includes(href) && styles.tabDisabled,
                   )}
                   title={
                     <div className={styles.tabTitle}>
@@ -246,7 +247,7 @@ export const Navbar = () => {
                           linkStyles({ color: "foreground" }),
                           styles.navMenuLink,
                           currentPath === href && styles.linkActive,
-                          disabledTabs.includes(key) && styles.linkDisabled,
+                          disabledTabs.includes(href) && styles.linkDisabled,
                         )}
                         color="foreground"
                         href={href}

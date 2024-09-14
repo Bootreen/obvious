@@ -186,7 +186,7 @@ const Home = () => {
         if (quiz && quiz.length > 0) {
           if (checkQuiz(quiz)) {
             setQuiz(
-              quiz.map((question: any) => ({
+              quiz.map((question) => ({
                 ...question,
                 // Shuffle answer order, as AI tends to place the correct answer first
                 options: shuffleIndices(4).map((i) => question.options[i]),

@@ -8,6 +8,7 @@ import { Progress } from "@nextui-org/react";
 import { Button } from "@nextui-org/button";
 import { Card, CardBody } from "@nextui-org/card";
 
+import { shuffleIndices } from "@/utils/shuffle";
 import { useAppStates, useAppActions } from "@/store/app-states";
 import MarkdownRenderer from "@/components/md-renderer";
 import common from "@/styles/page.default.module.css";
@@ -44,7 +45,20 @@ const QuizPage = () => {
   };
   const onNextQuestionButtonClick = () => incCurrentQuestionNumber();
 
-  const onRestartQuizButtonClick = () => setQuiz(questions);
+  const onRestartQuizButtonClick = () => {
+    setQuiz(
+      shuffleIndices(10)
+        // Shuffle question order
+        .map((i) => questions[i])
+        .map((question) => ({
+          ...question,
+          // Shuffle answer order
+          options: shuffleIndices(4).map((i) => question.options[i]),
+          isAnswered: false,
+          selectedIncorrectOptionIndex: null,
+        })),
+    );
+  };
 
   return (
     <article className={clsx(common.proseBlock, styles.quizPageContainer)}>
