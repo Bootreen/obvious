@@ -1,9 +1,9 @@
-.tableRow {
-  @apply h-full border-none;
+.pairTable {
+  @apply flex flex-row gap-x-4;
 }
 
-.tableCell {
-  @apply h-full align-top;
+.pairColumn {
+  @apply flex flex-col gap-y-4;
 }
 
 .pairLabelContainer {

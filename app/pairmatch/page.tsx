@@ -4,14 +4,6 @@ import clsx from "clsx";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardBody } from "@nextui-org/card";
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableColumn,
-  TableRow,
-  TableCell,
-} from "@nextui-org/table";
 
 import { useAppStates, useAppActions } from "@/store/app-states";
 import MarkdownRenderer from "@/components/md-renderer";
@@ -40,60 +32,56 @@ const PairsPage = () => {
       {isReady && (
         <>
           <h2>{topic}: Pair match</h2>
-          <Table hideHeader removeWrapper aria-label="Matching pairs">
-            <TableHeader>
-              <TableColumn> </TableColumn>
-              <TableColumn> </TableColumn>
-            </TableHeader>
-            <TableBody>
-              {pairs.map(({ question, answer }, i) => (
-                <TableRow key={i} className={styles.tableRow}>
-                  <TableCell className={styles.tableCell}>
-                    <Card
-                      isPressable
-                      className={clsx(
-                        styles.pairLabelContainer,
-                        matchedPairsCounter > i && styles.pairLabelMatched,
-                      )}
-                      fullWidth={true}
-                      onPress={() => onPairPartClick("question", i)}
-                    >
-                      <CardBody
-                        className={clsx(
-                          styles.pairPart,
-                          question.isSelected && styles.pairPartSelected,
-                          matchedPairsCounter > i && styles.pairPartMatched,
-                        )}
-                      >
-                        <MarkdownRenderer content={question.value} />
-                      </CardBody>
-                    </Card>
-                  </TableCell>
-                  <TableCell className={styles.tableCell}>
-                    <Card
-                      isPressable
-                      className={clsx(
-                        styles.pairLabelContainer,
-                        matchedPairsCounter > i && styles.pairLabelMatched,
-                      )}
-                      fullWidth={true}
-                      onPress={() => onPairPartClick("answer", i)}
-                    >
-                      <CardBody
-                        className={clsx(
-                          styles.pairPart,
-                          answer.isSelected && styles.pairPartSelected,
-                          matchedPairsCounter > i && styles.pairPartMatched,
-                        )}
-                      >
-                        <MarkdownRenderer content={answer.value} />
-                      </CardBody>
-                    </Card>
-                  </TableCell>
-                </TableRow>
+          <div className={styles.pairTable}>
+            <div className={styles.pairColumn}>
+              {pairs.map(({ question }, i) => (
+                <Card
+                  key={i}
+                  isPressable
+                  className={clsx(
+                    styles.pairLabelContainer,
+                    matchedPairsCounter > i && styles.pairLabelMatched,
+                  )}
+                  fullWidth={true}
+                  onPress={() => onPairPartClick("question", i)}
+                >
+                  <CardBody
+                    className={clsx(
+                      styles.pairPart,
+                      question.isSelected && styles.pairPartSelected,
+                      matchedPairsCounter > i && styles.pairPartMatched,
+                    )}
+                  >
+                    <MarkdownRenderer content={question.value} />
+                  </CardBody>
+                </Card>
               ))}
-            </TableBody>
-          </Table>
+            </div>
+            <div className={styles.pairColumn}>
+              {pairs.map(({ answer }, i) => (
+                <Card
+                  key={i}
+                  isPressable
+                  className={clsx(
+                    styles.pairLabelContainer,
+                    matchedPairsCounter > i && styles.pairLabelMatched,
+                  )}
+                  fullWidth={true}
+                  onPress={() => onPairPartClick("answer", i)}
+                >
+                  <CardBody
+                    className={clsx(
+                      styles.pairPart,
+                      answer.isSelected && styles.pairPartSelected,
+                      matchedPairsCounter > i && styles.pairPartMatched,
+                    )}
+                  >
+                    <MarkdownRenderer content={answer.value} />
+                  </CardBody>
+                </Card>
+              ))}
+            </div>
+          </div>
           {mistakesCounter > 0 && (
             <h3 className={styles.mistakes}>Mistakes: {mistakesCounter}</h3>
           )}

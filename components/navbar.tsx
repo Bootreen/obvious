@@ -235,7 +235,10 @@ export const Navbar = () => {
               return (
                 <Tab
                   key={key}
-                  className={styles.tab}
+                  className={clsx(
+                    !disabledTabs.includes(key) && styles.tab,
+                    disabledTabs.includes(key) && styles.tabDisabled,
+                  )}
                   title={
                     <div className={styles.tabTitle}>
                       <NextLink
@@ -266,7 +269,14 @@ export const Navbar = () => {
             shadow="none"
             onPress={onSaveRequestIconClick}
           >
-            <CardBody className={styles.navbarButton}>
+            <CardBody
+              className={clsx(
+                !(!user || isEmptyContent || isBusy || isSaved) &&
+                  styles.navbarButton,
+                (!user || isEmptyContent || isBusy || isSaved) &&
+                  styles.navbarButtonDisabled,
+              )}
+            >
               <SaveIcon size={28} />
             </CardBody>
           </Card>
@@ -276,7 +286,12 @@ export const Navbar = () => {
             shadow="none"
             onPress={onOpenHistoryIconClick}
           >
-            <CardBody className={styles.navbarButton}>
+            <CardBody
+              className={clsx(
+                user && styles.navbarButton,
+                !user && styles.navbarButtonDisabled,
+              )}
+            >
               <HistoryIcon size={28} />
             </CardBody>
           </Card>
