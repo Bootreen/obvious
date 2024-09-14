@@ -19,9 +19,8 @@ import styles from "@/styles/page.home.module.css";
 const Home = () => {
   const router = useRouter();
   // State store variables...
-  const { contentRoutes, checkboxes, request, isBusy, progress } = useAppStates(
-    (state) => state,
-  );
+  const { contentRoutes, checkboxes, request, topic, isBusy, progress } =
+    useAppStates((state) => state);
   // ...and setters
   const {
     setTabState,
@@ -95,6 +94,8 @@ const Home = () => {
   ) => {
     setCheckboxState(checkbox, event.target.checked);
   };
+
+  const onExploreButtonClick = () => router.push(contentRoutes[1]);
 
   const onTextareaChange = (event: ChangeEvent<HTMLInputElement>) =>
     setRequest(event.target.value);
@@ -237,11 +238,9 @@ const Home = () => {
     estimatedLoadTime.current = estimateLoadTime(checkboxes);
 
     setIsSaved(false);
-    // Enable new requests again even after the fatal error
-    // if (contentRoutes.length === 1) {
-    //   console.log("Reset isBusy");
-    //   setIsBusy(false);
-    // }
+
+    // isBusy resets in contentRoutes useEffect
+
     // Close loading indicator
     onProgressClose();
     // Clear error log
@@ -256,15 +255,40 @@ const Home = () => {
   return (
     <section className={styles.homePage}>
       <div className={styles.contentContainer}>
-        <div>
-          <h1 className={styles.title}>Sarge Obvious</h1>
-          <p className={styles.paragraph}>
-            Ready to get in line and learn something?
-            <br />
-            <strong>Sarge Obvious</strong> is your new AI drill sergeant, here
-            to put you through your paces! Just give Sarge a command, and he’ll
-            generate custom study materials that’ll make you smarter in no time.
-          </p>
+        <div className={styles.descriptionContainer}>
+          {topic !== "" ? <h1>{topic}</h1> : <h1>Sarge Obvious</h1>}
+          <div className={styles.description}>
+            {topic !== "" ? (
+              <>
+                <Button
+                  className={styles.exploreButton}
+                  color="primary"
+                  radius="sm"
+                  size="lg"
+                  onPress={onExploreButtonClick}
+                >
+                  <p>Explore your requested topic</p>
+                </Button>
+                <div>
+                  <p>
+                    Or select the corresponding content tab in the navigation
+                    menu above. Or request a new topic in the input window
+                    below.
+                  </p>
+                </div>
+              </>
+            ) : (
+              <div>
+                <p>Ready to get in line and learn something?</p>
+                <p>
+                  <strong>Sarge Obvious</strong> is your new AI drill sergeant,
+                  here to put you through your paces! Just give Sarge a command,
+                  and he’ll generate custom study materials that’ll make you
+                  smarter in no time.
+                </p>
+              </div>
+            )}
+          </div>
           <Textarea
             isRequired
             className={styles.textarea}
@@ -277,6 +301,7 @@ const Home = () => {
         </div>
 
         <CheckboxGroup
+          className="mx-auto"
           defaultValue={Object.entries(checkboxes)
             .filter(([, { isChecked }]) => isChecked)
             .map(([key]) => key)}
