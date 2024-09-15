@@ -19,7 +19,7 @@
 }
 
 .textarea {
-  @apply mx-auto w-[424px] !min-h-36;
+  @apply mx-auto w-[424px] !min-h-44;
 }
 
 .submitButton {
