@@ -35,6 +35,7 @@ const Home = () => {
     setQuiz,
     setSubtopics,
     addContentRoute,
+    resetContentRoutes,
     resetContent,
     setIsBusy,
     setProgress,
@@ -141,6 +142,7 @@ const Home = () => {
             .map(([key]) => key) as Parts[],
         );
 
+        resetContentRoutes();
         addContentRoute("/");
         // Update content state and tab availability
         if (topic) setTopic(topic);
