@@ -31,6 +31,7 @@ AI-powered Learning Assistant
 - [Axios](https://axios-http.com/)
 - [clsx](https://www.npmjs.com/package/clsx)
 - [Tailwind CSS](https://tailwindcss.com/)
+- [Tailwind Typography](https://github.com/tailwindlabs/tailwindcss-typography)
 - [NextUI v2](https://nextui.org/)
 - [Framer Motion](https://www.framer.com/motion/)
 - [React Markdown](https://github.com/remarkjs/react-markdown)
