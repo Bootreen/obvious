@@ -1,9 +1,9 @@
 .navbarEdgeBlock {
-  @apply !gap-x-2;
+  @apply !gap-x-1 min-[500px]:!gap-x-2;
 }
 
 .userLogin {
-  @apply flex place-content-center cursor-pointer text-default-600 hover:text-primary-600;
+  @apply flex place-content-center text-default-600 hover:text-primary-600 cursor-pointer;
 }
 
 .navbarButton {
@@ -18,6 +18,10 @@
   @apply basis-1/5 sm:basis-full;
 }
 
+.icon {
+  @apply w-[22px] min-[500px]:w-auto h-auto;
+}
+
 .tab {
   @apply !px-0 hover:opacity-100;
 }
@@ -27,15 +31,15 @@
 }
 
 .tabTitle {
-  @apply flex items-center space-x-2;
+  @apply flex items-center space-x-0.5 min-[500px]:space-x-2;
 }
 
 .navMenu {
-  @apply flex gap-x-1 md:gap-x-2 justify-center bg-default rounded-lg p-1;
+  @apply p-0.5 min-[500px]:p-1 flex justify-center gap-x-1 md:gap-x-2 bg-default rounded-lg;
 }
 
 .navMenuLink {
-  @apply font-medium gap-x-2 text-sm lg:text-lg bg-transparent py-1 px-1 lg:px-2 rounded-lg text-default-600 hover:text-primary-600;
+  @apply p-0.5 min-[500px]:p-1 lg:px-2 gap-x-0.5 min-[500px]:gap-x-2 text-lg font-medium bg-transparent rounded-lg text-default-600 hover:text-primary-600;
 }
 
 .linkActive {
@@ -47,5 +51,5 @@
 }
 
 .linkText {
-  @apply hidden md:inline;
+  @apply hidden lg:inline;
 }

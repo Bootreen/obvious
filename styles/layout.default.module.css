@@ -1,5 +1,5 @@
 .section {
-  @apply flex flex-col items-center justify-center py-1;
+  @apply py-1 flex flex-col items-center justify-center;
 }
 
 .mainContainer {

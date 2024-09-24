@@ -1,5 +1,5 @@
 .proseBlock {
-  @apply prose prose-lg text-foreground prose-headings:text-foreground prose-strong:text-foreground prose-ol:text-foreground prose-ul:text-foreground prose-li:text-foreground prose-code:text-foreground prose-pre:bg-foreground-300 prose-code:bg-foreground-300 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:before:hidden prose-code:after:hidden prose-pre:-indent-2 prose-h2:text-center;
+  @apply mx-auto prose prose-lg text-foreground prose-headings:text-foreground prose-strong:text-foreground prose-ol:text-foreground prose-ul:text-foreground prose-li:text-foreground prose-code:text-foreground prose-pre:bg-foreground-300 prose-code:bg-foreground-300 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:before:hidden prose-code:after:hidden prose-pre:-indent-2 prose-h2:text-center max-[375px]:max-w-[320px] max-[400px]:max-w-[345px] max-[430px]:max-w-[380px] max-[500px]:max-w-[450px] max-[768px]:w-5/6 max-[500px]:prose-h2:text-2xl max-[500px]:prose-h2:my-2 max-[500px]:prose-p:text-base;
 }
 
 .container {
@@ -7,7 +7,7 @@
 }
 
 .buttonBlock {
-  @apply flex flex-row gap-x-4 justify-center mt-8;
+  @apply mt-8 flex flex-row justify-center gap-x-4;
 }
 
 .navButton {

@@ -214,16 +214,17 @@ export const Navbar = () => {
           <ThemeSwitch />
           <Card isPressable shadow="none" onPress={onHelpOpen}>
             <CardBody className={styles.navbarButton}>
-              <HelpIcon size={28} />
+              <HelpIcon className={styles.icon} size={28} />
             </CardBody>
           </Card>
         </NavbarContent>
 
         <NavbarContent className={styles.navbarMiddle} justify="center">
           <Tabs
+            className="flex flex-row gap-x-0"
             radius="md"
             selectedKey={currentPath}
-            size="lg"
+            size="sm"
             variant="solid"
             {...(disabledTabs.length > 0 && {
               disabledKeys: disabledTabs,
@@ -252,7 +253,7 @@ export const Navbar = () => {
                         color="foreground"
                         href={href}
                       >
-                        <TabIcon size={28} />
+                        <TabIcon className={styles.icon} size={28} />
                         <span className={styles.linkText}>{label}</span>
                       </NextLink>
                     </div>
@@ -278,7 +279,7 @@ export const Navbar = () => {
                   styles.navbarButtonDisabled,
               )}
             >
-              <SaveIcon size={28} />
+              <SaveIcon className={styles.icon} size={28} />
             </CardBody>
           </Card>
           <Card
@@ -293,13 +294,13 @@ export const Navbar = () => {
                 !user && styles.navbarButtonDisabled,
               )}
             >
-              <HistoryIcon size={28} />
+              <HistoryIcon className={styles.icon} size={28} />
             </CardBody>
           </Card>
           <div className={styles.userLogin}>
             <SignedOut>
               <SignInButton>
-                <LoginIcon size={28} />
+                <LoginIcon className={styles.icon} size={28} />
               </SignInButton>
             </SignedOut>
             <SignedIn>

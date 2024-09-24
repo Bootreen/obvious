@@ -11,7 +11,7 @@
 }
 
 .request {
-  @apply flex flex-row gap-x-2 items-center justify-between mb-1;
+  @apply mb-1 flex flex-row items-center justify-between gap-x-2;
 }
 
 .buttonBlock {
