@@ -3,15 +3,15 @@
 }
 
 .pageContainer {
-  @apply relative flex flex-col h-screen;
+  @apply relative flex flex-col justify-between h-screen;
 }
 
 .mainSectionContainer {
-  @apply container mx-auto w-fit pt-1 px-6 flex-grow;
+  @apply container w-fit mx-auto pt-1 px-6 flex-grow;
 }
 
 .footer {
-  @apply w-full flex items-center justify-center py-3;
+  @apply w-full py-3 flex items-center justify-center;
 }
 
 .footerLink {

@@ -1,9 +1,9 @@
 .homePage {
-  @apply prose prose-lg text-foreground prose-headings:text-foreground prose-headings:text-center prose-headings:font-bold prose-strong:text-foreground prose-ol:text-foreground prose-ul:text-foreground prose-li:text-foreground flex flex-col items-center justify-center prose-h1:mt-6;
+  @apply flex flex-col items-center justify-center prose prose-lg text-foreground prose-headings:text-foreground prose-headings:text-center prose-headings:font-bold prose-strong:text-foreground prose-ol:text-foreground prose-ul:text-foreground prose-li:text-foreground prose-h1:mt-6 max-[430px]:prose-h1:text-4xl max-[430px]:prose-h1:my-2;
 }
 
 .contentContainer {
-  @apply flex flex-col gap-y-8;
+  @apply flex flex-col gap-y-8 max-[430px]:gap-y-6;
 }
 
 .descriptionContainer {
@@ -11,15 +11,19 @@
 }
 
 .exploreButton {
-  @apply flex mx-auto w-fit;
+  @apply mx-auto w-fit flex;
 }
 
 .description {
-  @apply text-lg mx-auto w-[400px];
+  @apply text-lg mx-auto max-[430px]:w-[330px] w-[400px];
+}
+
+.intro {
+  @apply max-[430px]:hidden;
 }
 
 .textarea {
-  @apply mx-auto w-[424px] !min-h-44;
+  @apply mx-auto max-[430px]:mt-6 max-[430px]:w-[354px] w-[424px] !min-h-44;
 }
 
 .submitButton {

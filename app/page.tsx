@@ -280,7 +280,7 @@ const Home = () => {
                 </div>
               </>
             ) : (
-              <div>
+              <div className={styles.intro}>
                 <p>Ready to get in line and learn something?</p>
                 <p>
                   <strong>Sarge Obvious</strong> is your new AI drill sergeant,
