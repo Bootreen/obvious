@@ -19,6 +19,7 @@ export const ModalProgress: React.FC<ModalProgressWindowProps> = ({
     classNames={{ header: styles.modalHeader }}
     isDismissable={false}
     isOpen={isOpen}
+    placement="center"
     size="md"
     onOpenChange={onOpenChangeHandler}
   >

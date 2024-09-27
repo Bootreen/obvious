@@ -1,3 +1,7 @@
 .modalHeader {
   @apply flex flex-row justify-center;
 }
+
+.modalBody {
+  @apply max-[500px]:text-sm;
+}

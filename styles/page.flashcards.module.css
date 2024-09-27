@@ -3,7 +3,7 @@
 }
 
 .container {
-  @apply mx-auto max-[500px]:prose-base prose-xl max-[500px]:w-64 w-96 max-[500px]:h-44 text-white select-none;
+  @apply mx-auto max-[500px]:prose-base prose-xl max-[500px]:w-80 w-96 max-[500px]:h-52 h-64 text-white select-none;
 }
 
 .cardFront {

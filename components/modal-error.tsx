@@ -18,10 +18,11 @@ export const ModalError: React.FC<ModalWindowProps> = ({
     classNames={{ header: styles.modalHeader }}
     isDismissable={false}
     isOpen={isOpen}
+    placement="center"
     size="xl"
     onOpenChange={onOpenChangeHandler}
   >
-    <ModalContent>
+    <ModalContent className={styles.modalBody}>
       {(onErrorClose) => (
         <>
           <ModalHeader>Unable to fulfill the request</ModalHeader>

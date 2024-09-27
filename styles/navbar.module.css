@@ -35,11 +35,11 @@
 }
 
 .navMenu {
-  @apply p-0.5 min-[500px]:p-1 flex justify-center gap-x-1 md:gap-x-2 bg-default rounded-lg;
+  @apply flex justify-center gap-x-1 md:gap-x-2 bg-default rounded-lg;
 }
 
 .navMenuLink {
-  @apply p-0.5 min-[500px]:p-1 lg:px-2 gap-x-0.5 min-[500px]:gap-x-2 text-lg font-medium bg-transparent rounded-lg text-default-600 hover:text-primary-600;
+  @apply p-1 lg:px-2 gap-x-0.5 min-[500px]:gap-x-2 text-lg font-medium bg-transparent rounded-lg text-default-600 hover:text-primary-600;
 }
 
 .linkActive {

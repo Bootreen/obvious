@@ -14,14 +14,20 @@ export const ModalHelpMain: React.FC<ModalWindowProps> = ({
   isOpen,
   onOpenChangeHandler,
 }) => (
-  <Modal isOpen={isOpen} size="xl" onOpenChange={onOpenChangeHandler}>
+  <Modal
+    isOpen={isOpen}
+    placement="center"
+    scrollBehavior="outside"
+    size="xl"
+    onOpenChange={onOpenChangeHandler}
+  >
     <ModalContent>
       {(onHelpClose) => (
         <>
           <ModalHeader className={styles.modalHeader}>
             Sarge Obvious: Help
           </ModalHeader>
-          <ModalBody>
+          <ModalBody className={styles.modalBody}>
             <h3>1. Choose Your Topic:</h3>
             <p>
               Enter any topic you’d like to learn about. The more specific, the
