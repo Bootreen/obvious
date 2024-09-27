@@ -17,6 +17,7 @@ export const ModalHelpMain: React.FC<ModalWindowProps> = ({
   <Modal
     isOpen={isOpen}
     placement="center"
+    scrollBehavior="outside"
     size="xl"
     onOpenChange={onOpenChangeHandler}
   >

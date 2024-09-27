@@ -2,6 +2,10 @@
   @apply flex flex-row justify-center;
 }
 
+.modalBody {
+  @apply max-[500px]:text-sm;
+}
+
 .historyList {
   @apply flex flex-col gap-y-2;
 }

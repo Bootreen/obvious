@@ -130,14 +130,20 @@ export const ModalHistory: React.FC<ModalWindowProps> = ({
   };
 
   return (
-    <Modal isOpen={isOpen} size="4xl" onOpenChange={onOpenChangeHandler}>
+    <Modal
+      isOpen={isOpen}
+      placement="center"
+      scrollBehavior="outside"
+      size="4xl"
+      onOpenChange={onOpenChangeHandler}
+    >
       <ModalContent>
         {(onHistoryClose) => (
           <>
             <ModalHeader className={styles.modalHeader}>
               {user?.username}: Sessions History
             </ModalHeader>
-            <ModalBody>
+            <ModalBody className={styles.modalBody}>
               <div className={styles.historyList}>
                 {userHistory.map(({ session, requests }, i) => (
                   <div key={i}>
