@@ -11,7 +11,7 @@ export const promptParams = {
 };
 
 export const requestInstructions = {
-  prefix: `Please create comprehensive learning resources on the topic provided above, including the following components:\n`,
+  prefix: `\nPlease create comprehensive learning resources on the topic provided above, including the following components:\n`,
 
   guide: `- Guide (a concise, step-by-step introduction to the topic, consisting of ${promptParams.stepsMin} to ${promptParams.stepsMax} steps, with the number of steps adjusted based on the topic's complexity)\n`,
 

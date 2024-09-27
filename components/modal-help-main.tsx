@@ -17,7 +17,7 @@ export const ModalHelpMain: React.FC<ModalWindowProps> = ({
   <Modal
     isOpen={isOpen}
     placement="center"
-    size="md"
+    size="xl"
     onOpenChange={onOpenChangeHandler}
   >
     <ModalContent>
