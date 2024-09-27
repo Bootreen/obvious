@@ -1,5 +1,5 @@
 .homePage {
-  @apply flex flex-col items-center justify-center prose prose-lg text-foreground prose-headings:text-foreground prose-headings:text-center prose-headings:font-bold prose-strong:text-foreground prose-ol:text-foreground prose-ul:text-foreground prose-li:text-foreground prose-h1:mt-6 max-[430px]:prose-h1:text-4xl max-[430px]:prose-h1:my-2;
+  @apply flex flex-col items-center justify-center prose prose-lg text-foreground prose-headings:text-foreground prose-headings:text-center prose-headings:font-bold prose-strong:text-foreground prose-ol:text-foreground prose-ul:text-foreground prose-li:text-foreground prose-h1:mt-6 max-[500px]:prose-h1:text-3xl max-[500px]:prose-h1:mt-2 max-[500px]:prose-h1:mb-5 max-[500px]:prose-p:text-base max-[500px]:prose-p:my-4;
 }
 
 .contentContainer {
@@ -23,7 +23,7 @@
 }
 
 .textarea {
-  @apply mx-auto max-[430px]:mt-6 max-[430px]:w-[354px] w-[424px] !min-h-44;
+  @apply mx-auto max-[430px]:mt-1 max-[430px]:w-[354px] w-[424px] !min-h-44;
 }
 
 .submitButton {

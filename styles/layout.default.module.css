@@ -3,5 +3,5 @@
 }
 
 .mainContainer {
-  @apply inline-block w-max justify-center;
+  @apply inline-block w-screen sm:w-max justify-center;
 }

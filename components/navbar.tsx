@@ -221,7 +221,6 @@ export const Navbar = () => {
 
         <NavbarContent className={styles.navbarMiddle} justify="center">
           <Tabs
-            className="flex flex-row gap-x-0"
             radius="md"
             selectedKey={currentPath}
             size="sm"
