@@ -212,7 +212,7 @@ export const Navbar = () => {
       <DefaultNavbar maxWidth="xl" position="sticky">
         <NavbarContent className={styles.navbarEdgeBlock}>
           <ThemeSwitch />
-          <Card isPressable shadow="none" onPress={onHelpOpen}>
+          <Card isPressable shadow="none" onPressStart={onHelpOpen}>
             <CardBody className={styles.navbarButton}>
               <HelpIcon className={styles.icon} size={28} />
             </CardBody>
@@ -268,7 +268,7 @@ export const Navbar = () => {
             isDisabled={!user || isEmptyContent || isBusy || isSaved}
             isPressable={!(!user || isEmptyContent || isBusy || isSaved)}
             shadow="none"
-            onPress={onSaveRequestIconClick}
+            onPressStart={onSaveRequestIconClick}
           >
             <CardBody
               className={clsx(
@@ -285,7 +285,7 @@ export const Navbar = () => {
             isDisabled={user ? false : true}
             isPressable={user ? true : false}
             shadow="none"
-            onPress={onOpenHistoryIconClick}
+            onPressStart={onOpenHistoryIconClick}
           >
             <CardBody
               className={clsx(
