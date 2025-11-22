@@ -22,7 +22,7 @@ export const POST = async (req: Request): Promise<NextResponse> => {
       genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string);
     }
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash",
+      model: "gemini-2.5-flash",
       generationConfig: { responseMimeType: "application/json" },
     });
     const data: RequestData = await req.json();

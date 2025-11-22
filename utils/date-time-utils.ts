@@ -6,11 +6,11 @@ export const estimateLoadTime = (
   // Average time to generate tabs (determined experimentally)
   // And made more conservative than averages
   const tabsEstimate = {
-    summary: 1900,
-    guide: 2200,
-    flashcards: 2500,
-    pairmatch: 2500,
-    quiz: 4500,
+    summary: 2500,
+    guide: 3500,
+    flashcards: 5500,
+    pairmatch: 5500,
+    quiz: 5500,
   };
 
   // Check which checkboxes are selected and sum up the estimated time
