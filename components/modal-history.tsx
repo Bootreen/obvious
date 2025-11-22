@@ -1,13 +1,13 @@
 /* eslint-disable no-console */
 import { useRouter } from "next/navigation";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import {
   Modal,
   ModalHeader,
   ModalBody,
   ModalContent,
   ModalFooter,
-} from "@nextui-org/modal";
+} from "@heroui/modal";
 
 import { shuffleIndices } from "@/utils/shuffle";
 import { ModalWindowProps } from "@/types";

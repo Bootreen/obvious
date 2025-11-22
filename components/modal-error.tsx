@@ -1,11 +1,11 @@
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 import {
   Modal,
   ModalHeader,
   ModalBody,
   ModalContent,
   ModalFooter,
-} from "@nextui-org/modal";
+} from "@heroui/modal";
 
 import { ModalWindowProps } from "@/types";
 import styles from "@/styles/modal-error.module.css";

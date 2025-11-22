@@ -1,5 +1,5 @@
-import { Modal, ModalHeader, ModalContent } from "@nextui-org/modal";
-import { Progress } from "@nextui-org/react";
+import { Modal, ModalHeader, ModalContent } from "@heroui/modal";
+import { Progress } from "@heroui/react";
 
 import { ModalWindowProps } from "@/types";
 import styles from "@/styles/modal-progress.module.css";

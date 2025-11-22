@@ -4,9 +4,9 @@
 import clsx from "clsx";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Progress } from "@nextui-org/react";
-import { Button } from "@nextui-org/button";
-import { Card, CardBody } from "@nextui-org/card";
+import { Progress } from "@heroui/react";
+import { Button } from "@heroui/button";
+import { Card, CardBody } from "@heroui/card";
 
 import { shuffleIndices } from "@/utils/shuffle";
 import { useAppStates, useAppActions } from "@/store/app-states";
@@ -76,7 +76,9 @@ const QuizPage = () => {
               showValueLabel={true}
               size="md"
               value={((currentQuestionNumber + 1) / questions.length) * 100}
-              valueLabel={`${currentQuestionNumber + 1} of ${questions.length}, correct: ${correctAnswersCounter}`}
+              valueLabel={`${currentQuestionNumber + 1} of ${
+                questions.length
+              }, correct: ${correctAnswersCounter}`}
             />
             <div className={styles.quizQuestionContainer}>
               <MarkdownRenderer

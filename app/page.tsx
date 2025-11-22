@@ -2,10 +2,10 @@
 
 import { ChangeEvent, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Textarea } from "@nextui-org/input";
-import { CheckboxGroup, Checkbox } from "@nextui-org/checkbox";
-import { Button } from "@nextui-org/button";
-import { useDisclosure } from "@nextui-org/react";
+import { Textarea } from "@heroui/input";
+import { CheckboxGroup, Checkbox } from "@heroui/checkbox";
+import { Button } from "@heroui/button";
+import { useDisclosure } from "@heroui/react";
 
 import { ModalError } from "@/components/modal-error";
 import { ModalProgress } from "@/components/modal-progress";

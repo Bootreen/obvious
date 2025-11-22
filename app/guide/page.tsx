@@ -3,7 +3,7 @@
 import clsx from "clsx";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 
 import { useAppStates } from "@/store/app-states";
 import MarkdownRenderer from "@/components/md-renderer";

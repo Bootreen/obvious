@@ -7,10 +7,10 @@ import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { useUser } from "@clerk/clerk-react";
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { Navbar as DefaultNavbar, NavbarContent } from "@nextui-org/navbar";
-import { Tabs, Tab } from "@nextui-org/tabs";
-import { link as linkStyles } from "@nextui-org/theme";
-import { Card, CardBody, useDisclosure } from "@nextui-org/react";
+import { Navbar as DefaultNavbar, NavbarContent } from "@heroui/navbar";
+import { Tabs, Tab } from "@heroui/tabs";
+import { link as linkStyles } from "@heroui/theme";
+import { Card, CardBody, useDisclosure } from "@heroui/react";
 
 import { ModalHelpMain } from "./modal-help-main";
 import { ModalHistory } from "./modal-history";

@@ -3,7 +3,7 @@
 import ReactFlipCard from "reactjs-flip-card";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@nextui-org/button";
+import { Button } from "@heroui/button";
 
 import { shuffleIndices } from "@/utils/shuffle";
 import { useAppStates, useAppActions } from "@/store/app-states";

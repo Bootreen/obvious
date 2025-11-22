@@ -3,8 +3,8 @@
 import clsx from "clsx";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardBody } from "@nextui-org/card";
-import { Button } from "@nextui-org/button";
+import { Card, CardBody } from "@heroui/card";
+import { Button } from "@heroui/button";
 
 import { shuffleIndices } from "@/utils/shuffle";
 import { useAppStates, useAppActions } from "@/store/app-states";
